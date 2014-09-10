@@ -1,0 +1,135 @@
+/~
+	Grammar for the Casio (calculator) Basic Interpreter
+  written in JS/CC
+	by Francois Crevola
+~/
+	
+!	' |\r|\n|\t'
+
+	"IF"
+	"ELSE"
+	"WHILE"
+	"DO"
+	"SAY"
+	"WRITE"
+	"READ"
+  "ISZ"
+  "DSZ"
+  "LBL"
+  "GOTO"
+  "PLOT"
+  "RANGE"
+  "LINE"
+  "CLS"
+  "MCL"
+  "RAN"
+  "INT"
+  "INTG"
+  ','
+	'{'
+	'}'
+	'\['
+	'\]'
+	';'
+  ':'
+	'='
+	'->'
+	'\?'
+  '=>'
+	'=='
+	'!='
+	'<>'
+	'<='
+	'>='
+	'>'
+	'<'
+	'\+'
+	'\-'
+	'/'
+	'\*'
+	'\('
+	'\)'
+	'#'
+	'[A-Z]'	Letter
+	'[A-Za-z_][A-Za-z0-9_]*'	Identifier
+	'\"([^\"]|\"\")*\"'		String		[* %match = %match.substr( 1, %match.length - 2 );
+								   %match = %match.replace( /''/g, "\'" );	*]
+	'[0-9]+'			Integer
+	'[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'	Float
+	;
+
+##
+
+Program:	Program Stmt			[* programLines.push(%2); *]
+		|
+		;
+
+Stmt_List:	Stmt_List Stmt			[* %% = createNode( NODE_OP, OP_NONE, %1, %2 ); *]
+		|
+		;
+								
+Stmt:		IF Expression Stmt 		[* %% = createNode( NODE_OP, OP_IF, %2, %3 ); *]
+    | Expression '=>' Stmt    [* %% = createNode( NODE_OP, OP_IF, %1, %3 ); *]
+		| IF Expression Stmt ELSE Stmt	[* %% = createNode( NODE_OP, OP_IF_ELSE, %2, %3, %5 ); *]
+		| WHILE Expression DO Stmt 	[* %% = createNode( NODE_OP, OP_WHILE_DO, %2, %4 ); *]
+		| DO Stmt WHILE Expression ':'	[* %% = createNode( NODE_OP, OP_DO_WHILE, %2, %4 ); *]
+		| SAY String ':'		[* %% = createNode( NODE_OP, OP_SAY, %2 ); *]
+		| String ':'		[* %% = createNode( NODE_OP, OP_SAY, %1 ); *]
+		| String '?' '->' VariableCasio ':'		[* %% = createNode( NODE_OP, OP_INPUT, %1, %4 ); *]
+		| '?' '->' VariableCasio ':'		[* %% = createNode( NODE_OP, OP_INPUT, "", %3 ); *]
+		| WRITE Expression ':'		[* %% = createNode( NODE_OP, OP_WRITE, %2 ); *]
+		| Expression ':'		[* %% = createNode( NODE_OP, OP_WRITE, %1 ); *]
+		| LBL Integer ':'		[* programLabels["_"+%2] = programLines.length + 1; %% = createNode( NODE_OP, OP_REG_LBL, %2 ); *]
+		| GOTO Integer ':'		[* %% = createNode( NODE_OP, OP_GOTO, %2 ); *]
+		| READ Identifier ':'		[* %% = createNode( NODE_OP, OP_READ, %2 ); *]
+		| Expression '->' VariableCasio ':'[* %% = createNode( NODE_OP, OP_ASSIGN, %3, %1 ); *]
+		| ISZ VariableCasio ':'[* %% = createNode( NODE_OP, OP_INCR, %2 ); *]
+		| DSZ VariableCasio ':'[* %% = createNode( NODE_OP, OP_DECR, %2 ); *]
+		| PLOT Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT, %2, %4 ); *]
+		| RANGE Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
+		| LINE ':' [* %% = createNode( NODE_OP, OP_LINE ); *]
+		| CLS ':' [* %% = createNode( NODE_OP, OP_CLS ); *]
+		| MCL ':' [* %% = createNode( NODE_OP, OP_MCL ); *]
+		| '{' Stmt_List '}'		[* %% = %2; *]
+		| ':'				[* %% = createNode( NODE_OP, OP_NONE ); *]
+		;
+				
+Expression:	Expression '=' AddSubExp	[* %% = createNode( NODE_OP, OP_EQU, %1, %3 ); *]
+		| Expression '<' AddSubExp	[* %% = createNode( NODE_OP, OP_LOT, %1, %3 ); *]
+		| Expression '>' AddSubExp	[* %% = createNode( NODE_OP, OP_GRT, %1, %3 ); *]
+		| Expression '<=' AddSubExp	[* %% = createNode( NODE_OP, OP_LOE, %1, %3 ); *]
+		| Expression '>=' AddSubExp	[* %% = createNode( NODE_OP, OP_GRE, %1, %3 ); *]
+		| Expression '!=' AddSubExp	[* %% = createNode( NODE_OP, OP_NEQ, %1, %3 ); *]
+		| Expression '<>' AddSubExp	[* %% = createNode( NODE_OP, OP_NEQ, %1, %3 ); *]
+		| AddSubExp
+		;
+
+AddSubExp:	AddSubExp '-' MulDivExp		[* %% = createNode( NODE_OP, OP_SUB, %1, %3 ); *]
+		| AddSubExp '+' MulDivExp	[* %% = createNode( NODE_OP, OP_ADD, %1, %3 ); *]
+		| MulDivExp
+		;
+				
+MulDivExp:	MulDivExp '*' NegExp		[* %% = createNode( NODE_OP, OP_MUL, %1, %3 ); *]
+		| MulDivExp '/' NegExp		[* %% = createNode( NODE_OP, OP_DIV, %1, %3 ); *]
+		| NegExp
+		;
+				
+NegExp:		'-' Value			[* %% = createNode( NODE_OP, OP_NEG, %2 ); *]
+		| Value
+    | INT Value  [* %% = createNode( NODE_OP, OP_INT, %2 ); *]
+    | INTG Value  [* %% = createNode( NODE_OP, OP_INTG, %2 ); *]
+		;
+
+Value:		Integer				[* %% = createNode( NODE_CONST, %1 ); *]
+		| Float				[* %% = createNode( NODE_CONST, %1 ); *]
+		| Identifier			[* %% = createNode( NODE_VAR, %1 ); *]
+		| VariableCasio		[* %% = %1; *]
+		| '(' Expression ')'		[* %% = %2; *]
+		| RAN '#' [* %% = createNode( NODE_OP, OP_RANDOM ); *]
+		;
+
+VariableCasio:	
+      Letter '[' Expression ']' [* %% = createNode( NODE_OP, OP_READVAR, %1, %3 ); *]
+		| Letter [* %% = createNode( NODE_VAR, %1 ); *]
+		;
+

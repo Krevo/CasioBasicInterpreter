@@ -1,0 +1,176 @@
+<html>
+  <head>
+    <script type="text/javascript" src="js/cbimain.js"></script>
+    <script type="text/javascript" src="js/cbihelper.js"></script>
+    <script type="text/javascript" src="js/cbiparser.js"></script>
+  </head>
+  <body style="background-color: lightsteelblue">
+    <div style="text-align: center">
+      <div>
+        Web Interface for interacting with the <br>
+        <i><script type="text/javascript">document.write(cbiGetVersion(true));</script></i><br>
+        by <b>Krevo_ </b><br><br>
+        <img id="casioFont" style="display: none" src="data:image/gif;base64,
+R0lGODlhAAYIAKEBAAQEBP///////////yH5BAEKAAIALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz
+1Y7DDXbhJ5bkWZkpegXu6zKvNBuwDN95stf5DwwKd7zYjTfxJRUxS2NWHOqCuCbOYbVekUWPDHvN
+QmnGqq2s5HbV2++mFo7D4U4s0H6mmqdSo3Dv1yOY19RneIiYqAjlw/Q3suIm2SaGMcK4iLiHV0Xz
+pRVpqdIC1kj1AHpX18biJdoKaej6RLo2Cch3hGezlKkZ6xq8SjeWKjx6DIvsRLTsrAwdmiwNXP1M
+ff2KHa2aPa2dR8Y7h1Y+bi6eHr4uh85Ofh6v3i7/7k4/D49LmF8sZwZwUKCBvuo5WmcKyQ9c/c5E
+iULoTqOGFB0SDOiOoMX+jYwg6LNXL0wgfCDVTel0ytzCIftWngLUMmWugjRj0pR58c/HOJ8U+iTz
+sNMnnDIxzgyIshxJnkxE9vTzgaUShIOAjixJVeo9UzozWh24KatElxFN3uyzdKdapYWmYk27NW7I
+tXPlVoRbN+9dunvtvuX79+pVvH31BjZM+HDhxYobJ378ESfQOmPFla1ssCZUkVV1TNIINXLQXL2G
+jutAd7DAy4JPivXkiDE9PonztgZtep/QnpQKSSKNeg0Rt+Gs2tIyhjdyWo+flmFmFKxfpryUY6pw
+JHv1sC1Yvzrag/M/j57IE78MW/hUpgqTq57uHDHXoghLbRb6HiVMOrD+b9v5X1xvkE1HjmnFOAbY
+gIado6BsCT5IYITySehgRp01iCCFGU7IYYUdbughY0SFp510WlXFBkzMkNVfRKwZ+NxDuriHliau
+lWdCTjF+tl133Mno2Wkh2bddb63lY5aOGnGnmU+CeHTfYLmxyM8c2H140H7vZdaFiQfpgYZsl3z5
+ExvLZUkZZ6SN5d1CSVXXFDEGlYLac2yJ4ZRRQ2HYlkW1uTmlmhOBVpdTbCKVBllbRodhbV1ipmGj
+EFIlaaSThghippUi9oalnn64KaahanopqRYq2gxEBra42khA9imLdoLu1wuXg56EX0IrvpnCYVsq
+aZahmeXXUJjx0Db+6D9+rjmTkot0eiw70OkSLIt6CnnPf0RWQilbSZK52rUc3WXdlW2ZSyZATE7m
+DZ2tdtVjekIKG1pgatJrYqCAXaTvqS5iRSUtzPFXpHhcVXugwNoKWOqfUjwKasOlMijxp6JWHLHF
+pv47ascYX6yxxyF/LJaNDN9JlLLOunnwrV4mRdKRtEX3b7MtRwjjtQbXu+eFqW3Us8yhuRGn0DZX
+mcmmNiM8LtLz/uzaoQw615+qzdKsW4Llxlb0aJh8LZ1NAuUa7YlIwjnnnXDde147/S5o9aKvSS3o
+bfBaxq/LyHoJHrJvg1zzwySLnHHhgB++MeKjykz4PNZw803kj2/ZQzk4kreLOTcjBnl00fS9O99w
+jwi4ip7H6brFiZ0zOfCOBy4MJbX1qSdtnXO2l51JnMzoMtNJ7MI7oBC5B50tv6EumLZRu6s77i7t
+ZnpWX0WVHNmpjw45b6fDjm5Qw28GDpsJJXK55vZByUXCHFTfZ/mTpZsNt+zXmgpa0M7MiopgnC6w
+q6RnXjn6yWJyliOg+7qRPQAWUIEHbKABH6hA4QUQgiw4iwUviMEManCDHOygBz8IwhCKcIQkLKEJ
+T4jCFKpwhSxsoQtfCMMYynCGNKyhDW+IQxMWAAA7" />
+        <canvas id="canvas1" width="508" height="252"></canvas> <br><br>
+        <textarea id="srcCode" cols="80" rows="15">
+        </textarea> <br>
+ (list of <a href="availablefunctions.html">currently implemented functions</a>)<br><br>
+        <textarea style="display: none" id="srcCode0">
+""
+""
+""
+"    Hello World !"
+        </textarea>
+        <textarea style="display: none" id="srcCode1">
+5->A
+Lbl 1
+A
+Dsz A
+Goto 1
+"      Ignition !"
+        </textarea>
+        <textarea style="display: none" id="srcCode2">
+Range 1,10,0,10,1,0
+Mcl:1->A:1->B
+Lbl 1
+Plot 1,A:Plot B,10:Line
+Isz A:Isz B:A<>11=>Goto 1
+Mcl:1->A:10->B
+Lbl 2
+Plot A,10:Plot 10,B:Line
+Isz A:Dsz B:Goto 2
+Mcl:10->A:10->B
+Lbl 3
+Plot A,1:Plot 10,B:Line
+Dsz A:Dsz B:Goto 3
+Mcl:10->A:1->B
+Lbl 4
+Plot A,1:Plot 1,B:Line
+Isz B:Dsz A:Goto 4
+Cls:Mcl:Goto 1
+        </textarea>
+        <textarea style="display: none" id="srcCode3">
+-500->A
+Lbl 1
+Range 1,127,0,1,63,0
+Plot Ran#*127, Ran#*63
+Isz A
+Goto 1        
+        </textarea>
+        <textarea style="display: none" id="srcCode4">
+-50->A
+Plot Ran#*127, Ran#*63
+Lbl 1
+Range 1,127,0,1,63,0
+Plot Ran#*127, Ran#*63
+Line
+Isz A
+Goto 1
+       </textarea>
+        <textarea style="display: none" id="srcCode5">
+50->A
+Lbl 1
+Ran#
+Dsz A
+Goto 1
+       </textarea>
+        <textarea style="display: none" id="srcCode6">
+"   CALCUL IMC"
+"Poids (kg) "?->P
+"Taille (m) "?->T
+Int(P/(T*T)*100)/100
+       </textarea>
+        <button onclick="loadProg(0);">Hello World !</button>  
+        <button onclick="loadProg(1);">5,4,3,...</button>  
+        <button onclick="loadProg(2);">Screen saver</button>  
+        <button onclick="loadProg(3);">Random dots</button>  
+        <button onclick="loadProg(4);">Random line</button>
+        <button onclick="loadProg(5);">Random num</button>
+        <button onclick="loadProg(6);">IMC</button>  <br><br>
+        <button onclick="executeCode();">Execute !</button>
+        <button onclick="stopCodeExecution()">STOP !</button>  <br><br>
+      </div>
+    </div>
+    <script type="text/javascript">
+
+      function loadProg(progNumber) {
+        stopCodeExecution();
+        var srcCode = document.getElementById("srcCode"+progNumber).value;
+        document.getElementById("srcCode").value = srcCode;
+        executeCode();
+      }
+
+      function executeCode() {
+        var srcCode = document.getElementById("srcCode").value;
+        document.getElementById("srcCode").disabled = true;
+        if (idTimerMain == 0) {
+          jsccRun(srcCode);
+        }
+      }
+
+      function stopCodeExecution() {
+        finish("SIG_STOP received !");
+      }
+
+      var casioScreenW = 127;
+      var casioScreenH = 63;
+
+      var c=document.getElementById("canvas1");
+      var ctx=c.getContext("2d");
+
+      /* Test */
+      if (window.addEventListener){
+        window.addEventListener("keypress", calcHandleOnKeyPress, false);
+        window.addEventListener("keydown", calcHandleOnKeyDown, false);  
+      } else if (window.attachEvent){ // IE sucks !
+        window.attachEvent("keypress", calcHandleOnKeyPress, false);
+        window.attachEvent("keydown", calcHandleOnKeyDown, false);
+      }
+      
+
+      var zoomW = c.width  / casioScreenW;
+      var zoomH = c.height / casioScreenH;
+      console.log("zoomW = "+zoomW+" zoomH = "+zoomH);
+
+      // No anti-aliasing
+      ctx.imageSmoothingEnabled = false
+      ctx.webkitImageSmoothingEnabled = false
+      ctx.mozImageSmoothingEnabled = false
+ 
+      ctx.scale(zoomW,zoomH); // Apply zoom
+      ctx.translate(-1,-1); // Translate so coords starts from (1,1) and go to (127,63);
+
+      cls();
+      loadProg(0);
+      //executeCode();
+    </script>
+    <div style="text-align: right">
+      <a href="https://twitter.com/Krevo_" class="twitter-follow-button" data-show-count="false">Follow @Krevo_</a>
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </div>
+
+  </body>
+</html>

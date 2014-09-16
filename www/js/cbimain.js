@@ -47,6 +47,7 @@ var OP_RANGE = 31;
 var OP_INPUT = 32;
 var OP_INT = 33;
 var OP_INTG = 34;
+var OP_LOCATE = 35;
 
 var programLines = new Array();
 var programLabels = new Array();
@@ -201,6 +202,14 @@ function execute( node )
 				case OP_SAY:
           print( node.children[0] );
 					break;
+                case OP_LOCATE: // Efface l'écran texte puis affiche le texte demandé à la position demandée
+                  if (typeof node.children[2].type != 'undefined') {
+                    str = ""+execute(node.children[2]); // 3rd arg is an expression to evaluate
+                  } else {
+                    str = node.children[2]; // 3rd arg is a string
+                  }
+                  locate(execute(node.children[0]),execute(node.children[1]),str);
+                  break;
 				case OP_INPUT:
           paused = true; // pause program execution
           print(node.children[0]+"?");

@@ -1,5 +1,5 @@
 var CBI_VERSION = "Casio Basic Interpreter 0.1.6";
-var CBI_BUILD_DATE = "2014-09-04";
+var CBI_BUILD_DATE = "2014-09-16";
 
 function cbiGetVersion(withBuildDate) {
   toReturn = CBI_VERSION;
@@ -157,6 +157,18 @@ function print(str) {
     textScreenLines.shift();
     redrawAllTextScreen();
   }
+}
+
+function locate(col,ligne,str) {
+  if (col<1 || col>21) return; // Should generate a runtimeError, do nothing for now !
+  if (ligne<1 || ligne>7) return; // Should generate a runtimeError, do nothing for now !
+  while (textScreenLines.length < ligne) {
+    textScreenLines.push("                       ");
+  }
+  currentLine = textScreenLines[ligne-1];
+  newLine = currentLine.substring(0,col-1) + str + currentLine.substring(col+str.length);
+  textScreenLines[ligne-1] = newLine;
+  redrawAllTextScreen();
 }
 
 function drawTextLine(lineNb,str) {

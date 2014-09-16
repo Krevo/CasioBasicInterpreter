@@ -25,6 +25,7 @@
   "RAN"
   "INT"
   "INTG"
+  "LOCATE"
   ','
 	'{'
 	'}'
@@ -87,6 +88,8 @@ Stmt:		IF Expression Stmt 		[* %% = createNode( NODE_OP, OP_IF, %2, %3 ); *]
 		| DSZ VariableCasio ':'[* %% = createNode( NODE_OP, OP_DECR, %2 ); *]
 		| PLOT Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT, %2, %4 ); *]
 		| RANGE Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
+        | LOCATE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
+        | LOCATE Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
 		| LINE ':' [* %% = createNode( NODE_OP, OP_LINE ); *]
 		| CLS ':' [* %% = createNode( NODE_OP, OP_CLS ); *]
 		| MCL ':' [* %% = createNode( NODE_OP, OP_MCL ); *]

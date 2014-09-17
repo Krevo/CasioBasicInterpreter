@@ -1,5 +1,5 @@
-var CBI_VERSION = "Casio Basic Interpreter 0.1.6";
-var CBI_BUILD_DATE = "2014-09-16";
+var CBI_VERSION = "Casio Basic Interpreter 0.1.7";
+var CBI_BUILD_DATE = "2014-09-17";
 
 function cbiGetVersion(withBuildDate) {
   toReturn = CBI_VERSION;

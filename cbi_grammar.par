@@ -21,6 +21,7 @@
   "RANGE"
   "LINE"
   "CLS"
+  "CLRTEXT"
   "MCL"
   "RAN"
   "INT"
@@ -91,6 +92,7 @@ Stmt:		IF Expression Stmt 		[* %% = createNode( NODE_OP, OP_IF, %2, %3 ); *]
         | LOCATE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
         | LOCATE Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
 		| LINE ':' [* %% = createNode( NODE_OP, OP_LINE ); *]
+        | CLRTEXT ':' [* %% = createNode( NODE_OP, OP_CLEARTEXT ); *]
 		| CLS ':' [* %% = createNode( NODE_OP, OP_CLS ); *]
 		| MCL ':' [* %% = createNode( NODE_OP, OP_MCL ); *]
 		| '{' Stmt_List '}'		[* %% = %2; *]

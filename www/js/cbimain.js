@@ -48,6 +48,7 @@ var OP_INPUT = 32;
 var OP_INT = 33;
 var OP_INTG = 34;
 var OP_LOCATE = 35;
+var OP_CLEARTEXT = 36;
 
 var programLines = new Array();
 var programLabels = new Array();
@@ -280,6 +281,10 @@ function execute( node )
 				case OP_CLS:
 					cls();
 					break;
+                case OP_CLEARTEXT:
+                    console.log("cleartext call");
+                    cleartext();
+                    break;
 				case OP_MCL:
 					mcl();
 					break;

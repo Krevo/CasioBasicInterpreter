@@ -166,6 +166,9 @@ function locate(col,ligne,str) {
     textScreenLines.push("                       ");
   }
   currentLine = textScreenLines[ligne-1];
+  if (currentLine.length<col-1) {
+    currentLine = currentLine + "                       ".substring(0,(col-1)-currentLine.length);
+  }
   newLine = currentLine.substring(0,col-1) + str + currentLine.substring(col-1+str.length);
   textScreenLines[ligne-1] = newLine;
   redrawAllTextScreen();

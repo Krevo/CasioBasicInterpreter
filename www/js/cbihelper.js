@@ -1,5 +1,5 @@
 var CBI_VERSION = "Casio Basic Interpreter 0.1.7";
-var CBI_BUILD_DATE = "2014-09-17";
+var CBI_BUILD_DATE = "2014-09-18";
 
 function cbiGetVersion(withBuildDate) {
   toReturn = CBI_VERSION;
@@ -166,7 +166,7 @@ function locate(col,ligne,str) {
     textScreenLines.push("                       ");
   }
   currentLine = textScreenLines[ligne-1];
-  newLine = currentLine.substring(0,col-1) + str + currentLine.substring(col+str.length);
+  newLine = currentLine.substring(0,col-1) + str + currentLine.substring(col-1+str.length);
   textScreenLines[ligne-1] = newLine;
   redrawAllTextScreen();
 }

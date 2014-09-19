@@ -49,6 +49,7 @@ var OP_INT = 33;
 var OP_INTG = 34;
 var OP_LOCATE = 35;
 var OP_CLEARTEXT = 36;
+var OP_FRAC = 37;
 
 var programLines = new Array();
 var programLabels = new Array();
@@ -273,8 +274,11 @@ function execute( node )
           }
 					break;
 				case OP_INTG:
-          ret = Math.floor(execute(node.children[0]));
-					break;
+                  ret = Math.floor(execute(node.children[0]));
+                case OP_FRAC:
+                  n = execute(node.children[0]);
+                  ret =  n % 1;
+                  break;
 				case OP_LINE:
 					line();
 					break;

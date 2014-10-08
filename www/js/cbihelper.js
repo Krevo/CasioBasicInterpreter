@@ -1,5 +1,8 @@
-var CBI_VERSION = "Casio Basic Interpreter 0.1.7.x";
-var CBI_BUILD_DATE = "2014-09-19";
+var CBI_VERSION = "Casio Basic Interpreter 0.1.8.x";
+var CBI_BUILD_DATE = "2014-10-08";
+
+var TEXT_SCREEN_WIDTH = 21;
+var TEXT_SCREEN_HEIGHT = 7;
 
 function cbiGetVersion(withBuildDate) {
   toReturn = CBI_VERSION;
@@ -149,14 +152,16 @@ function redrawAllTextScreen() {
 }
 
 function print(str) {
-  textScreenLines.push(str);
-  var lineNb = textScreenLines.length;
-  if (textScreenLines.length <= 7) {
-    drawTextLine(lineNb,str);  
-  } else {
-    textScreenLines.shift();
-    redrawAllTextScreen();
+  str += " ";
+  while (str.length>TEXT_SCREEN_WIDTH) {
+    textScreenLines.push(str.substring(0,TEXT_SCREEN_WIDTH));
+    str = str.substring(TEXT_SCREEN_WIDTH);
   }
+  textScreenLines.push(str);
+  while (textScreenLines.length > TEXT_SCREEN_HEIGHT) {
+    textScreenLines.shift();
+  }
+  redrawAllTextScreen();
 }
 
 function locate(col,ligne,str) {

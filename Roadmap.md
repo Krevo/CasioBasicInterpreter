@@ -8,6 +8,6 @@
 - ajout affectation à un ensemble de variable genre 1→A~Z
 - gestion programmes / sous-programmes (appel "Prog x", Return, ...)
 - gestion commentaire 1 line : 'comentaire
-- Locate x,y,expr
+- ~~Locate x,y,expr~~ 2014-09-18
 - ajout boucles
 - ....

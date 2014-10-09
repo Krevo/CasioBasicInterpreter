@@ -81,14 +81,19 @@ Isz A
 Goto 1        
         </textarea>
         <textarea style="display: none" id="srcCode4">
-Range 1,127,0,1,63,0
--50->A
-Plot Ran#*127, Ran#*63
+Range 1,127,0,63,1,0
+0->B
 Lbl 1
-Plot Ran#*127, Ran#*63
+0->A
+Lbl 2
+Int (Ran#*2)->C
+Plot A*5,(B+C)*5
+Plot (A+1)*5,(B+1-C)*5
 Line
 Isz A
-Goto 1
+A<26=>Goto 2
+Isz B
+B<14=>Goto 1       
        </textarea>
         <textarea style="display: none" id="srcCode5">
 50->A
@@ -107,7 +112,7 @@ Int(P/(T*T)*100)/100
         <button onclick="loadProg(1);">5,4,3,...</button>  
         <button onclick="loadProg(2);">Screen saver</button>  
         <button onclick="loadProg(3);">Random dots</button>  
-        <button onclick="loadProg(4);">Random line</button>
+        <button onclick="loadProg(4);">Maze generator</button>
         <button onclick="loadProg(5);">Random num</button>
         <button onclick="loadProg(6);">IMC</button>  <br><br>
         <button onclick="executeCode();">Execute !</button>

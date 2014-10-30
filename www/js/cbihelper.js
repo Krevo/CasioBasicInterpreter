@@ -1,5 +1,5 @@
-var CBI_VERSION = "Casio Basic Interpreter 0.1.8.x";
-var CBI_BUILD_DATE = "2014-10-10";
+var CBI_VERSION = "Casio Basic Interpreter 0.1.9.x";
+var CBI_BUILD_DATE = "2014-10-30";
 
 var TEXT_SCREEN_WIDTH = 21;
 var TEXT_SCREEN_HEIGHT = 7;
@@ -134,17 +134,39 @@ function calcHandleOnKeyPress(e) {
   }
 }
 
-//Interpreting functions
+function swapToGraphicScreen() {
+  c1.style.display = "none";
+  c2.style.display = "";
+  ctx = ctx2;
+}
 
-// Clear the graphic screen
-function cls() {
+function swapToTextScreen() {
+  c1.style.display = "";
+  c2.style.display = "none";
+  ctx = ctx1;
+}
+
+// Clear the current display
+function clearDisplay() {
   ctx.fillStyle="#FFFFFF";
   ctx.fillRect(1,1,127,63);
 }
 
+//Interpreting functions
+
+function cls() {
+  swapToGraphicScreen();
+  clearDisplay();
+}
+
+function clrtext() {
+  swapToTextScreen();
+  clearDisplay();
+}
+
 // Redraw all screen
 function redrawAllTextScreen() {  
-  cls();
+  clrtext();
   for (var i=0; i<textScreenLines.length; i++) {
     lineNb = i+1;
     drawTextLine(lineNb,textScreenLines[i]);
@@ -152,6 +174,7 @@ function redrawAllTextScreen() {
 }
 
 function print(str) {
+  swapToTextScreen();
   str += " ";
   while (str.length>TEXT_SCREEN_WIDTH) {
     textScreenLines.push(str.substring(0,TEXT_SCREEN_WIDTH));
@@ -234,6 +257,7 @@ function bline(x0, y0, x1, y1) {
 }
 
 function plot(x, y) {
+  swapToGraphicScreen();
   plots.push([x,y]);
   if (plots.length>2) {
     plots.shift();

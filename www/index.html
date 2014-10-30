@@ -34,7 +34,9 @@ jwi4ip7H6brFiZ0zOfCOBy4MJbX1qSdtnXO2l51JnMzoMtNJ7MI7oBC5B50tv6EumLZRu6s77i7t
 ZnpWX0WVHNmpjw45b6fDjm5Qw28GDpsJJXK55vZByUXCHFTfZ/mTpZsNt+zXmgpa0M7MiopgnC6w
 q6RnXjn6yWJyliOg+7qRPQAWUIEHbKABH6hA4QUQgiw4iwUviMEManCDHOygBz8IwhCKcIQkLKEJ
 T4jCFKpwhSxsoQtfCMMYynCGNKyhDW+IQxMWAAA7" />
-        <canvas id="canvas1" width="508" height="252"></canvas> <br><br>
+        <canvas id="canvas1" width="508" height="252"></canvas>
+        <canvas id="canvas2" width="508" height="252"></canvas>
+       <br><br>
         <textarea id="srcCode" cols="80" rows="15">
         </textarea> <br>
  (list of <a href="availablefunctions.html">currently implemented functions</a>)<br><br>
@@ -143,8 +145,14 @@ Int(P/(T*T)*100)/100
       var casioScreenW = 127;
       var casioScreenH = 63;
 
-      var c=document.getElementById("canvas1");
-      var ctx=c.getContext("2d");
+      var c1 = document.getElementById("canvas1");
+      var c2 = document.getElementById("canvas2");
+
+      var ctx1=c1.getContext("2d");
+      var ctx2=c2.getContext("2d");
+
+      var c=c1;
+      var ctx=ctx1;
 
       /* Test */
       if (window.addEventListener){
@@ -160,15 +168,26 @@ Int(P/(T*T)*100)/100
       var zoomH = c.height / casioScreenH;
       console.log("zoomW = "+zoomW+" zoomH = "+zoomH);
 
-      // No anti-aliasing
-      ctx.imageSmoothingEnabled = false
-      ctx.webkitImageSmoothingEnabled = false
-      ctx.mozImageSmoothingEnabled = false
- 
-      ctx.scale(zoomW,zoomH); // Apply zoom
-      ctx.translate(-1,-1); // Translate so coords starts from (1,1) and go to (127,63);
+      function prepareDisplay(ctx) {
+        // No anti-aliasing
+        ctx.imageSmoothingEnabled = false
+        ctx.webkitImageSmoothingEnabled = false
+        ctx.mozImageSmoothingEnabled = false
+   
+        ctx.scale(zoomW,zoomH); // Apply zoom
+        ctx.translate(-1,-1); // Translate so coords starts from (1,1) and go to (127,63);
+      }
 
+      prepareDisplay(ctx1);
+      prepareDisplay(ctx2);
+
+      // Efface ecran texte 
+      clrtext();
+
+      // Efface ecran graphique
       cls();
+      
+
       loadProg(0);
       //executeCode();
     </script>

@@ -1,4 +1,4 @@
-﻿- une réelle distinction écran texte / écran graphique (parce que là les chaines de caractères imprimés et les plot/line se superpose sur le même écran)
+- ~~une réelle distinction écran texte / écran graphique (parce que là les chaines de caractères imprimés et les plot/line se superpose sur le même écran)~~ 2014-10-30
 - ~~un débordement sur la ligne suivante lors de print de texte >= 21 caracteres~~ 2014-10-08
 - ~~un scroll de l'écran texte (l'ajout d'une ligne doit faire monter ce qu'il y avait déjà)~~ 2014-08-29
 - ~~ajout de ? pour recevoir de l'input utilisateur~~ 2014-09-04

@@ -5,9 +5,14 @@
 - ~~ajout de [EXE] pour valider son input~~ 2014-09-04
 - ajout pause affichage : ◢ , [EXE] pour continuer
 - ajout déplacement curseur (j'ai de vieux programme comme "Démineur" basé sur un Plot x,y◢ ) , valid et recup coordonnées
+- multiplication sans opérateur '*'
 - ajout affectation à un ensemble de variable genre 1→A~Z
 - gestion programmes / sous-programmes (appel "Prog x", Return, ...)
 - gestion commentaire 1 line : 'comentaire
 - ~~Locate x,y,expr~~ 2014-09-18
-- ajout boucles
-- ....
+- ajout For/To/Step/Next
+- ajout While/WhileEnd
+- ajout Do/LpWhile
+- ajout If/Then/Else/IfEnd 
+- ajout And/Or/not
+

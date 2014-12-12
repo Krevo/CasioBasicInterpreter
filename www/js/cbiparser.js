@@ -996,7 +996,7 @@ switch( match )
 }
 
 
-function __parse( src, err_off, err_la )
+function __parse( src, err_off, err_la, nodes, labels )
 {
 	var		sstack			= new Array();
 	var		vstack			= new Array();

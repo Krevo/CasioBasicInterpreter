@@ -15,4 +15,6 @@
 - ajout Do/LpWhile
 - ajout If/Then/Else/IfEnd 
 - ajout And/Or/not
-
+- fonction trigo (sin, cos, ..)
+- mode Deg, Rad, Grad
+- Pol() / Rec()

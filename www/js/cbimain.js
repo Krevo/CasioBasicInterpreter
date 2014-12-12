@@ -50,9 +50,12 @@ var OP_INTG = 34;
 var OP_LOCATE = 35;
 var OP_CLEARTEXT = 36;
 var OP_FRAC = 37;
+var OP_PROG_CALL = 38;
 
+var programs = new Array();
 var programLines = new Array();
 var programLabels = new Array();
+var nextLine = 0;
 
 var v_names = new Array();
 var v_values = new Array();
@@ -173,6 +176,10 @@ function execute( node )
           break;
         case OP_GOTO:
           nextLine = programLabels["_"+node.children[0]];
+          break;
+        case OP_PROG_CALL:
+          console.log("Requested a call to subprogram '"+node.children[0]+"'"); // Here we should stack a return labels of the current program
+          console.log("Here we should stack a return labels to the next line of the current program --> ["+"main"+":"+nextLine+"]");
           break;
 				case OP_IF:
 					if (execute(node.children[0])) {
@@ -308,8 +315,96 @@ function execute( node )
 	return ret;
 }
 
+function cut(name,arrayOfLines,startIndexIncluded,stopIndexExcluded) {
+  console.log("Prog "+name+" from line "+(startIndexIncluded+1)+" to line "+stopIndexExcluded);
+  var prog = new Array();
+  for( i = startIndexIncluded; i < stopIndexExcluded; i++ ) {
+    if (arrayOfLines[i].substr(0,1)=="#" || arrayOfLines[i].substr(0,2)=="@@" || arrayOfLines[i].trim()=="") {
+      continue;
+    }
+    prog.push(arrayOfLines[i]);
+  }
+  return prog;
+}
+
 function jsccRun(str) {
 
+  // WORK IN PROGRESS
+  programs = new Array();
+  programsSrc = new Array();
+  
+  //arrayOfLines = str.match(/[\r\n]/g);
+  var arrayOfLines = str.split("\n");
+  console.log(arrayOfLines);
+  var progName = "main"; // default prog name
+  var currentBoundary = 0;
+  //console.log(arrayOfLines);
+  for( i = 0; i < arrayOfLines.length; i++ ) {
+    var line = arrayOfLines[i];
+    //console.log(line);
+    //if (line.substr(0,7)=='@@ Prog' || line.substr(0,6)=='@@Prog') {
+      //console.log("here is a program header :"+line);
+      var res = line.match(/@@\s?Prog(?:ram)?\s+"?([a-zA-Z0-9]*)"?\s?.?/);
+      if (res!=null) {
+        console.log(res); // It matched and res[0] contain the all string, res[1] the sub-matched part ie the programe name or number
+        // cut from old boundary to i, then i become new boundary
+        programsSrc[progName] = cut(progName,arrayOfLines,currentBoundary,i);
+        progName = res[1];
+        currentBoundary = i;
+      }
+    //}
+  }
+  console.log("last cut");
+  programsSrc[progName] = cut(progName,arrayOfLines,currentBoundary,arrayOfLines.length);
+  console.log("last cut after");
+  
+  console.log(programsSrc);
+  
+  // end of WORK IN PROGRESS
+
+  reset();
+  cls();
+  
+  // Bon, maintenant faut parser tout les elts de programSrc
+  for (var progName in programsSrc){
+      if (programsSrc.hasOwnProperty(progName)) {
+          console.log("parsing " + progName + " ...");
+          parsedProg = parse(programsSrc[progName].join(":"),progName);
+          programs[progName] = new Array();
+          programs[progName]['nodes'] = parsedProg.nodes;
+          programs[progName]['labels'] = parsedProg.labels;
+          programs[progName]['error_cnt'] = parsedProg.error_cnt;
+      }
+  }
+  
+  console.log(programs);
+
+  // ... puis lancer le programme "main"
+  programLines = programs['main']['nodes'];
+  programLabels = programs['main']['labels'];
+  
+  textScreenLines = new Array();
+
+  nextLine = 0;
+  
+  if (programs['main']['error_cnt'] == 0) {
+    console.log("nextLine = "+nextLine);
+    idTimerMain = setTimeout('executeNextLine()',10);
+    console.log("timeout id = "+idTimerMain);
+  } else {
+    finish("Syntax error");
+  }
+
+  
+}
+
+function parse(str, name) {
+  
+  console.log("Parsing "+name+" ...");
+  
+  var nodes = new Array();
+  var labels = new Array();
+  
   str = str + ":"; // Add a final ":" 
   str = str.replace(/(?:\r\n|\r|\n)/g, ':'); // Replace CR / LF with ":" (our instruction separator)
 
@@ -317,32 +412,26 @@ function jsccRun(str) {
   var error_off	= new Array();
   var error_la	= new Array();
 
-  programLines = new Array();
-  programLabels = new Array();
-  textScreenLines = new Array();
-
-  reset();
-  cls();
-
   console.log("before parse");
-  if( ( error_cnt = __parse( str, error_off, error_la ) ) > 0 )
+
+  if( ( error_cnt = __parse( str, error_off, error_la, nodes, labels ) ) > 0 )
   {
 	  for( i = 0; i < error_cnt; i++ ) {
-		  alert( "SYNTAX ERROR Line "+programLines.length+" near "
+		  alert( "SYNTAX ERROR Line "+nodes.length+" near "
 			  + str.substr( error_off[i], 30 ));
       break;
     }
   }
-  console.log(programLines);
+  console.log(nodes);
+  console.log(labels);
   console.log("after parse");
-  nextLine = 0;
 
-  if (error_cnt == 0) {
-    idTimerMain = setTimeout('executeNextLine()',10);
-    console.log("timeout id = "+idTimerMain);
-  } else {
-    finish("Syntax error");
+  return {
+    nodes : nodes,
+    labels : labels,
+    error_cnt : error_cnt
   }
+  
 }
 
 function executeNextLine() {

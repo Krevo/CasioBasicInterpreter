@@ -1,15 +1,9 @@
-- ~~une réelle distinction écran texte / écran graphique (parce que là les chaines de caractères imprimés et les plot/line se superpose sur le même écran)~~ 2014-10-30
-- ~~un débordement sur la ligne suivante lors de print de texte >= 21 caracteres~~ 2014-10-08
-- ~~un scroll de l'écran texte (l'ajout d'une ligne doit faire monter ce qu'il y avait déjà)~~ 2014-08-29
-- ~~ajout de ? pour recevoir de l'input utilisateur~~ 2014-09-04
-- ~~ajout de [EXE] pour valider son input~~ 2014-09-04
+- gestion programmes / sous-programmes (appel Prog "xyz", Return, ...)
 - ajout pause affichage : ◢ , [EXE] pour continuer
 - ajout déplacement curseur (j'ai de vieux programme comme "Démineur" basé sur un Plot x,y◢ ) , valid et recup coordonnées
 - multiplication sans opérateur '*'
 - ajout affectation à un ensemble de variable genre 1→A~Z
-- gestion programmes / sous-programmes (appel "Prog x", Return, ...)
-- gestion commentaire 1 line : 'comentaire
-- ~~Locate x,y,expr~~ 2014-09-18
+- gestion commentaire 1 line : 'commentaire
 - ajout For/To/Step/Next
 - ajout While/WhileEnd
 - ajout Do/LpWhile

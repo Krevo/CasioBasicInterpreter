@@ -53,9 +53,13 @@ var OP_FRAC = 37;
 var OP_PROG_CALL = 38;
 
 var programs = new Array();
-var programLines = new Array();
-var programLabels = new Array();
+var currentPrgName = "main";
 var nextLine = 0;
+var callStack = new Array();
+
+// deprecated
+//var programLines = new Array();
+//var programLabels = new Array();
 
 var v_names = new Array();
 var v_values = new Array();
@@ -175,11 +179,16 @@ function execute( node )
           // do nothing during exec phase, label is already defined when parsing is done
           break;
         case OP_GOTO:
-          nextLine = programLabels["_"+node.children[0]];
+          nextLine = programs[currentPrgName]['labels']["_"+node.children[0]];
           break;
         case OP_PROG_CALL:
-          console.log("Requested a call to subprogram '"+node.children[0]+"'"); // Here we should stack a return labels of the current program
-          console.log("Here we should stack a return labels to the next line of the current program --> ["+"main"+":"+nextLine+"]");
+          console.log("Call to subprogram '"+node.children[0]+"'");
+          console.log("We stack a return labels to the next line of the current program --> ['"+currentPrgName+"':"+nextLine+"]");
+          callStack.push({ prgName: currentPrgName, line: nextLine });
+          console.log(callStack);
+          // ATTTENTION voir le cas d'un prog inexistant !!!
+          currentPrgName = node.children[0];
+          nextLine = 0;
           break;
 				case OP_IF:
 					if (execute(node.children[0])) {
@@ -380,8 +389,7 @@ function jsccRun(str) {
   console.log(programs);
 
   // ... puis lancer le programme "main"
-  programLines = programs['main']['nodes'];
-  programLabels = programs['main']['labels'];
+  currentPrgName = "main";
   
   textScreenLines = new Array();
 
@@ -435,12 +443,18 @@ function parse(str, name) {
 }
 
 function executeNextLine() {
-  console.log("["+idTimerMain+"] executeNextLine "+nextLine+" / "+programLines.length);
-  if (isNaN(nextLine) || nextLine>=programLines.length) {
-    finish("End Of program.");
-    return;
+  if (isNaN(nextLine) || nextLine>=programs[currentPrgName]['nodes'].length) {
+    if (callStack.length>0) {
+      var obj = callStack.pop(); // unstack
+      currentPrgName = obj.prgName;
+      nextLine = obj.line;
+    } else {
+      finish("End Of program.");
+      return;
+    }
   }
-  execute(programLines[nextLine++]);
+  console.log("["+idTimerMain+"] prog "+currentPrgName+" - executeNextLine "+nextLine+" / "+programs[currentPrgName]['nodes'].length); 
+  execute(programs[currentPrgName]['nodes'][nextLine++]);
   if (!paused) {
     idTimerMain = setTimeout('executeNextLine()',10);
   }

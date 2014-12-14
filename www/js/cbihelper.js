@@ -1,5 +1,5 @@
-var CBI_VERSION = "Casio Basic Interpreter 0.1.9.x";
-var CBI_BUILD_DATE = "2014-10-30";
+var CBI_VERSION = "Casio Basic Interpreter 0.2";
+var CBI_BUILD_DATE = "2014-12-14";
 
 var TEXT_SCREEN_WIDTH = 21;
 var TEXT_SCREEN_HEIGHT = 7;
@@ -65,8 +65,8 @@ function reset() {
   cursorCol = 1;
   cursorLine = 1;
   currentLineBuffer = null;
-  programLines = new Array();
-  programLabels = new Array();
+  currentPrgName = "main";
+  callStack = new Array();
   nextLine = NaN; // index in the programLines array
   textScreenLines = new Array();
   clearInterval(idTimerMain); idTimerMain = 0;

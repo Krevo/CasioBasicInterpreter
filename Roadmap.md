@@ -1,4 +1,4 @@
-- gestion programmes / sous-programmes (appel Prog "xyz", Return, ...)
+~~- gestion programmes / sous-programmes (appel Prog "xyz", Return, ...)~~ 2014-12-15
 - ajout pause affichage : ◢ , [EXE] pour continuer
 - ajout déplacement curseur (j'ai de vieux programme comme "Démineur" basé sur un Plot x,y◢ ) , valid et recup coordonnées
 - multiplication sans opérateur '*'

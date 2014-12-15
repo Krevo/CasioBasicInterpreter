@@ -51,6 +51,7 @@ var OP_LOCATE = 35;
 var OP_CLEARTEXT = 36;
 var OP_FRAC = 37;
 var OP_PROG_CALL = 38;
+var OP_RETURN = 39;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -189,6 +190,9 @@ function execute( node )
           // ATTTENTION voir le cas d'un prog inexistant !!!
           currentPrgName = node.children[0];
           nextLine = 0;
+          break;
+        case OP_RETURN:
+          unstack();
           break;
 				case OP_IF:
 					if (execute(node.children[0])) {
@@ -442,13 +446,19 @@ function parse(str, name) {
   
 }
 
+function unstack() {
+  if (callStack.length>0) {
+    var obj = callStack.pop(); // unstack
+    currentPrgName = obj.prgName;
+    nextLine = obj.line;
+    return true;
+  }
+  return false;
+}
+
 function executeNextLine() {
   if (isNaN(nextLine) || nextLine>=programs[currentPrgName]['nodes'].length) {
-    if (callStack.length>0) {
-      var obj = callStack.pop(); // unstack
-      currentPrgName = obj.prgName;
-      nextLine = obj.line;
-    } else {
+    if (!unstack()) { // If nothing was on stack ... we have no parent to return.
       finish("End Of program.");
       return;
     }

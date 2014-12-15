@@ -21,6 +21,7 @@
   "PLOT"
   "RANGE"
   "LINE"
+  "RETURN"
   "CLS"
   "CLRTEXT"
   "MCL"
@@ -98,6 +99,7 @@ Stmt:		IF Expression Stmt 		[* %% = createNode( NODE_OP, OP_IF, %2, %3 ); *]
 		| RANGE Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
         | LOCATE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
         | LOCATE Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
+		| RETURN ':' [* %% = createNode( NODE_OP, OP_RETURN ); *]
 		| LINE ':' [* %% = createNode( NODE_OP, OP_LINE ); *]
         | CLRTEXT ':' [* %% = createNode( NODE_OP, OP_CLEARTEXT ); *]
 		| CLS ':' [* %% = createNode( NODE_OP, OP_CLS ); *]

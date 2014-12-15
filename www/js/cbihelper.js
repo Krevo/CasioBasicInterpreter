@@ -4,6 +4,12 @@ var CBI_BUILD_DATE = "2014-12-14";
 var TEXT_SCREEN_WIDTH = 21;
 var TEXT_SCREEN_HEIGHT = 7;
 
+var DEG = 1;
+var RAD = 2;
+var GRAD = 3;
+
+var angleMode = DEG;
+
 function cbiGetVersion(withBuildDate) {
   toReturn = CBI_VERSION;
   if (withBuildDate) {
@@ -69,6 +75,7 @@ function reset() {
   callStack = new Array();
   nextLine = NaN; // index in the programLines array
   textScreenLines = new Array();
+  angleMode = DEG;
   clearInterval(idTimerMain); idTimerMain = 0;
   clearInterval(idTimerCursor); idTimerCursor = 0;
 }
@@ -295,3 +302,12 @@ function mcl() {
   }
 }
 
+// Convert angle unit from current mode (Deg, Rad or Grad) to radians
+function convertAngle(angle) {
+  if (angleMode == DEG) {
+    // @TODO
+  } else if (angleMode == GRAD) {
+    // @TODO
+  }
+  return angle;
+}

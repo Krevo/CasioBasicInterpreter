@@ -52,6 +52,9 @@ var OP_CLEARTEXT = 36;
 var OP_FRAC = 37;
 var OP_PROG_CALL = 38;
 var OP_RETURN = 39;
+var OP_DEG = 40;
+var OP_RAD = 41;
+var OP_GRAD = 42;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -193,6 +196,18 @@ function execute( node )
           break;
         case OP_RETURN:
           unstack();
+          break;
+        case OP_DEG:
+          angleMode = DEG;
+          console.log("Current angle mode is "+angleMode);
+          break;
+        case OP_RAD:
+          angleMode = RAD;
+          console.log("Current angle mode is "+angleMode);
+          break;
+        case OP_GRAD:
+          angleMode = GRAD;
+          console.log("Current angle mode is "+angleMode);
           break;
 				case OP_IF:
 					if (execute(node.children[0])) {

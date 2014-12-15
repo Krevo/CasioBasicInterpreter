@@ -293,7 +293,7 @@ function execute( node )
                   ret = Math.floor(execute(node.children[0]));
                 case OP_FRAC:
                   n = execute(node.children[0]);
-                  ret =  n % 1;
+                  ret =  parseFloat((n % 1).toPrecision(15));
                   break;
 				case OP_LINE:
 					line();

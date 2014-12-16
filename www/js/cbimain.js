@@ -55,6 +55,11 @@ var OP_RETURN = 39;
 var OP_DEG = 40;
 var OP_RAD = 41;
 var OP_GRAD = 42;
+var OP_COS = 43;
+var OP_SIN = 44;
+var OP_TAN = 45;
+var OP_REC = 46;
+var OP_POL = 47;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -199,16 +204,41 @@ function execute( node )
           break;
         case OP_DEG:
           angleMode = DEG;
-          console.log("Current angle mode is "+angleMode);
           break;
         case OP_RAD:
           angleMode = RAD;
-          console.log("Current angle mode is "+angleMode);
           break;
         case OP_GRAD:
           angleMode = GRAD;
-          console.log("Current angle mode is "+angleMode);
           break;
+       case OP_COS:
+          ret = Math.cos(angleToRadians(execute(node.children[0])));
+          break;
+        case OP_SIN:
+          ret = Math.sin(angleToRadians(execute(node.children[0])));
+          break;
+        case OP_TAN:
+          ret = Math.tan(angleToRadians(execute(node.children[0])));
+          break;
+        case OP_POL:
+          // rectangular to polar coord
+          x = execute(node.children[0]);
+          y = execute(node.children[1]);
+          r = Math.sqrt(x*x+y*y);
+          a = Math.atan(y/x);
+          letvar("A_9", r); // I = r
+          letvar("A_10", a); // J = a
+          break;
+        case OP_REC:
+          // polar to rectangular coord
+          r = execute(node.children[0]);
+          a = execute(node.children[1]);
+          x = r * Math.cos(angleToRadians(a));
+          y = r * Math.sin(angleToRadians(a));
+          letvar("A_9", x);  // I = x
+          letvar("A_10", y); // J = y
+          break;
+
 				case OP_IF:
 					if (execute(node.children[0])) {
 					  execute(node.children[1]);

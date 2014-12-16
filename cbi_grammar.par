@@ -33,6 +33,11 @@
   "FRAC"
   "INTG"
   "LOCATE"
+  "COS"
+  "SIN"
+  "TAN"
+  "REC\("
+  "POL\("
   ','
 	'{'
 	'}'
@@ -99,6 +104,8 @@ Stmt:		IF Expression Stmt 		[* %% = createNode( NODE_OP, OP_IF, %2, %3 ); *]
 		| ISZ VariableCasio ':'[* %% = createNode( NODE_OP, OP_INCR, %2 ); *]
 		| DSZ VariableCasio ':'[* %% = createNode( NODE_OP, OP_DECR, %2 ); *]
 		| PLOT Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT, %2, %4 ); *]
+		| "REC\(" Expression ',' Expression '\)' ':' [* %% = createNode( NODE_OP, OP_REC, %2, %4 ); *]
+		| "POL\(" Expression ',' Expression '\)' ':' [* %% = createNode( NODE_OP, OP_POL, %2, %4 ); *]
 		| RANGE Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
         | LOCATE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
         | LOCATE Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
@@ -136,6 +143,9 @@ MulDivExp:	MulDivExp '*' NegExp		[* %% = createNode( NODE_OP, OP_MUL, %1, %3 ); 
 				
 NegExp:		'-' Value			[* %% = createNode( NODE_OP, OP_NEG, %2 ); *]
 		| Value
+		| COS Value [* %% = createNode( NODE_OP, OP_COS, %2 ); *]
+		| SIN Value [* %% = createNode( NODE_OP, OP_SIN, %2 ); *]
+		| TAN Value [* %% = createNode( NODE_OP, OP_TAN, %2 ); *]
     | INT Value  [* %% = createNode( NODE_OP, OP_INT, %2 ); *]
     | FRAC Value  [* %% = createNode( NODE_OP, OP_FRAC, %2 ); *]
     | INTG Value  [* %% = createNode( NODE_OP, OP_INTG, %2 ); *]

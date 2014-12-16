@@ -303,11 +303,21 @@ function mcl() {
 }
 
 // Convert angle unit from current mode (Deg, Rad or Grad) to radians
-function convertAngle(angle) {
+function angleToRadians(angle) {
   if (angleMode == DEG) {
-    // @TODO
+    return Math.PI * angle / 180;
   } else if (angleMode == GRAD) {
-    // @TODO
+    return Math.PI * angle / 200;
+  }
+  return angle;
+}
+
+// Convert from radians to current unit (Deg, Rad or Grad)
+function radiansToAngle(radians) {
+  if (angleMode == DEG) {
+    return 180 * radians / Math.PI;
+  } else if (angleMode == GRAD) {
+    return 200 * radians / Math.PI;
   }
   return angle;
 }

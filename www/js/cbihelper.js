@@ -1,5 +1,5 @@
-var CBI_VERSION = "Casio Basic Interpreter 0.2";
-var CBI_BUILD_DATE = "2014-12-14";
+var CBI_VERSION = "Casio Basic Interpreter 0.3";
+var CBI_BUILD_DATE = "2014-12-16";
 
 var TEXT_SCREEN_WIDTH = 21;
 var TEXT_SCREEN_HEIGHT = 7;

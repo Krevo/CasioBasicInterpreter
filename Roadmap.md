@@ -1,7 +1,7 @@
-~~- gestion programmes / sous-programmes (appel Prog "xyz", Return, ...)~~ 2014-12-15
-~~- mode Deg, Rad, Grad~~ 2014-12-15
-- Pol() / Rec()
-- fonction trigo (sin, cos, ..)
+- ~~gestion programmes / sous-programmes (appel Prog "xyz", Return, ...)~~ 2014-12-15
+- ~~mode Deg, Rad, Grad~~ 2014-12-15
+- ~~fonction trigo (sin, cos, tan)~~ 2014-12-16
+- ~~Pol() / Rec()~~ 2014-12-16
 - ajout pause affichage : ◢ , [EXE] pour continuer
 - ajout déplacement curseur (j'ai de vieux programme comme "Démineur" basé sur un Plot x,y◢ ) , valid et recup coordonnées
 - multiplication sans opérateur '*'
@@ -12,4 +12,4 @@
 - ajout Do/LpWhile
 - ajout If/Then/Else/IfEnd 
 - ajout And/Or/not
-
+- autres fonctions trigo

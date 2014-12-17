@@ -225,7 +225,7 @@ function execute( node )
           x = execute(node.children[0]);
           y = execute(node.children[1]);
           r = Math.sqrt(x*x+y*y);
-          a = Math.atan(y/x);
+          a = radiansToAngle(Math.atan(y/x));
           letvar("A_9", r); // I = r
           letvar("A_10", a); // J = a
           break;

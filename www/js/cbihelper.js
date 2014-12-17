@@ -319,5 +319,6 @@ function radiansToAngle(radians) {
   } else if (angleMode == GRAD) {
     return 200 * radians / Math.PI;
   }
-  return angle;
+  return radians;
 }
+

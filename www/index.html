@@ -443,18 +443,37 @@ Line
 15+A->A
 A<=0=>Goto 1
        </textarea>
-
+        <textarea style="display: none" id="srcCode9">
+#
+# POLYGONE REGULIER
+#
+Deg
+Mcl
+Range 1,127,0,1,63,0
+" POLYGON "
+"NB COTE "?->N
+360/N->A
+Plot 94,32
+0->K
+Lbl 1
+K+A->K
+Rec(30,K)
+Plot I+64,J+32
+Line
+K<360=>Goto 1
+       </textarea>
 
         <button onclick="loadProg(0);">Hello World !</button>  
         <button onclick="loadProg(1);">5,4,3,...</button>  
         <button onclick="loadProg(2);">Screen saver</button>  
         <button onclick="loadProg(3);">Random dots</button>  
+        <button onclick="loadProg(5);">Random num</button>
         <br>
         <button onclick="loadProg(4);">Maze generator</button>
-        <button onclick="loadProg(5);">Random num</button>
         <button onclick="loadProg(6);">IMC</button>
         <button onclick="loadProg(7);">Calendrier</button>
-        <button onclick="loadProg(8);">City</button>  <br><br>
+        <button onclick="loadProg(8);">City</button>  
+        <button onclick="loadProg(9);">Polygon</button>  <br><br>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>  <br><br>
       </div>

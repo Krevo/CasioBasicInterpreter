@@ -319,6 +319,131 @@ Plot A,Y:Line
 Lbl 0
 A+4->A
        </textarea>
+        <textarea style="display: none" id="srcCode8">
+# 
+# CITY 
+# 1 ou 2 Joueurs
+# 
+# VOUS ETES LE PERSONNAGE DE GAUCHE SUR L' ECRAN GRAPHIQUE. VOTRE BUT : TUER
+# AVEC UN TIR DE MORTIER BIEN PLACE VOTRE ENNEMIE DE TOUJOURS 
+# POUR CELA, VOUS DEVEZ INDIQUEZ L'ANGLE (EN DEGRE), PUIS LA FORCE DE TIR (ENTRE 50 ET 100 ENVIRON).
+# --------------------
+
+Prog 1
+
+@@ Prog 1 ( ) 
+
+Range 4,645,0,400,4,0
+Deg
+Mcl
+10->D
+Lbl 0
+Int(Ran#*230)+170->E[D]
+Dsz D
+Goto 0
+Prog 9
+2->S:101->T:Prog 8
+9->S:548->T:Prog 8
+0->R
+Lbl 5
+"JOUEURS 1 2 "?->E
+E<>1=>E<>2=>Goto 5
+1->P
+Plot X,Y
+Lbl 1
+P=1=>0.15->Q
+P=2=>-0.15->Q
+Plot X,Y:Line
+Isz Z
+"ANGLE "?->U
+P=2=>-U->U
+"FORCE "?->V
+V*cos U->S
+V*sin U->T
+0->C
+Lbl 2
+C+Q->C
+S*C+.5*R*C*C->A
+P=1=>101+A->A
+P=2=>548+A->A
+E[7*P-5]+(.5*9.81*C*C)-50-T*C->B
+Plot A,B
+Int ((A-5)/64)+1->D
+P=1=>A>533=>A<563=>B<E[D]=>B>E[D]-58=>Goto 4
+P=2=>A>90=>A<111=>B<E[D]=>B>E[D]-58=>Goto 4
+B<E[D]=>D>0=>D<11=>Goto 2
+E=2=>3-P->P
+Goto 1
+Lbl 4
+9->S:548->T
+P=2=>2->S
+P=2=>101->T
+Prog Y
+Plot X,Y:Line
+"GAGNE"
+E=1=>"PTS"
+E=2=>"GAGNANT:"
+E=1=>240-40*Z
+E=2=>P
+""
+
+@@ Prog 8 ( ) 
+
+16->D
+Plot T-D,E[S]
+Plot T,E[S]-25
+Line
+Plot T+D,E[S]
+Line
+Plot T-D,E[S]-32
+Plot T+D,E[S]-32
+Line
+Plot T,E[S]-45
+Plot T,E[S]-25
+Line
+Plot T,E[S]-45
+Plot T-(D/3),Y
+Line
+Plot X,E[S]-58
+Line
+Plot T+(D/3),Y
+Line
+Plot X,E[S]-45
+Line
+Plot T,E[S]-45
+Line
+
+@@ Prog 9 ( ) 
+
+Cls
+0->D
+Lbl 1
+Isz D
+64*(D-1)+5->W
+Plot W,400
+Plot W,E[D]
+Line
+Plot W+64,E[D]
+Line
+Plot W+64,400
+Line
+D<10=>Goto 1
+
+@@ Prog Y ( )
+
+Deg
+-180->A
+Lbl 1
+Rec(45,A)
+I+T->X
+J+E[S]->Y
+Plot X,Y
+Plot T,E[S]
+Line
+15+A->A
+A<=0=>Goto 1
+       </textarea>
+
 
         <button onclick="loadProg(0);">Hello World !</button>  
         <button onclick="loadProg(1);">5,4,3,...</button>  
@@ -328,7 +453,8 @@ A+4->A
         <button onclick="loadProg(4);">Maze generator</button>
         <button onclick="loadProg(5);">Random num</button>
         <button onclick="loadProg(6);">IMC</button>
-        <button onclick="loadProg(7);">Calendrier</button>  <br><br>
+        <button onclick="loadProg(7);">Calendrier</button>
+        <button onclick="loadProg(8);">City</button>  <br><br>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>  <br><br>
       </div>

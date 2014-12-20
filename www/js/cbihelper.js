@@ -118,7 +118,7 @@ function clignoteCurseur() {
   var charH = 8;
   var y = (cursorLine-1) * charH + 1;
   var x = (cursorCol-1) * charW + 1;
-  ctx.drawImage(imageObj, cursorMode.charCodeAt(0)*6, 0, charW, charH, x, y, charW, charH);
+  ctx1.drawImage(imageObj, cursorMode.charCodeAt(0)*6, 0, charW, charH, x, y, charW, charH);
   if (cursorMode == "_") {
     cursorMode = " ";
   } else {
@@ -138,6 +138,14 @@ function calcHandleOnKeyPress(e) {
         cursorCol+=1;
       }
     }
+  }
+}
+
+function swap() {
+  if (ctx == ctx2) {
+    swapToTextScreen();
+  } else {
+    swapToGraphicScreen();
   }
 }
 

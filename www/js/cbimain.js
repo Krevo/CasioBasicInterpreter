@@ -170,15 +170,35 @@ function execute( node )
             nextLine++; // Isz and Dsz have a special meaning when value reach 0, next line/instruction is ignored
           }
           break;
-				case OP_ASSIGN:
-          if (node.children[0].type == NODE_VAR) {
-            varTabIndex = letterToIndexSupp(node.children[0].value)+1;
-					  letvar( "A_"+varTabIndex, execute( node.children[1] ) );
+        case OP_ASSIGN:
+				console.log(node.children);
+				console.log(node.children[2]);
+          if (node.children[1].type == NODE_VAR) {
+            varTabIndexBegin = letterToIndexSupp(node.children[1].value)+1;
           } else {
-            child0 = node.children[0];
-            varTabIndex = letterToIndexSupp(child0.children[0])+execute(child0.children[1]);
-            letvar("A_"+varTabIndex, execute( node.children[1] ) );
+            child0 = node.children[1];
+            varTabIndexBegin = letterToIndexSupp(child0.children[0])+execute(child0.children[1]);
           }
+          
+          if (node.children[2]!==undefined) {
+			  if (node.children[2].type == NODE_VAR) {
+				varTabIndexEnd = letterToIndexSupp(node.children[2].value)+1;
+			  } else {
+				child0 = node.children[2];
+				varTabIndexEnd = letterToIndexSupp(child0.children[0])+execute(child0.children[1]);
+			  }
+		  } else {
+			  varTabIndexEnd = varTabIndexBegin;
+		  }
+		  console.log("begin ="+varTabIndexBegin);
+		  console.log("end ="+varTabIndexEnd);
+		  if (varTabIndexBegin <= varTabIndexEnd) {
+			for (i = varTabIndexBegin; i <= varTabIndexEnd; i++ ) {
+				letvar( "A_"+i, execute( node.children[0] ) );
+			}
+		  } else {
+			  // Throw syntax error !
+		  }
 					break;
 				case OP_READVAR: // Read a Casio array var like A[Expr]
           varTabIndex = letterToIndexSupp(node.children[0])+execute(node.children[1]);

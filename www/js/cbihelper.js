@@ -250,7 +250,7 @@ function drawTextGfx(y,x,str) {
     var charH = 8;
     swapToGraphicScreen();
     for (var i=0; i<str.length; i++) {
-        ctx.drawImage(casioFontGfx, str.charCodeAt(i) * charW, 0, charW, charH, xtoR(x), ytoR(y), charW, charH);
+        ctx.drawImage(casioFontGfx, str.charCodeAt(i) * charW, 0, charW, charH, x, y, charW, charH);
         x += parseInt(gfxFontSize[str.charCodeAt(i)]); // add witdh of char which has just been drawn (variable font width)
     }
 }

@@ -39,25 +39,27 @@ function calcHandleOnKeyDown(e) {
       doPrevent = true;
     }
   }
-  if (doPrevent) {
-    event.preventDefault();
-  }
 
   if ((e.keyCode==8 || e.keyCode==46) && editMode && currentLineBuffer.length>0) {
     currentLineBuffer = currentLineBuffer.substring(0,currentLineBuffer.length-1);
     cursorMode = " "; clignoteCurseur(); // Clear old position
     drawTextLine(textScreenLines.length,currentLineBuffer+" ");
-    //if (cursorCol>1) { cursorCol--; } 
     cursorCol--;
     cursorMode = "_"; clignoteCurseur(); // Cursor at new pos
   }
   
   if (e.keyCode==13 && editMode) { // 13 is "ENTER / CARRIAGE RETURN"
+    doPrevent = true;
+      
     editModeOff();
 
     /* Un-pause programe execution */
     paused = false;
     idTimerMain = setTimeout('executeNextLine()',10); 
+  }
+
+  if (doPrevent) {
+    event.preventDefault();
   }
 
 }

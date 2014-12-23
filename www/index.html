@@ -10,38 +10,14 @@
         Web Interface for interacting with the <br>
         <i><script type="text/javascript">document.write(cbiGetVersion(true));</script></i><br>
         by <b>Krevo_ </b><br><br>
-        <img id="casioFont" style="display: none" src="data:image/gif;base64,
-R0lGODlhAAYIAKEBAAQEBP///////////yH5BAEKAAIALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz
-1Y7DDXbhJ5bkWZkpegXu6zKvNBuwDN95stf5DwwKd7zYjTfxJRUxS2NWHOqCuCbOYbVekUWPDHvN
-QmnGqq2s5HbV2++mFo7D4U4s0H6mmqdSo3Dv1yOY19RneIiYqAjlw/Q3suIm2SaGMcK4iLiHV0Xz
-pRVpqdIC1kj1AHpX18biJdoKaej6RLo2Cch3hGezlKkZ6xq8SjeWKjx6DIvsRLTsrAwdmiwNXP1M
-ff2KHa2aPa2dR8Y7h1Y+bi6eHr4uh85Ofh6v3i7/7k4/D49LmF8sZwZwUKCBvuo5WmcKyQ9c/c5E
-iULoTqOGFB0SDOiOoMX+jYwg6LNXL0wgfCDVTel0ytzCIftWngLUMmWugjRj0pR58c/HOJ8U+iTz
-sNMnnDIxzgyIshxJnkxE9vTzgaUShIOAjixJVeo9UzozWh24KatElxFN3uyzdKdapYWmYk27NW7I
-tXPlVoRbN+9dunvtvuX79+pVvH31BjZM+HDhxYobJ378ESfQOmPFla1ssCZUkVV1TNIINXLQXL2G
-jutAd7DAy4JPivXkiDE9PonztgZtep/QnpQKSSKNeg0Rt+Gs2tIyhjdyWo+flmFmFKxfpryUY6pw
-JHv1sC1Yvzrag/M/j57IE78MW/hUpgqTq57uHDHXoghLbRb6HiVMOrD+b9v5X1xvkE1HjmnFOAbY
-gIado6BsCT5IYITySehgRp01iCCFGU7IYYUdbughY0SFp510WlXFBkzMkNVfRKwZ+NxDuriHliau
-lWdCTjF+tl133Mno2Wkh2bddb63lY5aOGnGnmU+CeHTfYLmxyM8c2H140H7vZdaFiQfpgYZsl3z5
-ExvLZUkZZ6SN5d1CSVXXFDEGlYLac2yJ4ZRRQ2HYlkW1uTmlmhOBVpdTbCKVBllbRodhbV1ipmGj
-EFIlaaSThghippUi9oalnn64KaahanopqRYq2gxEBra42khA9imLdoLu1wuXg56EX0IrvpnCYVsq
-aZahmeXXUJjx0Db+6D9+rjmTkot0eiw70OkSLIt6CnnPf0RWQilbSZK52rUc3WXdlW2ZSyZATE7m
-DZ2tdtVjekIKG1pgatJrYqCAXaTvqS5iRSUtzPFXpHhcVXugwNoKWOqfUjwKasOlMijxp6JWHLHF
-pv47ascYX6yxxyF/LJaNDN9JlLLOunnwrV4mRdKRtEX3b7MtRwjjtQbXu+eFqW3Us8yhuRGn0DZX
-mcmmNiM8LtLz/uzaoQw615+qzdKsW4Llxlb0aJh8LZ1NAuUa7YlIwjnnnXDde147/S5o9aKvSS3o
-bfBaxq/LyHoJHrJvg1zzwySLnHHhgB++MeKjykz4PNZw803kj2/ZQzk4kreLOTcjBnl00fS9O99w
-jwi4ip7H6brFiZ0zOfCOBy4MJbX1qSdtnXO2l51JnMzoMtNJ7MI7oBC5B50tv6EumLZRu6s77i7t
-ZnpWX0WVHNmpjw45b6fDjm5Qw28GDpsJJXK55vZByUXCHFTfZ/mTpZsNt+zXmgpa0M7MiopgnC6w
-q6RnXjn6yWJyliOg+7qRPQAWUIEHbKABH6hA4QUQgiw4iwUviMEManCDHOygBz8IwhCKcIQkLKEJ
-T4jCFKpwhSxsoQtfCMMYynCGNKyhDW+IQxMWAAA7" />
+
         <canvas id="canvas1" width="508" height="252"></canvas>
         <canvas id="canvas2" width="508" height="252"></canvas>
        <br>
 	     <button onclick="swap();">G <-> T</button>         
        <br><br>
         <textarea id="srcCode" cols="80" rows="15">
-        </textarea> <br>
- (list of <a href="availablefunctions.html">currently implemented functions</a>)<br><br>
+        </textarea>
         <textarea style="display: none" id="srcCode0">
 ""
 ""
@@ -133,11 +109,7 @@ Plot 76,8*E-1:Line
 Dsz E
 Goto 4
 7->E:0->C
-Lbl 3
-Isz C
-C+.15->D:Prog F
 Prog 7
-C<7=>Goto 3
 "CALENDRIER UNIVERSEL"
 Lbl 1
 "ANNEE "?->Y
@@ -174,151 +146,22 @@ N<=J=>Goto 5
 
 @@ Prog 7 ( )
 
-C=1=>Goto 1
-C=2=>Goto 2
-C=3=>Goto 2
-C=4=>Goto 4
-C=5=>Goto 5
-C=6=>Goto 6
-C=7=>Goto 7
-Goto 0
-Lbl 1
-Plot A,B
-Plot A,B-4:Line
-Plot A+2,B-4:Line
-Goto 0
-Lbl 2
-Plot A,B-4
-Plot A,B:Line
-Plot A+1,B-2:Line
-Plot A+2,B:Line
-Plot A+2,B-4:Line
-Goto 0
-Lbl 4
-Plot A,B
-Plot A+2,B:Line
-Plot A+1,B
-Plot A+1,B-4:Line
-Plot A,B-3:Line
-Goto 0
-Lbl 5
-Plot A,B
-Plot A+1,B-4:Line
-Plot A+2,B:Line
-Goto 0
-Lbl 6
-Plot A+2,B
-Plot A,B-1:Line
-Plot A+2,B-3:Line
-Plot A,B-4:Line
-Goto 0
-Lbl 7
-Plot A,B
-Plot A,B-4:Line
-Plot A+1,B-4:Line
-Plot A+2,B-3:Line
-Plot A+2,B-1:Line
-Plot A+1,B:line
-Plot A,B:Line
-Lbl 0
-A+4->A
+Text 61,10,"L"
+Text 61,18,"M"
+Text 61,28,"M"
+Text 61,39,"J"
+Text 61,49,"V"
+Text 61,59,"S"
+Text 61,69,"D"
 
 @@ Prog F ( )
 
-# commun avec demineur
-
-(D-1)*10+8->A
+(D-1)*10+8-1->A
 E*8+5->B
 
 @@ Prog G ( )
 
-# commun avec demineur
-
-C=1=>Goto 1
-C=2=>Goto 2
-C=3=>Goto 3
-C=4=>Goto 4
-C=5=>Goto 5
-C=6=>Goto 6
-C=7=>Goto 7
-C=8=>Goto 8
-C=9=>Goto 9
-Plot A,B
-Plot A+2,B:Line
-Plot X,B-4:Line
-Plot A,Y:Line
-Plot A,B:Line
-Goto 0
-Lbl 1
-Plot A,B-1
-Plot A+1,B
-Plot X,B-4
-Line
-Goto 0
-Lbl 2
-Plot A,B
-Plot A+2,B:Line
-Plot X,B-2:Line
-Plot A,Y:Line
-Plot A,B-4:Line
-Plot A+2,Y:Line
-Goto 0
-Lbl 3
-Plot A,B
-Plot A+2,B:Line
-Plot X,B-4:Line
-Plot A,Y:Line
-Plot A,B-2
-Plot A+1,Y:Line
-Goto 0		
-Lbl 4
-Plot A,B
-Plot A,B-2:Line
-Plot A+2,Y:Line
-Plot X,B:Line
-Plot X,B-4:Line
-Goto 0
-Lbl 5
-Plot A+2,B
-Plot A,B:Line
-Plot A,B-2:Line
-Plot A+2,Y:Line
-Plot X,B-4:Line
-Plot A,Y:Line
-Goto 0
-Lbl 6
-Plot A+2,B
-Plot A,B:Line
-Plot A,B-4:Line
-Plot A+2,Y:Line
-Plot X,B-2:Line
-Plot A+1,Y
-Goto 0
-Lbl 7
-Plot A,B-1
-Plot A,B
-Plot A+2,B:Line
-Plot X,B-2:Line
-Plot A+1,B-3
-Plot X,B-4
-Goto 0
-Lbl 8
-Plot A,B
-Plot A+2,B:Line
-Plot X,B-4:Line
-Plot A,Y:Line
-Plot A,B:Line
-Plot A+1,B-2:Line
-Plot A+1,B-2
-Goto 0
-Lbl 9
-Plot A+1,B-2
-Plot A,Y
-Plot A,B:Line
-Plot A+2,B:Line
-Plot X,B-4:Line
-Plot A,Y:Line
-Lbl 0
+Text B,A,C
 A+4->A
        </textarea>
         <textarea style="display: none" id="srcCode8">
@@ -464,7 +307,13 @@ Plot I+64,J+32
 Line
 K<360=>Goto 1
        </textarea>
-
+        <br>
+        <button onclick="executeCode();">Execute !</button>
+        <button onclick="stopCodeExecution()">STOP !</button>
+        <br>
+        <br>
+ List of <a href="availablefunctions.html">currently implemented functions</a><br><br>
+ Sample programs :<br><br>
         <button onclick="loadProg(0);">Hello World !</button>  
         <button onclick="loadProg(1);">5,4,3,...</button>  
         <button onclick="loadProg(2);">Screen saver</button>  
@@ -476,8 +325,6 @@ K<360=>Goto 1
         <button onclick="loadProg(7);">Calendrier</button>
         <button onclick="loadProg(8);">City</button>  
         <button onclick="loadProg(9);">Polygon</button>  <br><br>
-        <button onclick="executeCode();">Execute !</button>
-        <button onclick="stopCodeExecution()">STOP !</button>  <br><br>
       </div>
     </div>
     <script type="text/javascript">

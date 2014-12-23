@@ -59,6 +59,7 @@ var OP_SIN = 44;
 var OP_TAN = 45;
 var OP_REC = 46;
 var OP_POL = 47;
+var OP_TEXT = 48;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -289,12 +290,20 @@ function execute(node) {
                     print( node.children[0] );
                     break;
                 case OP_LOCATE: // Efface l'écran texte puis affiche le texte demandé à la position demandée
-                  if (typeof node.children[2].type != 'undefined') {
-                    str = ""+execute(node.children[2]); // 3rd arg is an expression to evaluate
-                  } else {
-                    str = node.children[2]; // 3rd arg is a string
-                  }
-                  locate(execute(node.children[0]),execute(node.children[1]),str);
+                    if (typeof node.children[2].type != 'undefined') {
+                      str = ""+execute(node.children[2]); // 3rd arg is an expression to evaluate
+                    } else {
+                      str = node.children[2]; // 3rd arg is a string
+                    }
+                    locate(execute(node.children[0]),execute(node.children[1]),str);
+                    break;
+                case OP_TEXT: // Efface l'écran texte puis affiche le texte demandé à la position demandée
+                    if (typeof node.children[2].type != 'undefined') {
+                        str = ""+execute(node.children[2]); // 3rd arg is an expression to evaluate
+                    } else {
+                        str = node.children[2]; // 3rd arg is a string
+                    }
+                    drawTextGfx(execute(node.children[0]),execute(node.children[1]),str);
                   break;
                 case OP_INPUT:
                     paused = true; // pause program execution

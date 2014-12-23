@@ -33,6 +33,7 @@
   "FRAC"
   "INTG"
   "LOCATE"
+  "TEXT"
   "COS"
   "SIN"
   "TAN"
@@ -111,6 +112,8 @@ Stmt:		IF Expression Stmt 		[* %% = createNode( NODE_OP, OP_IF, %2, %3 ); *]
 		| RANGE Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
         | LOCATE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
         | LOCATE Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
+        | TEXT Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_TEXT, %2, %4, %6); *]
+        | TEXT Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_TEXT, %2, %4, %6); *]
 		| RETURN ':' [* %% = createNode( NODE_OP, OP_RETURN ); *]
 		| DEG ':' [* %% = createNode( NODE_OP, OP_DEG ); *]
 		| RAD ':' [* %% = createNode( NODE_OP, OP_RAD ); *]

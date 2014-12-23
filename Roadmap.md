@@ -4,6 +4,7 @@
 - ~~Pol() / Rec()~~ 2014-12-16
 - ~~ajout affectation à un ensemble de variable genre 1→A~Z~~  2014-12-22
 - ~~gestion commentaire 1 line : 'commentaire~~  2014-12-22
+- ~~ajout Text x,y,"..."~~ 2014-12-23
 - ajout pause affichage : ◢ , [EXE] pour continuer
 - ajout déplacement curseur (j'ai de vieux programme comme "Démineur" basé sur un Plot x,y◢ ) , valid et recup coordonnées
 - multiplication sans opérateur '*'
@@ -12,5 +13,4 @@
 - ajout Do/LpWhile
 - ajout If/Then/Else/IfEnd 
 - ajout And/Or/not
-- ajout Text x,y,"..."
 - autres fonctions trigo

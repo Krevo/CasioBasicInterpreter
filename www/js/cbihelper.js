@@ -1,4 +1,4 @@
-var CBI_VERSION = "Casio Basic Interpreter 0.5";
+var CBI_VERSION = "Casio Basic Interpreter 0.6";
 var CBI_BUILD_DATE = "2014-12-23";
 
 var TEXT_SCREEN_WIDTH = 21;
@@ -9,6 +9,14 @@ var RAD = 2;
 var GRAD = 3;
 
 var angleMode = DEG;
+
+var casioFont = new Image();
+casioFont.src = "data:image/gif;base64,R0lGODlhAAYIAKEBAAQEBP///////////yH5BAEKAAIALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXu6zKvNBuwDN95stf5DwwKd7zYjTfxJRUxS2NWHOqCuCbOYbVekUWPDHvNQmnGqq2s5HbV2++mFo7D4U4s0H6mmqdSo3Dv1yOY19RneIiYqAjlw/Q3suIm2SaGMcK4iLiHV0XzpRVpqdIC1kj1AHpX18biJdoKaej6RLo2Cch3hGezlKkZ6xq8SjeWKjx6DIvsRLTsrAwdmiwNXP1Mff2KHa2aPa2dR8Y7h1Y+bi6eHr4uh85Ofh6v3i7/7k4/D49LmF8sZwZwUKCBvuo5WmcKyQ9c/c5EiULoTqOGFB0SDOiOoMX+jYwg6LNXL0wgfCDVTel0ytzCIftWngLUMmWugjRj0pR58c/HOJ8U+iTzsNMnnDIxzgyIshxJnkxE9vTzgaUShIOAjixJVeo9UzozWh24KatElxFN3uyzdKdapYWmYk27NW7ItXPlVoRbN+9dunvtvuX79+pVvH31BjZM+HDhxYobJ378ESfQOmPFla1ssCZUkVV1TNIINXLQXL2GjutAd7DAy4JPivXkiDE9PonztgZtep/QnpQKSSKNeg0Rt+Gs2tIyhjdyWo+flmFmFKxfpryUY6pwJHv1sC1Yvzrag/M/j57IE78MW/hUpgqTq57uHDHXoghLbRb6HiVMOrD+b9v5X1xvkE1HjmnFOAbYgIado6BsCT5IYITySehgRp01iCCFGU7IYYUdbughY0SFp510WlXFBkzMkNVfRKwZ+NxDuriHliaulWdCTjF+tl133Mno2Wkh2bddb63lY5aOGnGnmU+CeHTfYLmxyM8c2H140H7vZdaFiQfpgYZsl3z5ExvLZUkZZ6SN5d1CSVXXFDEGlYLac2yJ4ZRRQ2HYlkW1uTmlmhOBVpdTbCKVBllbRodhbV1ipmGjEFIlaaSThghippUi9oalnn64KaahanopqRYq2gxEBra42khA9imLdoLu1wuXg56EX0IrvpnCYVsqaZahmeXXUJjx0Db+6D9+rjmTkot0eiw70OkSLIt6CnnPf0RWQilbSZK52rUc3WXdlW2ZSyZATE7mDZ2tdtVjekIKG1pgatJrYqCAXaTvqS5iRSUtzPFXpHhcVXugwNoKWOqfUjwKasOlMijxp6JWHLHFpv47ascYX6yxxyF/LJaNDN9JlLLOunnwrV4mRdKRtEX3b7MtRwjjtQbXu+eFqW3Us8yhuRGn0DZXmcmmNiM8LtLz/uzaoQw615+qzdKsW4Llxlb0aJh8LZ1NAuUa7YlIwjnnnXDde147/S5o9aKvSS3obfBaxq/LyHoJHrJvg1zzwySLnHHhgB++MeKjykz4PNZw803kj2/ZQzk4kreLOTcjBnl00fS9O99wjwi4ip7H6brFiZ0zOfCOBy4MJbX1qSdtnXO2l51JnMzoMtNJ7MI7oBC5B50tv6EumLZRu6s77i7tZnpWX0WVHNmpjw45b6fDjm5Qw28GDpsJJXK55vZByUXCHFTfZ/mTpZsNt+zXmgpa0M7MiopgnC6wq6RnXjn6yWJyliOg+7qRPQAWUIEHbKABH6hA4QUQgiw4iwUviMEManCDHOygBz8IwhCKcIQkLKEJT4jCFKpwhSxsoQtfCMMYynCGNKyhDW+IQxMWAAA7";
+
+var casioFontGfx = new Image();
+casioFontGfx.src = "data:image/gif;base64,R0lGODlhAAYIAIABAAQEBP///yH5BAEKAAEALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXuy7yuBBtyLN95stf5DwwKb7wZEecwIovJBoxZHPaCuBkUSdwtj88q02atgsExMRY7VmjL5uW5hrbRlN06NSr+4XXSdN4bNxSo1ldoSGh0qCj1ZSU4ssIm6RbWxWLhuKj4twdHFnYJiYGZNKj3AJrXchWqMurqoaon6rR6lcoINKGzq7kY+9rKglhhB3wsigxLuyYcGfys7AxNLR2djL2sPT27fe2N4Uk3LideTj53rp7OPtb+hu4uD78+b/5+bx9/2kPv9GZmio+BiXzxcvdHYDs++fzhCShoID56AQdBNJem4ML+J2p40KDoyZQXffb8yWPIMJ0ufhkRafRzsKDMlQI7kvPTBk6ZNQ0l1qOEMqMsku92eiRUjE0Wji0JUnGaMKhKeCDPJPVhNNGHiFpPKvxENGyfqk6f7psTKKGpmj5jNjXI9WfPeFQzdQ1Llu5cuXr78v2Lz29gwHj3Dj5cWHBir3kJN0b8eDFkw5IrR75MGfPMzWhJ0ZzKtuvGbmNvAgJaK3UTjbeY2sW5eiedEq6FIkTNrlPKkQc/ltsS0qXtzGChBm051KzdJm1wP6ytHHRwCIqBGycu2zTLmbwnKzEKfmmx2kdXa8U0PJjUfm1/U//4Hut631D4FEV6JLt3OVn+q5elWU8taMSmX3HqpPQPY1xUgk5rmjkmTnbGEOdfhYSd8+B+GlpGIYQWbpihVwiGSGKHIJrI4Ycpesjihr5Mxdtmod2Gi0EOHZfeSzEe+BaApclHXz5uXeQXTCCN6MhoYKkEE3YH7tgUkb+IJeRxR95DZJCfWLecjyOR5RtBnDCSFYgjvFZeKWrWV6OSMqlikRC6JXVfgKUk+N04QA14kWwhdtniHQWuNeBTdd311ZCvcVflmyhGRoxZJar4p4KTBnrpiZQ+yildG3SKKaiahrppqaSe6uKM+UH05Vtw2vFmctsx11pqrKEGG6wu6daCo9+FKRybDCJHEa9+NmL+p5VaBrsgo/3FiitPgj4C3XPkLbUPSrkBVByUL2ErEa8YimhrjicN2lB4/Im3KyBasNQZOJ5JGVcKv927UHc6RiimfNoimmpOleF4JYKqHfUrf8y1l+1psNK6p6hUkulTpisiNq6po258cccWWwyvxxJ/PHLJGot88lqFbLtvj+kBSy+2ssJF81hSyjrUzDXvzHPPPv8MdNBCD0100ebmnJm6413VLrjMYrSytibVW9K6yWacV1r+toyuYk8P/F/BDMsJtVBxvPqtjDfzm3Kjh5Dcdtyoojw33HVLnDbHl2UzjTXV8P1N34D/Le/gfvcyZcxJUq2qjE4bDTnaPkKCC3nlll+Oeeaab145slF0I/ive7IyHprmYRW4LFE5Lqjg4Ai4OFLO0damG65T19Fp3JSLC+KW6JwBgBB/XvvsCjloePKnr6z87akTTjz0zx/e/PTVS4899YUvr73zvXIOfvjij09++eafj3766q/Pfvvuvw9//PLPT3/99t+P//wFAAA7";
+
+var gfxFontSize = "4444444444444444444444444444444442444444444444444444444444444444444444444445466446444446444444444444444442444654445444464444444";
 
 function cbiGetVersion(withBuildDate) {
   toReturn = CBI_VERSION;
@@ -120,7 +128,7 @@ function clignoteCurseur() {
   var charH = 8;
   var y = (cursorLine-1) * charH + 1;
   var x = (cursorCol-1) * charW + 1;
-  ctx1.drawImage(imageObj, cursorMode.charCodeAt(0)*6, 0, charW, charH, x, y, charW, charH);
+  ctx1.drawImage(casioFont, cursorMode.charCodeAt(0)*6, 0, charW, charH, x, y, charW, charH);
   if (cursorMode == "_") {
     cursorMode = " ";
   } else {
@@ -226,7 +234,6 @@ function cleartext() {
 }
 
 function drawTextLine(lineNb,str) {
-  imageObj = document.getElementById('casioFont');
   var charW = 6;
   var charH = 8;
   var y = (lineNb-1) * charH + 1;
@@ -234,8 +241,18 @@ function drawTextLine(lineNb,str) {
   str = str.substring(0,21); // 21 first char
   for (var i=0; i<str.length; i++) {
     x = i * 6 + 1;
-    ctx.drawImage(imageObj, str.charCodeAt(i)*6, 0, charW, charH, x, y, charW, charH);
+    ctx.drawImage(casioFont, str.charCodeAt(i)*6, 0, charW, charH, x, y, charW, charH);
   }
+}
+
+function drawTextGfx(y,x,str) {
+    var charW = 6;
+    var charH = 8;
+    swapToGraphicScreen();
+    for (var i=0; i<str.length; i++) {
+        ctx.drawImage(casioFontGfx, str.charCodeAt(i) * charW, 0, charW, charH, xtoR(x), ytoR(y), charW, charH);
+        x += parseInt(gfxFontSize[str.charCodeAt(i)]); // add witdh of char which has just been drawn (variable font width)
+    }
 }
 
 var plots = Array();

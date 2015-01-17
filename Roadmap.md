@@ -5,7 +5,7 @@
 - ~~ajout affectation à un ensemble de variable genre 1→A~Z~~  2014-12-22
 - ~~gestion commentaire 1 line : 'commentaire~~  2014-12-22
 - ~~ajout Text x,y,"..."~~ 2014-12-23
-- ajout pause affichage : ◢ , [EXE] pour continuer
+- ~~ajout pause affichage : ◢ , [EXE] pour continuer~~ 2015-01-17
 - ajout déplacement curseur (j'ai de vieux programme comme "Démineur" basé sur un Plot x,y◢ ) , valid et recup coordonnées
 - multiplication sans opérateur '*'
 - ajout For/To/Step/Next

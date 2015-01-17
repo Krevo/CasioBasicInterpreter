@@ -60,6 +60,7 @@ var OP_TAN = 45;
 var OP_REC = 46;
 var OP_POL = 47;
 var OP_TEXT = 48;
+var OP_DISP = 49;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -318,6 +319,9 @@ function execute(node) {
                     debug("stock Var is "+stockVarName);
                     editModeOn();
                     break;
+                case OP_DISP:
+                    dispModeOn();
+                    break;
                 case OP_EQU:
                     ret = execute( node.children[0] ) == execute( node.children[1] );
                     break;
@@ -474,6 +478,7 @@ function parse(str, name) {
     var labels = new Array();
   
     str = str + ":"; // Add a final ":" 
+    str = str.replace(/(\u25E2:|_:)/g, ':_Disp_:'); // Replace "◢" or "_" by "_Disp_"
     str = str.replace(/(?:\r\n|\r|\n)/g, ':'); // Replace CR / LF with ":" (our instruction separator)
 
     var error_cnt     = 0;

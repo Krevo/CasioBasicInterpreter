@@ -1,5 +1,5 @@
 var CBI_VERSION = "Casio Basic Interpreter 0.6";
-var CBI_BUILD_DATE = "2014-12-23";
+var CBI_BUILD_DATE = "2015-01-17";
 
 var TEXT_SCREEN_WIDTH = 21;
 var TEXT_SCREEN_HEIGHT = 7;
@@ -58,12 +58,14 @@ function calcHandleOnKeyDown(e) {
   
   if (e.keyCode==13 && editMode) { // 13 is "ENTER / CARRIAGE RETURN"
     doPrevent = true;
-      
     editModeOff();
+    unpauseProgramExec();
+  }
 
-    /* Un-pause programe execution */
-    paused = false;
-    idTimerMain = setTimeout('executeNextLine()',10); 
+  if (e.keyCode==13 && dispMode) { // 13 is "ENTER / CARRIAGE RETURN"
+    doPrevent = true;
+    dispModeOff();
+    unpauseProgramExec();
   }
 
   if (doPrevent) {
@@ -72,6 +74,11 @@ function calcHandleOnKeyDown(e) {
 
 }
 
+function unpauseProgramExec() {
+  /* unpause program execution */
+  paused = false;
+  idTimerMain = setTimeout('executeNextLine()',10);
+}
 
 function reset() {
   editMode = false;
@@ -91,12 +98,28 @@ function reset() {
 }
 
 var editMode = false;
+var dispMode = false;
 var paused = false;
 var stockVarName = ""; // Destination of input
 var cursorMode = "_";
 var cursorCol = 1;
 var cursorLine = 1;
 var idTimerCursor;
+
+function dispModeOn() {
+  console.log("dispModeOn");
+  paused = true;
+  dispMode = true;
+  currentLineBuffer = "";
+  print("            __Disp__");
+}
+
+function dispModeOff() {
+  console.log("dispModeOff");
+  dispMode = false;
+  textScreenLines.pop();
+  redrawAllTextScreen();
+}
 
 function editModeOn() {
   console.log("editModeOn");

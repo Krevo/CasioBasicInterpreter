@@ -15,7 +15,8 @@
         <canvas id="canvas1" width="508" height="252"></canvas>
         <canvas id="canvas2" width="508" height="252"></canvas>
        <br>
-	     <button onclick="swap();">G <-> T</button>         
+	     <button onclick="swap();">G <-> T</button>
+	     <button style="display: none;" onclick="clignoteCurseurGraphOn();">Clignote</button>
        <br><br>
         <textarea id="srcCode" cols="80" rows="15">
         </textarea>
@@ -380,6 +381,9 @@ K<360=>Goto 1
       var zoomW = c.width  / casioScreenW;
       var zoomH = c.height / casioScreenH;
       console.log("zoomW = "+zoomW+" zoomH = "+zoomH);
+      var dx = -1;
+      var dy = -1;
+      console.log("dx = "+dx+" dy = "+dy);
 
       function prepareDisplay(ctx) {
         // No anti-aliasing
@@ -387,8 +391,12 @@ K<360=>Goto 1
         ctx.webkitImageSmoothingEnabled = false
         ctx.mozImageSmoothingEnabled = false
    
+        /*
         ctx.scale(zoomW,zoomH); // Apply zoom
-        ctx.translate(-1,-1); // Translate so coords starts from (1,1) and go to (127,63);
+        ctx.translate(dx,dy); // Translate so coords starts from (1,1) and go to (127,63);
+        */
+        gtm = { a: zoomW, b:0, c:0, d:zoomH, e:-1, f:-1 }; // Global transform matrix (Simulate an SVGMatrix)
+        ctx.transform(gtm.a, gtm.b, gtm.c, gtm.d, gtm.e, gtm.f); // Apply zoom && translate so coords starts from (1,1) and go to (127,63);
       }
 
       prepareDisplay(ctx1);

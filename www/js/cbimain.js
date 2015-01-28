@@ -357,7 +357,7 @@ function execute(node) {
                     ret = execute( node.children[0] ) * -1;
                     break;
                 case OP_PLOT:
-                    plot(execute( node.children[0] ), execute( node.children[1] ));
+                    plotOn(execute( node.children[0] ), execute( node.children[1] ));
                     break;
                 case OP_RANGE:
                     range(execute( node.children[0] ), execute( node.children[1] ), execute( node.children[2] ), execute( node.children[3] ), execute( node.children[4] ), execute( node.children[5] ));

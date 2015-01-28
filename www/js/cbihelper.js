@@ -146,6 +146,15 @@ function editModeOff() {
   cursorMode = " "; clignoteCurseur(); // Clear old position
 }
 
+function clignoteCurseurGraphOn() {
+  swapToGraphicScreen();
+  idTimerCursor = setInterval('clignoteCurseurGraph()',500);
+}
+  
+function clignoteCurseurGraph() {
+  plotChg(plots[0][0],plots[0][1]);
+}
+
 function clignoteCurseur() {
   var charW = 6;
   var charH = 8;
@@ -286,10 +295,36 @@ var ymin = 1;
 var ymax = 63;
 var yscl = 0;
 
-function setPixel(x,y) {
+function getPixelColor(x,y) {
+  console.log("getPixelColor "+x+" "+y);
+  var imgd = ctx.getImageData(x * gtm.a + gtm.e, y * gtm.d + gtm.f, 1, 1);
+  var pix = imgd.data;
+
+  if (pix[0] == 255 && pix[1] == 255 && pix[2] == 255) {
+    return "white";
+  }
+
+  if (pix[0] == 0 && pix[1] == 0 && pix[2] == 0) {
+    return "black";
+  }
+
+  return ""; // undefined
+}
+
+function setPixelOn(x,y) {
+  console.log("setPixelOn "+x+" "+y);
+  setPixel(x,y,"black"); 
+}
+  
+function setPixelOff(x,y) {
+  console.log("setPixelOff "+x+" "+y);  
+  setPixel(x,y,"white"); 
+}
+
+function setPixel(x,y,color) {
   x = Math.round(x);
   y = Math.round(y);
-  ctx.fillStyle = "black";
+  ctx.fillStyle = color;
   ctx.fillRect(x,y,1,1);
 }
 
@@ -299,13 +334,12 @@ function bline(x0, y0, x1, y1) {
   y0 = Math.round(y0);
   x1 = Math.round(x1);
   y1 = Math.round(y1);
-  ctx.fillStyle = "black";
   var dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
   var dy = Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1; 
   var err = (dx>dy ? dx : -dy)/2;
  
   while (true) {
-    setPixel(x0,y0);
+    setPixelOn(x0,y0);
     if (x0 === x1 && y0 === y1) break;
     var e2 = err;
     if (e2 > -dx) { err -= dy; x0 += sx; }
@@ -313,7 +347,25 @@ function bline(x0, y0, x1, y1) {
   }
 }
 
-function plot(x, y) {
+function plotChg(x, y) {
+  var color = getPixelColor(xtoR(x), ytoR(y));
+  console.log("plotChg color read = "+color);
+  if (color == "black") {
+    plotOff(x,y);
+  } else {
+    plotOn(x,y);
+  }
+}
+
+function plotOn(x, y) {
+  plot(x,y,true);
+}
+
+function plotOff(x, y) {
+  plot(x,y,false);
+}
+
+function plot(x, y, mode) {
   swapToGraphicScreen();
   plots.push([x,y]);
   if (plots.length>2) {
@@ -321,7 +373,11 @@ function plot(x, y) {
   }
   letvar("A_24", x);
   letvar("A_25", y);
-  setPixel(xtoR(x), ytoR(y));
+  if (mode) {
+    setPixelOn(xtoR(x), ytoR(y));
+  } else {
+    setPixelOff(xtoR(x), ytoR(y));
+  }
 }
 
 function range(xmin,xmax,xscl,ymin,ymax,yscl) {

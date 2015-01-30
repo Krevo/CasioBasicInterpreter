@@ -391,12 +391,13 @@ K<360=>Goto 1
         ctx.webkitImageSmoothingEnabled = false
         ctx.mozImageSmoothingEnabled = false
    
-        /*
-        ctx.scale(zoomW,zoomH); // Apply zoom
-        ctx.translate(dx,dy); // Translate so coords starts from (1,1) and go to (127,63);
-        */
-        gtm = { a: zoomW, b:0, c:0, d:zoomH, e:-1, f:-1 }; // Global transform matrix (Simulate an SVGMatrix)
-        ctx.transform(gtm.a, gtm.b, gtm.c, gtm.d, gtm.e, gtm.f); // Apply zoom && translate so coords starts from (1,1) and go to (127,63);
+        // We need to keep a var (called 'gtm') containing the current transformation applied to canvas (until ctx.currentTransform is fully supported)
+        // that's why we avoid using ctx.scale() or ctx.translate();
+        var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        gtm = svgElement.createSVGMatrix();
+        gtm = gtm.scaleNonUniform(zoomW,zoomH); // Apply zoom
+        gtm = gtm.translate(dx,dy); // Translate so coords starts from (1,1) and go to (127,63);
+        ctx.transform(gtm.a, gtm.b, gtm.c, gtm.d, gtm.e, gtm.f); // Apply transform to canvas
       }
 
       prepareDisplay(ctx1);

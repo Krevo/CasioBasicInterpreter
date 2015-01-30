@@ -19,6 +19,9 @@
   "GOTO"
   "PROG"
   "PLOT"
+  "PLOTON"
+  "PLOTOFF"
+  "PLOTCHG"
   "RANGE"
   "LINE"
   "RETURN"
@@ -106,6 +109,9 @@ Stmt:		IF Expression Stmt 		[* %% = createNode( NODE_OP, OP_IF, %2, %3 ); *]
 		| ISZ VariableCasio ':'[* %% = createNode( NODE_OP, OP_INCR, %2 ); *]
 		| DSZ VariableCasio ':'[* %% = createNode( NODE_OP, OP_DECR, %2 ); *]
 		| PLOT Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT, %2, %4 ); *]
+		| PLOTON Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT_ON, %2, %4 ); *]
+		| PLOTOFF Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT_OFF, %2, %4 ); *]
+		| PLOTCHG Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT_CHG, %2, %4 ); *]
 		| "REC\(" Expression ',' Expression '\)' ':' [* %% = createNode( NODE_OP, OP_REC, %2, %4 ); *]
 		| "POL\(" Expression ',' Expression '\)' ':' [* %% = createNode( NODE_OP, OP_POL, %2, %4 ); *]
 		| RANGE Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]

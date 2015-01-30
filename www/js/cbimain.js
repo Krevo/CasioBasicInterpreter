@@ -61,6 +61,9 @@ var OP_REC = 46;
 var OP_POL = 47;
 var OP_TEXT = 48;
 var OP_DISP = 49;
+var OP_PLOT_ON = 50;
+var OP_PLOT_OFF = 51;
+var OP_PLOT_CHG = 52;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -356,8 +359,15 @@ function execute(node) {
                     debug(node.children[0]);
                     ret = execute( node.children[0] ) * -1;
                     break;
+                case OP_PLOT_ON:
                 case OP_PLOT:
                     plotOn(execute( node.children[0] ), execute( node.children[1] ));
+                    break;
+                case OP_PLOT_OFF:
+                    plotOff(execute( node.children[0] ), execute( node.children[1] ));
+                    break;
+                case OP_PLOT_CHG:
+                    plotChg(execute( node.children[0] ), execute( node.children[1] ));
                     break;
                 case OP_RANGE:
                     range(execute( node.children[0] ), execute( node.children[1] ), execute( node.children[2] ), execute( node.children[3] ), execute( node.children[4] ), execute( node.children[5] ));

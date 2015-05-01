@@ -64,6 +64,10 @@ var OP_DISP = 49;
 var OP_PLOT_ON = 50;
 var OP_PLOT_OFF = 51;
 var OP_PLOT_CHG = 52;
+var OP_PXL_ON = 53;
+var OP_PXL_OFF = 54;
+var OP_PXL_CHG = 55;
+var OP_PXL_TEST = 56;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -368,6 +372,19 @@ function execute(node) {
                     break;
                 case OP_PLOT_CHG:
                     plotChg(execute( node.children[0] ), execute( node.children[1] ));
+                    break;
+                case OP_PXL_ON:
+                    pixelOn(execute( node.children[1] ), execute( node.children[0] ));
+                    break;
+                case OP_PXL_OFF:
+                    pixelOff(execute( node.children[1] ), execute( node.children[0] ));
+                    break;
+                case OP_PXL_CHG:
+                    pixelChg(execute( node.children[1] ), execute( node.children[0] ));
+                    break;
+                case OP_PXL_TEST:
+                    // nothing for now ...
+                    ret = pixelTest(execute( node.children[1] ), execute( node.children[0] ));
                     break;
                 case OP_RANGE:
                     range(execute( node.children[0] ), execute( node.children[1] ), execute( node.children[2] ), execute( node.children[3] ), execute( node.children[4] ), execute( node.children[5] ));

@@ -1,5 +1,5 @@
-var CBI_VERSION = "Casio Basic Interpreter 0.7";
-var CBI_BUILD_DATE = "2015-01-30";
+var CBI_VERSION = "Casio Basic Interpreter 0.8";
+var CBI_BUILD_DATE = "2015-05-01";
 
 var TEXT_SCREEN_WIDTH = 21;
 var TEXT_SCREEN_HEIGHT = 7;
@@ -312,12 +312,10 @@ function getPixelColor(x,y) {
 }
 
 function setPixelOn(x,y) {
-  console.log("setPixelOn "+x+" "+y);
   setPixel(x,y,"black"); 
 }
   
 function setPixelOff(x,y) {
-  console.log("setPixelOff "+x+" "+y);  
   setPixel(x,y,"white"); 
 }
 
@@ -349,7 +347,6 @@ function bline(x0, y0, x1, y1) {
 
 function plotChg(x, y) {
   var color = getPixelColor(xtoR(x), ytoR(y));
-  console.log("plotChg color read = "+color);
   if (color == "black") {
     plotOff(x,y);
   } else {
@@ -377,6 +374,47 @@ function plot(x, y, mode) {
     setPixelOn(xtoR(x), ytoR(y));
   } else {
     setPixelOff(xtoR(x), ytoR(y));
+  }
+}
+
+function pixelTest(x, y) {
+  var color = getPixelColor(x, y);
+  if (color == "black") {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+function pixelChg(x, y) {
+  var color = getPixelColor(x, y);
+  if (color == "black") {
+    pixelOff(x,y);
+  } else {
+    pixelOn(x,y);
+  }
+}
+
+function pixelOn(x, y) {
+  pixel(x,y,true);
+}
+
+function pixelOff(x, y) {
+  pixel(x,y,false);
+}
+
+function pixel(x, y, mode) {
+  swapToGraphicScreen();
+  plots.push([x,y]);
+  if (plots.length>2) {
+    plots.shift();
+  }
+  letvar("A_24", x);
+  letvar("A_25", y);
+  if (mode) {
+    setPixelOn(x, y);
+  } else {
+    setPixelOff(x, y);
   }
 }
 

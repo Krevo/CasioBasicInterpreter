@@ -1,0 +1,10 @@
+var CBI_VERSION = "xxx";
+var CBI_BUILD_DATE = "xxx";
+
+function cbiGetVersion(withBuildDate) {
+    toReturn = "Casio Basic Interpreter "+ CBI_VERSION;
+    if (withBuildDate) {
+      toReturn += ' (built: '+CBI_BUILD_DATE+')';
+    }
+    return toReturn;
+}

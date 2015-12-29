@@ -25,65 +25,69 @@ var currentLineBuffer = null;
 
 function calcHandleOnKeyDown(e) {
 
-  // Disable back button acting like history previous / back
-  var doPrevent = false;
-  if (event.keyCode === 8) {
-    var d = event.srcElement || event.target;
-    if ((d.tagName.toUpperCase() === 'INPUT' && (d.type.toUpperCase() === 'TEXT' || d.type.toUpperCase() === 'PASSWORD')) 
-         || d.tagName.toUpperCase() === 'TEXTAREA') {
-        doPrevent = d.readOnly || d.disabled;
-    } else {
-      doPrevent = true;
+    // Disable back button acting like history previous / back
+    var doPrevent = false;
+    if (event.keyCode === 8) {
+        var d = event.srcElement || event.target;
+        if ((d.tagName.toUpperCase() === 'INPUT' && (d.type.toUpperCase() === 'TEXT' || d.type.toUpperCase() === 'PASSWORD'))
+            || d.tagName.toUpperCase() === 'TEXTAREA') {
+            doPrevent = d.readOnly || d.disabled;
+        } else {
+            doPrevent = true;
+        }
     }
-  }
 
-  if ((e.keyCode==8 || e.keyCode==46) && editMode && currentLineBuffer.length>0) {
-    currentLineBuffer = currentLineBuffer.substring(0,currentLineBuffer.length-1);
-    cursorMode = " "; clignoteCurseur(); // Clear old position
-    drawTextLine(textScreenLines.length,currentLineBuffer+" ");
-    cursorCol--;
-    cursorMode = "_"; clignoteCurseur(); // Cursor at new pos
-  }
-  
-  if (e.keyCode==13 && editMode) { // 13 is "ENTER / CARRIAGE RETURN"
-    doPrevent = true;
-    editModeOff();
-    unpauseProgramExec();
-  }
+    if ((e.keyCode == 8 || e.keyCode == 46) && editMode && currentLineBuffer.length > 0) {
+        currentLineBuffer = currentLineBuffer.substring(0, currentLineBuffer.length - 1);
+        cursorMode = " ";
+        clignoteCurseur(); // Clear old position
+        drawTextLine(textScreenLines.length, currentLineBuffer + " ");
+        cursorCol--;
+        cursorMode = "_";
+        clignoteCurseur(); // Cursor at new pos
+    }
 
-  if (e.keyCode==13 && dispMode) { // 13 is "ENTER / CARRIAGE RETURN"
-    doPrevent = true;
-    dispModeOff();
-    unpauseProgramExec();
-  }
+    if (e.keyCode == 13 && editMode) { // 13 is "ENTER / CARRIAGE RETURN"
+        doPrevent = true;
+        editModeOff();
+        unpauseProgramExec();
+    }
 
-  if (doPrevent) {
-    event.preventDefault();
-  }
+    if (e.keyCode == 13 && dispMode) { // 13 is "ENTER / CARRIAGE RETURN"
+        doPrevent = true;
+        dispModeOff();
+        unpauseProgramExec();
+    }
+
+    if (doPrevent) {
+        event.preventDefault();
+    }
 
 }
 
 function unpauseProgramExec() {
-  /* unpause program execution */
-  paused = false;
-  idTimerMain = setTimeout('executeNextLine()',10);
+    /* unpause program execution */
+    paused = false;
+    idTimerMain = setTimeout('executeNextLine()', 10);
 }
 
 function reset() {
-  editMode = false;
-  paused = false;
-  stockVarName = ""; // Destination of input
-  cursorMode = "_";
-  cursorCol = 1;
-  cursorLine = 1;
-  currentLineBuffer = null;
-  currentPrgName = "main";
-  callStack = new Array();
-  nextLine = NaN; // index in the programLines array
-  textScreenLines = new Array();
-  angleMode = DEG;
-  clearInterval(idTimerMain); idTimerMain = 0;
-  clearInterval(idTimerCursor); idTimerCursor = 0;
+    editMode = false;
+    paused = false;
+    stockVarName = ""; // Destination of input
+    cursorMode = "_";
+    cursorCol = 1;
+    cursorLine = 1;
+    currentLineBuffer = null;
+    currentPrgName = "main";
+    callStack = new Array();
+    nextLine = NaN; // index in the programLines array
+    textScreenLines = new Array();
+    angleMode = DEG;
+    clearInterval(idTimerMain);
+    idTimerMain = 0;
+    clearInterval(idTimerCursor);
+    idTimerCursor = 0;
 }
 
 var editMode = false;
@@ -96,181 +100,182 @@ var cursorLine = 1;
 var idTimerCursor;
 
 function dispModeOn() {
-  console.log("dispModeOn");
-  paused = true;
-  dispMode = true;
-  currentLineBuffer = "";
-  print("            __Disp__");
+    console.log("dispModeOn");
+    paused = true;
+    dispMode = true;
+    currentLineBuffer = "";
+    print("            __Disp__");
 }
 
 function dispModeOff() {
-  console.log("dispModeOff");
-  dispMode = false;
-  textScreenLines.pop();
-  redrawAllTextScreen();
+    console.log("dispModeOff");
+    dispMode = false;
+    textScreenLines.pop();
+    redrawAllTextScreen();
 }
 
 function editModeOn() {
-  console.log("editModeOn");
-  editMode = true;
-  currentLineBuffer = "";
-  print("");
-  currentLineIndex = textScreenLines.length - 1;
-  cursorLine = textScreenLines.length;
-  cursorCol = 1;
-  idTimerCursor = setInterval('clignoteCurseur()',500);
+    console.log("editModeOn");
+    editMode = true;
+    currentLineBuffer = "";
+    print("");
+    currentLineIndex = textScreenLines.length - 1;
+    cursorLine = textScreenLines.length;
+    cursorCol = 1;
+    idTimerCursor = setInterval('clignoteCurseur()', 500);
 }
 
 function editModeOff() {
-  console.log("editModeOff");
-  editMode = false;
-  if (currentLineBuffer=="") { // If line is empty when exit edit mode, remove line from textscreenline
-    textScreenLines.pop();
-  } else {
+    console.log("editModeOff");
+    editMode = false;
+    if (currentLineBuffer == "") { // If line is empty when exit edit mode, remove line from textscreenline
+        textScreenLines.pop();
+    } else {
 
-  }
-  letvar(stockVarName, parseFloat(currentLineBuffer));
-  currentLineBuffer = null;
-  clearInterval(idTimerCursor);
-  cursorMode = " "; clignoteCurseur(); // Clear old position
+    }
+    letvar(stockVarName, parseFloat(currentLineBuffer));
+    currentLineBuffer = null;
+    clearInterval(idTimerCursor);
+    cursorMode = " ";
+    clignoteCurseur(); // Clear old position
 }
 
 function clignoteCurseurGraphOn() {
-  swapToGraphicScreen();
-  idTimerCursor = setInterval('clignoteCurseurGraph()',500);
+    swapToGraphicScreen();
+    idTimerCursor = setInterval('clignoteCurseurGraph()', 500);
 }
-  
+
 function clignoteCurseurGraph() {
-  plotChg(plots[0][0],plots[0][1]);
+    plotChg(plots[0][0], plots[0][1]);
 }
 
 function clignoteCurseur() {
-  var charW = 6;
-  var charH = 8;
-  var y = (cursorLine-1) * charH + 1;
-  var x = (cursorCol-1) * charW + 1;
-  ctx1.drawImage(casioFont, cursorMode.charCodeAt(0)*6, 0, charW, charH, x, y, charW, charH);
-  if (cursorMode == "_") {
-    cursorMode = " ";
-  } else {
-    cursorMode = "_";
-  }
+    var charW = 6;
+    var charH = 8;
+    var y = (cursorLine - 1) * charH + 1;
+    var x = (cursorCol - 1) * charW + 1;
+    ctx1.drawImage(casioFont, cursorMode.charCodeAt(0) * 6, 0, charW, charH, x, y, charW, charH);
+    if (cursorMode == "_") {
+        cursorMode = " ";
+    } else {
+        cursorMode = "_";
+    }
 }
 
 function calcHandleOnKeyPress(e) {
-  if (editMode) {
-    var charCode = e.charCode;
-    if (charCode==46 || (charCode >= 48 && charCode <= 57)) {
-      var currentLineIndex = textScreenLines.length - 1;
-      if (currentLineBuffer!==null && currentLineBuffer.length<20) {
-        currentLineBuffer += String.fromCharCode(charCode);
-        textScreenLines[currentLineIndex] = currentLineBuffer;
-        drawTextLine(currentLineIndex+1,currentLineBuffer);
-        cursorCol+=1;
-      }
+    if (editMode) {
+        var charCode = e.charCode;
+        if (charCode == 46 || (charCode >= 48 && charCode <= 57)) {
+            var currentLineIndex = textScreenLines.length - 1;
+            if (currentLineBuffer !== null && currentLineBuffer.length < 20) {
+                currentLineBuffer += String.fromCharCode(charCode);
+                textScreenLines[currentLineIndex] = currentLineBuffer;
+                drawTextLine(currentLineIndex + 1, currentLineBuffer);
+                cursorCol += 1;
+            }
+        }
     }
-  }
 }
 
 function swap() {
-  if (ctx == ctx2) {
-    swapToTextScreen();
-  } else {
-    swapToGraphicScreen();
-  }
+    if (ctx == ctx2) {
+        swapToTextScreen();
+    } else {
+        swapToGraphicScreen();
+    }
 }
 
 function swapToGraphicScreen() {
-  c1.style.display = "none";
-  c2.style.display = "";
-  ctx = ctx2;
+    c1.style.display = "none";
+    c2.style.display = "";
+    ctx = ctx2;
 }
 
 function swapToTextScreen() {
-  c1.style.display = "";
-  c2.style.display = "none";
-  ctx = ctx1;
+    c1.style.display = "";
+    c2.style.display = "none";
+    ctx = ctx1;
 }
 
 // Clear the current display
 function clearDisplay() {
-  ctx.fillStyle="#FFFFFF";
-  ctx.fillRect(1,1,127,63);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(1, 1, 127, 63);
 }
 
 //Interpreting functions
 
 function cls() {
-  swapToGraphicScreen();
-  clearDisplay();
+    swapToGraphicScreen();
+    clearDisplay();
 }
 
 function clrtext() {
-  swapToTextScreen();
-  clearDisplay();
+    swapToTextScreen();
+    clearDisplay();
 }
 
 // Redraw all screen
-function redrawAllTextScreen() {  
-  clrtext();
-  for (var i=0; i<textScreenLines.length; i++) {
-    lineNb = i+1;
-    drawTextLine(lineNb,textScreenLines[i]);
-  }
+function redrawAllTextScreen() {
+    clrtext();
+    for (var i = 0; i < textScreenLines.length; i++) {
+        lineNb = i + 1;
+        drawTextLine(lineNb, textScreenLines[i]);
+    }
 }
 
 function print(str) {
-  swapToTextScreen();
-  str += " ";
-  while (str.length>TEXT_SCREEN_WIDTH) {
-    textScreenLines.push(str.substring(0,TEXT_SCREEN_WIDTH));
-    str = str.substring(TEXT_SCREEN_WIDTH);
-  }
-  textScreenLines.push(str);
-  while (textScreenLines.length > TEXT_SCREEN_HEIGHT) {
-    textScreenLines.shift();
-  }
-  redrawAllTextScreen();
+    swapToTextScreen();
+    str += " ";
+    while (str.length > TEXT_SCREEN_WIDTH) {
+        textScreenLines.push(str.substring(0, TEXT_SCREEN_WIDTH));
+        str = str.substring(TEXT_SCREEN_WIDTH);
+    }
+    textScreenLines.push(str);
+    while (textScreenLines.length > TEXT_SCREEN_HEIGHT) {
+        textScreenLines.shift();
+    }
+    redrawAllTextScreen();
 }
 
-function locate(col,ligne,str) {
-  if (col<1 || col>21) return; // Should generate a runtimeError, do nothing for now !
-  if (ligne<1 || ligne>7) return; // Should generate a runtimeError, do nothing for now !
-  while (textScreenLines.length < ligne) {
-    textScreenLines.push("                       ");
-  }
-  currentLine = textScreenLines[ligne-1];
-  if (currentLine.length<col-1) {
-    currentLine = currentLine + "                       ".substring(0,(col-1)-currentLine.length);
-  }
-  newLine = currentLine.substring(0,col-1) + str + currentLine.substring(col-1+str.length);
-  textScreenLines[ligne-1] = newLine;
-  redrawAllTextScreen();
+function locate(col, ligne, str) {
+    if (col < 1 || col > 21) return; // Should generate a runtimeError, do nothing for now !
+    if (ligne < 1 || ligne > 7) return; // Should generate a runtimeError, do nothing for now !
+    while (textScreenLines.length < ligne) {
+        textScreenLines.push("                       ");
+    }
+    currentLine = textScreenLines[ligne - 1];
+    if (currentLine.length < col - 1) {
+        currentLine = currentLine + "                       ".substring(0, (col - 1) - currentLine.length);
+    }
+    newLine = currentLine.substring(0, col - 1) + str + currentLine.substring(col - 1 + str.length);
+    textScreenLines[ligne - 1] = newLine;
+    redrawAllTextScreen();
 }
 
 function cleartext() {
-  console.log("cleartext called !");
-  textScreenLines = new Array();
-  redrawAllTextScreen();
+    console.log("cleartext called !");
+    textScreenLines = new Array();
+    redrawAllTextScreen();
 }
 
-function drawTextLine(lineNb,str) {
-  var charW = 6;
-  var charH = 8;
-  var y = (lineNb-1) * charH + 1;
-  var x = 0;
-  str = str.substring(0,21); // 21 first char
-  for (var i=0; i<str.length; i++) {
-    x = i * 6 + 1;
-    ctx.drawImage(casioFont, str.charCodeAt(i)*6, 0, charW, charH, x, y, charW, charH);
-  }
+function drawTextLine(lineNb, str) {
+    var charW = 6;
+    var charH = 8;
+    var y = (lineNb - 1) * charH + 1;
+    var x = 0;
+    str = str.substring(0, 21); // 21 first char
+    for (var i = 0; i < str.length; i++) {
+        x = i * 6 + 1;
+        ctx.drawImage(casioFont, str.charCodeAt(i) * 6, 0, charW, charH, x, y, charW, charH);
+    }
 }
 
-function drawTextGfx(y,x,str) {
+function drawTextGfx(y, x, str) {
     var charW = 6;
     var charH = 8;
     swapToGraphicScreen();
-    for (var i=0; i<str.length; i++) {
+    for (var i = 0; i < str.length; i++) {
         ctx.drawImage(casioFontGfx, str.charCodeAt(i) * charW, 0, charW, charH, x, y, charW, charH);
         x += parseInt(gfxFontSize[str.charCodeAt(i)]); // add witdh of char which has just been drawn (variable font width)
     }
@@ -284,174 +289,180 @@ var ymin = 1;
 var ymax = 63;
 var yscl = 0;
 
-function getPixelColor(x,y) {
-  console.log("getPixelColor "+x+" "+y);
-  var imgd = ctx.getImageData(x * gtm.a + gtm.e, y * gtm.d + gtm.f, 1, 1);
-  var pix = imgd.data;
+function getPixelColor(x, y) {
+    console.log("getPixelColor " + x + " " + y);
+    var imgd = ctx.getImageData(x * gtm.a + gtm.e, y * gtm.d + gtm.f, 1, 1);
+    var pix = imgd.data;
 
-  if (pix[0] == 255 && pix[1] == 255 && pix[2] == 255) {
-    return "white";
-  }
+    if (pix[0] == 255 && pix[1] == 255 && pix[2] == 255) {
+        return "white";
+    }
 
-  if (pix[0] == 0 && pix[1] == 0 && pix[2] == 0) {
-    return "black";
-  }
+    if (pix[0] == 0 && pix[1] == 0 && pix[2] == 0) {
+        return "black";
+    }
 
-  return ""; // undefined
+    return ""; // undefined
 }
 
-function setPixelOn(x,y) {
-  setPixel(x,y,"black"); 
-}
-  
-function setPixelOff(x,y) {
-  setPixel(x,y,"white"); 
+function setPixelOn(x, y) {
+    setPixel(x, y, "black");
 }
 
-function setPixel(x,y,color) {
-  x = Math.round(x);
-  y = Math.round(y);
-  ctx.fillStyle = color;
-  ctx.fillRect(x,y,1,1);
+function setPixelOff(x, y) {
+    setPixel(x, y, "white");
+}
+
+function setPixel(x, y, color) {
+    x = Math.round(x);
+    y = Math.round(y);
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, 1, 1);
 }
 
 // draw a line using "Bresenham's line algorithm"
 function bline(x0, y0, x1, y1) {
-  x0 = Math.round(x0);
-  y0 = Math.round(y0);
-  x1 = Math.round(x1);
-  y1 = Math.round(y1);
-  var dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-  var dy = Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1; 
-  var err = (dx>dy ? dx : -dy)/2;
- 
-  while (true) {
-    setPixelOn(x0,y0);
-    if (x0 === x1 && y0 === y1) break;
-    var e2 = err;
-    if (e2 > -dx) { err -= dy; x0 += sx; }
-    if (e2 < dy) { err += dx; y0 += sy; }
-  }
+    x0 = Math.round(x0);
+    y0 = Math.round(y0);
+    x1 = Math.round(x1);
+    y1 = Math.round(y1);
+    var dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+    var dy = Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+    var err = (dx > dy ? dx : -dy) / 2;
+
+    while (true) {
+        setPixelOn(x0, y0);
+        if (x0 === x1 && y0 === y1) break;
+        var e2 = err;
+        if (e2 > -dx) {
+            err -= dy;
+            x0 += sx;
+        }
+        if (e2 < dy) {
+            err += dx;
+            y0 += sy;
+        }
+    }
 }
 
 function plotChg(x, y) {
-  var color = getPixelColor(xtoR(x), ytoR(y));
-  if (color == "black") {
-    plotOff(x,y);
-  } else {
-    plotOn(x,y);
-  }
+    var color = getPixelColor(xtoR(x), ytoR(y));
+    if (color == "black") {
+        plotOff(x, y);
+    } else {
+        plotOn(x, y);
+    }
 }
 
 function plotOn(x, y) {
-  plot(x,y,true);
+    plot(x, y, true);
 }
 
 function plotOff(x, y) {
-  plot(x,y,false);
+    plot(x, y, false);
 }
 
 function plot(x, y, mode) {
-  swapToGraphicScreen();
-  plots.push([x,y]);
-  if (plots.length>2) {
-    plots.shift();
-  }
-  letvar("A_24", x);
-  letvar("A_25", y);
-  if (mode) {
-    setPixelOn(xtoR(x), ytoR(y));
-  } else {
-    setPixelOff(xtoR(x), ytoR(y));
-  }
+    swapToGraphicScreen();
+    plots.push([x, y]);
+    if (plots.length > 2) {
+        plots.shift();
+    }
+    letvar("A_24", x);
+    letvar("A_25", y);
+    if (mode) {
+        setPixelOn(xtoR(x), ytoR(y));
+    } else {
+        setPixelOff(xtoR(x), ytoR(y));
+    }
 }
 
 function pixelTest(x, y) {
-  var color = getPixelColor(x, y);
-  if (color == "black") {
-    return 1;
-  } else {
-    return 0;
-  }
+    var color = getPixelColor(x, y);
+    if (color == "black") {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 function pixelChg(x, y) {
-  var color = getPixelColor(x, y);
-  if (color == "black") {
-    pixelOff(x,y);
-  } else {
-    pixelOn(x,y);
-  }
+    var color = getPixelColor(x, y);
+    if (color == "black") {
+        pixelOff(x, y);
+    } else {
+        pixelOn(x, y);
+    }
 }
 
 function pixelOn(x, y) {
-  pixel(x,y,true);
+    pixel(x, y, true);
 }
 
 function pixelOff(x, y) {
-  pixel(x,y,false);
+    pixel(x, y, false);
 }
 
 function pixel(x, y, mode) {
-  swapToGraphicScreen();
-  plots.push([x,y]);
-  if (plots.length>2) {
-    plots.shift();
-  }
-  letvar("A_24", x);
-  letvar("A_25", y);
-  if (mode) {
-    setPixelOn(x, y);
-  } else {
-    setPixelOff(x, y);
-  }
+    swapToGraphicScreen();
+    plots.push([x, y]);
+    if (plots.length > 2) {
+        plots.shift();
+    }
+    letvar("A_24", x);
+    letvar("A_25", y);
+    if (mode) {
+        setPixelOn(x, y);
+    } else {
+        setPixelOff(x, y);
+    }
 }
 
-function range(xmin,xmax,xscl,ymin,ymax,yscl) {
-  this.xmin = xmin;
-  this.xmax = xmax;
-  this.xscl = xscl;
-  this.ymin = ymin;
-  this.ymax = ymax;
-  this.yscl = yscl;
+function range(xmin, xmax, xscl, ymin, ymax, yscl) {
+    this.xmin = xmin;
+    this.xmax = xmax;
+    this.xscl = xscl;
+    this.ymin = ymin;
+    this.ymax = ymax;
+    this.yscl = yscl;
 }
 
 function xtoR(x) {
-  return ((x-this.xmin)*(this.casioScreenW-1)/(this.xmax-this.xmin))+1;
+    return ((x - this.xmin) * (this.casioScreenW - 1) / (this.xmax - this.xmin)) + 1;
 }
-	
+
 function ytoR(y) {
-  return ((this.casioScreenH-1)-((y-this.ymin)*(this.casioScreenH-1)/(this.ymax-this.ymin))+1);
+    return ((this.casioScreenH - 1) - ((y - this.ymin) * (this.casioScreenH - 1) / (this.ymax - this.ymin)) + 1);
 }
 
 function line() {
-  bline(xtoR(plots[0][0]),ytoR(plots[0][1]),xtoR(plots[1][0]),ytoR(plots[1][1]));
+    bline(xtoR(plots[0][0]), ytoR(plots[0][1]), xtoR(plots[1][0]), ytoR(plots[1][1]));
 }
 
 // Reset all vars to 0
 function mcl() {
-	for(i=0;i<v_values.length;i++) {
-  	v_values[i] = 0;
-  }
+    for (i = 0; i < v_values.length; i++) {
+        v_values[i] = 0;
+    }
 }
 
 // Convert angle unit from current mode (Deg, Rad or Grad) to radians
 function angleToRadians(angle) {
-  if (angleMode == DEG) {
-    return Math.PI * angle / 180;
-  } else if (angleMode == GRAD) {
-    return Math.PI * angle / 200;
-  }
-  return angle;
+    if (angleMode == DEG) {
+        return Math.PI * angle / 180;
+    } else if (angleMode == GRAD) {
+        return Math.PI * angle / 200;
+    }
+    return angle;
 }
 
 // Convert from radians to current unit (Deg, Rad or Grad)
 function radiansToAngle(radians) {
-  if (angleMode == DEG) {
-    return 180 * radians / Math.PI;
-  } else if (angleMode == GRAD) {
-    return 200 * radians / Math.PI;
-  }
-  return radians;
+    if (angleMode == DEG) {
+        return 180 * radians / Math.PI;
+    } else if (angleMode == GRAD) {
+        return 200 * radians / Math.PI;
+    }
+    return radians;
 }
 

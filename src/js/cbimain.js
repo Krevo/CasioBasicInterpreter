@@ -68,6 +68,9 @@ var OP_PXL_ON = 53;
 var OP_PXL_OFF = 54;
 var OP_PXL_CHG = 55;
 var OP_PXL_TEST = 56;
+var OP_FLINE = 57;
+var OP_HORIZONTAL = 58;
+var OP_VERTICAL = 59;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -405,6 +408,15 @@ function execute(node) {
                     break;
                 case OP_LINE:
                     line();
+                    break;
+                case OP_FLINE:
+                    fline(execute(node.children[0]), execute(node.children[1]), execute(node.children[2]), execute(node.children[3]));
+                    break;
+                case OP_HORIZONTAL:
+                    horizontal(execute(node.children[0]));
+                    break;
+                case OP_VERTICAL:
+                    vertical(execute(node.children[0]));
                     break;
                 case OP_CLS:
                     cls();

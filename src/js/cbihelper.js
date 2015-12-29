@@ -435,6 +435,20 @@ function ytoR(y) {
     return ((this.casioScreenH - 1) - ((y - this.ymin) * (this.casioScreenH - 1) / (this.ymax - this.ymin)) + 1);
 }
 
+function fline(x1, y1, x2, y2) {
+    plotOn(x1, y1);
+    plotOn(x2, y2);
+    line();
+}
+
+function horizontal(y) {
+    bline(this.xmin, ytoR(y), this.xmax, ytoR(y));
+}
+
+function vertical(x) {
+    bline(xtoR(x), this.ymin, xtoR(x), this.ymax);
+}
+
 function line() {
     bline(xtoR(plots[0][0]), ytoR(plots[0][1]), xtoR(plots[1][0]), ytoR(plots[1][1]));
 }

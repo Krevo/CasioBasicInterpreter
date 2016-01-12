@@ -316,6 +316,9 @@ K<360=>Goto 1
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
         <br>
+        Load raw content from URL : <input type="text" size="60" id="urlLoader">        
+        <button onclick="loadFromUrl()">Load</button>
+        <br>
         <br>
  List of <a href="availablefunctions.html">currently implemented functions</a><br><br>
  Sample programs :<br><br>
@@ -334,6 +337,29 @@ K<360=>Goto 1
       </div>
     </div>
     <script type="text/javascript">
+
+      function loadFromUrl() {
+        var urlToLoad = document.getElementById("urlLoader").value;
+        
+        var request = new XMLHttpRequest();
+        request.open('GET', urlToLoad, true);
+
+        request.onreadystatechange = function() {
+          if (this.readyState === 4) {
+            if (this.status >= 200 && this.status < 400) {
+              // Success!
+              var srcCode = this.responseText;
+              document.getElementById("srcCode").value = srcCode;
+              executeCode();
+            } else {
+              document.getElementById("status").innerHTML = 'Unable to load content from Url !';
+            }
+          }
+        };
+
+        request.send();
+        request = null;
+      }
 
       function loadProg(progNumber) {
         stopCodeExecution();

@@ -19,9 +19,64 @@ var nextLine = NaN; // index in the programLines array
 
 var textScreenLines = new Array();
 var idTimerMain = 0;
-
-
 var currentLineBuffer = null;
+
+var casioScreenW = 127;
+var casioScreenH = 63;
+
+var c1, c2, ctx1, ctx2, c, ctx;
+var zoomW, zoomH, dx, dy;
+
+function cbiInit() {
+
+    c1 = document.getElementById("canvas1");
+    c2 = document.getElementById("canvas2");
+
+    ctx1 = c1.getContext("2d");
+    ctx2 = c2.getContext("2d");
+
+    c = c1;
+    ctx = ctx1;
+
+    if (window.addEventListener){
+        window.addEventListener("keypress", calcHandleOnKeyPress, false);
+        window.addEventListener("keydown", calcHandleOnKeyDown, false);
+    } else if (window.attachEvent){ // IE sucks !
+        window.attachEvent("keypress", calcHandleOnKeyPress, false);
+        window.attachEvent("keydown", calcHandleOnKeyDown, false);
+    }
+
+    zoomW = c.width  / casioScreenW;
+    zoomH = c.height / casioScreenH;
+
+    dx = -1;
+    dy = -1;
+
+    prepareDisplay(ctx1);
+    prepareDisplay(ctx2);
+
+    // Efface ecran texte
+    clrtext();
+
+    // Efface ecran graphique
+    cls();
+
+}
+
+function prepareDisplay(ctx) {
+    // No anti-aliasing
+    ctx.imageSmoothingEnabled = false
+    ctx.webkitImageSmoothingEnabled = false
+    ctx.mozImageSmoothingEnabled = false
+
+    // We need to keep a var (called 'gtm') containing the current transformation applied to canvas (until ctx.currentTransform is fully supported)
+    // that's why we avoid using ctx.scale() or ctx.translate();
+    var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    gtm = svgElement.createSVGMatrix();
+    gtm = gtm.scaleNonUniform(zoomW,zoomH); // Apply zoom
+    gtm = gtm.translate(dx,dy); // Translate so coords starts from (1,1) and go to (127,63);
+    ctx.transform(gtm.a, gtm.b, gtm.c, gtm.d, gtm.e, gtm.f); // Apply transform to canvas
+}
 
 function calcHandleOnKeyDown(e) {
 
@@ -100,7 +155,6 @@ var cursorLine = 1;
 var idTimerCursor;
 
 function dispModeOn() {
-    console.log("dispModeOn");
     paused = true;
     dispMode = true;
     currentLineBuffer = "";
@@ -108,14 +162,12 @@ function dispModeOn() {
 }
 
 function dispModeOff() {
-    console.log("dispModeOff");
     dispMode = false;
     textScreenLines.pop();
     redrawAllTextScreen();
 }
 
 function editModeOn() {
-    console.log("editModeOn");
     editMode = true;
     currentLineBuffer = "";
     print("");
@@ -126,7 +178,6 @@ function editModeOn() {
 }
 
 function editModeOff() {
-    console.log("editModeOff");
     editMode = false;
     if (currentLineBuffer == "") { // If line is empty when exit edit mode, remove line from textscreenline
         textScreenLines.pop();
@@ -254,7 +305,6 @@ function locate(col, ligne, str) {
 }
 
 function cleartext() {
-    console.log("cleartext called !");
     textScreenLines = new Array();
     redrawAllTextScreen();
 }
@@ -290,7 +340,6 @@ var ymax = 63;
 var yscl = 0;
 
 function getPixelColor(x, y) {
-    console.log("getPixelColor " + x + " " + y);
     var imgd = ctx.getImageData(x * gtm.a + gtm.e, y * gtm.d + gtm.f, 1, 1);
     var pix = imgd.data;
 

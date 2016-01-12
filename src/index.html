@@ -312,7 +312,7 @@ K<360=>Goto 1
 "Have a break ?"◢
 "Bye."
        </textarea>
-        <br>
+        <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
         <br>
@@ -345,70 +345,25 @@ K<360=>Goto 1
       function executeCode() {
         var srcCode = document.getElementById("srcCode").value;
         document.getElementById("srcCode").disabled = true;
+        document.getElementById("status").innerHTML = '';
         if (idTimerMain == 0) {
-          jsccRun(srcCode);
+          jsccRun(srcCode, function(errorCode, msg, programs) {
+              if (errorCode > 0) {
+                  document.getElementById("status").innerHTML = msg;
+              }
+              document.getElementById("srcCode").disabled = false;
+          });
         }
       }
 
       function stopCodeExecution() {
-        finish("SIG_STOP received !");
+        finish(EXIT_STOPPED, "Stopped on user request.");
       }
 
-      var casioScreenW = 127;
-      var casioScreenH = 63;
-
-      var c1 = document.getElementById("canvas1");
-      var c2 = document.getElementById("canvas2");
-
-      var ctx1=c1.getContext("2d");
-      var ctx2=c2.getContext("2d");
-
-      var c=c1;
-      var ctx=ctx1;
-
-      /* Test */
-      if (window.addEventListener){
-        window.addEventListener("keypress", calcHandleOnKeyPress, false);
-        window.addEventListener("keydown", calcHandleOnKeyDown, false);  
-      } else if (window.attachEvent){ // IE sucks !
-        window.attachEvent("keypress", calcHandleOnKeyPress, false);
-        window.attachEvent("keydown", calcHandleOnKeyDown, false);
-      }
-      
-
-      var zoomW = c.width  / casioScreenW;
-      var zoomH = c.height / casioScreenH;
-      console.log("zoomW = "+zoomW+" zoomH = "+zoomH);
-      var dx = -1;
-      var dy = -1;
-      console.log("dx = "+dx+" dy = "+dy);
-
-      function prepareDisplay(ctx) {
-        // No anti-aliasing
-        ctx.imageSmoothingEnabled = false
-        ctx.webkitImageSmoothingEnabled = false
-        ctx.mozImageSmoothingEnabled = false
-   
-        // We need to keep a var (called 'gtm') containing the current transformation applied to canvas (until ctx.currentTransform is fully supported)
-        // that's why we avoid using ctx.scale() or ctx.translate();
-        var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        gtm = svgElement.createSVGMatrix();
-        gtm = gtm.scaleNonUniform(zoomW,zoomH); // Apply zoom
-        gtm = gtm.translate(dx,dy); // Translate so coords starts from (1,1) and go to (127,63);
-        ctx.transform(gtm.a, gtm.b, gtm.c, gtm.d, gtm.e, gtm.f); // Apply transform to canvas
+      window.onload = function() {
+          loadProg(0);
       }
 
-      prepareDisplay(ctx1);
-      prepareDisplay(ctx2);
-
-      // Efface ecran texte 
-      clrtext();
-
-      // Efface ecran graphique
-      cls();
-      
-
-      loadProg(0);
       //executeCode();
     </script>
     <div style="text-align: right">

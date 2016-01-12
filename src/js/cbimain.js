@@ -82,6 +82,10 @@ var v_values = new Array();
 
 var DEBUG = 1;
 
+var EXIT_SUCCESS = 0;
+var EXIT_STOPPED = 14;
+var EXIT_SYNTAX_ERROR = 15;
+
 function debug(msg) {
     if (DEBUG) {
         console.log(msg);
@@ -458,10 +462,22 @@ function cut(name, arrayOfLines, startIndexIncluded, stopIndexExcluded) {
     return prog;
 }
 
-function jsccRun(str) {
+var finishCallBack = null;
+
+function jsccRun(str, finishCallBack) {
+
+    if (ctx1 == undefined) {
+        cbiInit();
+    }
+
+    cls();
+    cleartext();
+
     programs = new Array();
     programsSrc = new Array();
 
+    this.finishCallBack = finishCallBack;
+    
     var arrayOfLines = str.split("\n");
     debug(arrayOfLines);
     var progName = "main"; // default prog name
@@ -482,6 +498,8 @@ function jsccRun(str) {
     reset();
     cls();
 
+    var nbErrors = 0;
+
     // Bon, maintenant faut parser tout les elts de programSrc
     for (var progName in programsSrc) {
         if (programsSrc.hasOwnProperty(progName)) {
@@ -491,6 +509,8 @@ function jsccRun(str) {
             programs[progName]['nodes'] = parsedProg.nodes;
             programs[progName]['labels'] = parsedProg.labels;
             programs[progName]['error_cnt'] = parsedProg.error_cnt;
+            programs[progName]['error_off'] = parsedProg.error_off;
+            nbErrors += parsedProg.error_cnt;
         }
     }
 
@@ -503,12 +523,13 @@ function jsccRun(str) {
 
     nextLine = 0;
 
-    if (programs['main']['error_cnt'] == 0) {
+    //if (programs['main']['error_cnt'] == 0) {
+    if (nbErrors == 0) {
         debug("nextLine = " + nextLine);
         idTimerMain = setTimeout('executeNextLine()', 10);
         debug("timeout id = " + idTimerMain);
     } else {
-        finish("Syntax error");
+        finish(EXIT_SYNTAX_ERROR, "Syntax error", programs);
     }
 
 }
@@ -532,7 +553,7 @@ function parse(str, name) {
 
     if ((error_cnt = __parse(str, error_off, error_la, nodes, labels)) > 0) {
         for (i = 0; i < error_cnt; i++) {
-            alert("SYNTAX ERROR Line " + nodes.length + " near " + str.substr(error_off[i], 30));
+            //alert("SYNTAX ERROR Line " + nodes.length + " near " + str.substr(error_off[i], 30));
             break;
         }
     }
@@ -543,7 +564,8 @@ function parse(str, name) {
     return {
         nodes: nodes,
         labels: labels,
-        error_cnt: error_cnt
+        error_cnt: error_cnt,
+        error_off: error_off
     }
 }
 
@@ -557,22 +579,31 @@ function unstack() {
     return false;
 }
 
+var Ans = null;
+
+function getLastAnswer() {
+    return this.Ans;
+}
+
 function executeNextLine() {
     if (isNaN(nextLine) || nextLine >= programs[currentPrgName]['nodes'].length) {
         if (!unstack()) { // If nothing was on stack ... we have no parent to return.
-            finish("End Of program.");
+            finish(EXIT_SUCCESS, "End Of program.", programs);
             return;
         }
     }
     debug("[" + idTimerMain + "] prog " + currentPrgName + " - executeNextLine " + nextLine + " / " + programs[currentPrgName]['nodes'].length);
-    execute(programs[currentPrgName]['nodes'][nextLine++]);
+    this.Ans = execute(programs[currentPrgName]['nodes'][nextLine++]);
     if (!paused) {
         idTimerMain = setTimeout('executeNextLine()', 10);
     }
 }
 
-function finish(str) {
+function finish(errorCode, str, programs) {
     debug(str);
     reset();
-    document.getElementById("srcCode").disabled = false;
+    if (finishCallBack) {
+      debug("call the finish callBack");
+      finishCallBack(errorCode, str, programs); // call the finish callback
+    }
 }

@@ -322,6 +322,7 @@ function setPixel(x, y, color) {
 
 // draw a line using "Bresenham's line algorithm"
 function bline(x0, y0, x1, y1) {
+    swapToGraphicScreen();
     x0 = Math.round(x0);
     y0 = Math.round(y0);
     x1 = Math.round(x1);

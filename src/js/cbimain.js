@@ -243,13 +243,16 @@ function execute(node) {
                     angleMode = GRAD;
                     break;
                 case OP_COS:
-                    ret = Math.cos(angleToRadians(execute(node.children[0])));
+                    n = Math.cos(angleToRadians(execute(node.children[0])));
+                    ret = parseFloat((n % 1).toPrecision(15));
                     break;
                 case OP_SIN:
-                    ret = Math.sin(angleToRadians(execute(node.children[0])));
+                    n = Math.sin(angleToRadians(execute(node.children[0])));
+                    ret = parseFloat((n % 1).toPrecision(15));
                     break;
                 case OP_TAN:
-                    ret = Math.tan(angleToRadians(execute(node.children[0])));
+                    n = Math.tan(angleToRadians(execute(node.children[0])));
+                    ret = parseFloat((n % 1).toPrecision(15));
                     break;
                 case OP_POL:
                     // rectangular to polar coord
@@ -292,7 +295,8 @@ function execute(node) {
                     } while (execute(node.children[1]));
                     break;
                 case OP_WRITE:
-                    print("" + execute(node.children[0]));
+                    ret = execute(node.children[0]);
+                    print("" + ret);
                     break;
                 case OP_READ:
                     letvar(node.children[0].toString(), prompt("Please enter a value:", "0"));

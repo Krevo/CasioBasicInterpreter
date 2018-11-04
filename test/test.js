@@ -74,6 +74,30 @@ QUnit.test("jsccRun - test", function( assert ) {
         cos 45
       `,
       answer: 0.707106781186548
+    },
+    {
+      name: '2AB test',
+      srcCode: `
+        2->A
+        3->B
+        2AB
+      `,
+      answer: 12
+    },
+    {
+      name: 'A(expr) test',
+      srcCode: `
+        2->A
+        A(5+3)
+      `,
+      answer: 16
+    },
+    {
+      name: '(expr)(expr) test',
+      srcCode: `
+        (2*3)(5+3)
+      `,
+      answer: 48
     }];
 
   assert.expect(testsToRun.length * 2);

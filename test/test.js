@@ -98,6 +98,28 @@ QUnit.test("jsccRun - test", function( assert ) {
         (2*3)(5+3)
       `,
       answer: 48
+    },
+    {
+      name: 'Do / LpWhile test',
+      srcCode: `
+        1->A
+        Do
+        A+1->A
+        LpWhile A<=5
+        A
+      `,
+      answer: 6
+    },
+    {
+      name: 'While / WhileEnd test',
+      srcCode: `
+        1->A
+        While A<=5
+        A+1->A
+        WhileEnd
+        A
+      `,
+      answer: 6
     }];
 
   assert.expect(testsToRun.length * 2);

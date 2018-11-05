@@ -8,8 +8,8 @@
 - ~~ajout pause affichage : ◢ , [EXE] pour continuer~~ 2015-01-17
 - ~~ajout If/Then/Else/IfEnd~~ 2016-01-12
 - ~~multiplication sans opérateur '*'~~ 2018-11-04
-- ajout While/WhileEnd
-- ajout Do/LpWhile
+- ~~ajout While/WhileEnd~~ 2018-11-05
+- ~~ajout Do/LpWhile~~ 2018-11-05
 - ajout déplacement curseur (Plot x,y◢ ) , valid et recup coordonnées
 - ajout For/To/Step/Next
 - ajout And/Or/not

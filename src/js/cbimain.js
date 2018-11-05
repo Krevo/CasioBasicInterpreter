@@ -542,7 +542,13 @@ function parse(str, name) {
     var labels = new Array();
 
     str = str + ":"; // Add a final ":" 
-    str = str.replace(/(\u25E2:|_:)/g, ':_Disp_:'); // Replace "◢" or "_" by "_Disp_"
+    str = str.replace(/(\u00A0)/g, ' '); // Replace "non breakable space" by space
+    str = str.replace(/(\u2192)/g, '->'); // Replace "right arrow" by "->"
+    str = str.replace(/(\u21D2)/g, '=>'); // Replace "rightwards double arrow" by "=>"
+    str = str.replace(/(\u2260)/g, '<>'); // Replace "not equal to" by "<>"
+    str = str.replace(/(\u2264)/g, '<='); // Replace "lower or equal" by "<="
+    str = str.replace(/(\u2265)/g, '>='); // Replace "lower or equal" by ">="
+    str = str.replace(/(\u25E2:|_:)/g, ':_Disp_:'); // Replace "black lower right triangle" or "_" by "_Disp_"
     str = str.replace(/(?:\r\n|\r|\n)/g, ':'); // Replace CR / LF with ":" (our instruction separator)
 
     var error_cnt = 0;

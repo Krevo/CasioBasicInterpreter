@@ -82,8 +82,8 @@ function calcHandleOnKeyDown(e) {
 
     // Disable back button acting like history previous / back
     var doPrevent = false;
-    if (event.keyCode === 8) {
-        var d = event.srcElement || event.target;
+    if (e.keyCode === 8) {
+        var d = e.srcElement || e.target;
         if ((d.tagName.toUpperCase() === 'INPUT' && (d.type.toUpperCase() === 'TEXT' || d.type.toUpperCase() === 'PASSWORD'))
             || d.tagName.toUpperCase() === 'TEXTAREA') {
             doPrevent = d.readOnly || d.disabled;
@@ -115,7 +115,7 @@ function calcHandleOnKeyDown(e) {
     }
 
     if (doPrevent) {
-        event.preventDefault();
+        e.preventDefault();
     }
 
 }

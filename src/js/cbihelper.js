@@ -1,6 +1,33 @@
 var TEXT_SCREEN_WIDTH = 21;
 var TEXT_SCREEN_HEIGHT = 7;
 
+  var BLUE = [
+    0x39, // red component
+    0x43, // green component
+    0xCE  // blue component
+  ];
+
+  var GREEN = [
+    0xBD, // red component
+    0xDE, // green component
+    0xCE  // blue component
+  ];
+
+  var BLACK = [
+    0x04, // red component
+    0x04, // green component
+    0x04  // blue component
+  ];
+
+  var WHITE = [
+    0xFF, // red component
+    0xFF, // green component
+    0xFF  // blue component
+  ];
+
+var FOREGROUND_COLOR = BLUE;
+var BACKGROUND_COLOR = GREEN;
+
 var DEG = 1;
 var RAD = 2;
 var GRAD = 3;
@@ -8,10 +35,13 @@ var GRAD = 3;
 var angleMode = DEG;
 
 var casioFont = new Image();
-casioFont.src = "data:image/gif;base64,R0lGODlhAAYIAKEBAAQEBP///////////yH5BAEKAAIALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXu6zKvNBuwDN95stf5DwwKd7zYjTfxJRUxS2NWHOqCuCbOYbVekUWPDHvNQmnGqq2s5HbV2++mFo7D4U4s0H6mmqdSo3Dv1yOY19RneIiYqAjlw/Q3suIm2SaGMcK4iLiHV0XzpRVpqdIC1kj1AHpX18biJdoKaej6RLo2Cch3hGezlKkZ6xq8SjeWKjx6DIvsRLTsrAwdmiwNXP1Mff2KHa2aPa2dR8Y7h1Y+bi6eHr4uh85Ofh6v3i7/7k4/D49LmF8sZwZwUKCBvuo5WmcKyQ9c/c5EiULoTqOGFB0SDOiOoMX+jYwg6LNXL0wgfCDVTel0ytzCIftWngLUMmWugjRj0pR58c/HOJ8U+iTzsNMnnDIxzgyIshxJnkxE9vTzgaUShIOAjixJVeo9UzozWh24KatElxFN3uyzdKdapYWmYk27NW7ItXPlVoRbN+9dunvtvuX79+pVvH31BjZM+HDhxYobJ378ESfQOmPFla1ssCZUkVV1TNIINXLQXL2GjutAd7DAy4JPivXkiDE9PonztgZtep/QnpQKSSKNeg0Rt+Gs2tIyhjdyWo+flmFmFKxfpryUY6pwJHv1sC1Yvzrag/M/j57IE78MW/hUpgqTq57uHDHXoghLbRb6HiVMOrD+b9v5X1xvkE1HjmnFOAbYgIado6BsCT5IYITySehgRp01iCCFGU7IYYUdbughY0SFp510WlXFBkzMkNVfRKwZ+NxDuriHliaulWdCTjF+tl133Mno2Wkh2bddb63lY5aOGnGnmU+CeHTfYLmxyM8c2H140H7vZdaFiQfpgYZsl3z5ExvLZUkZZ6SN5d1CSVXXFDEGlYLac2yJ4ZRRQ2HYlkW1uTmlmhOBVpdTbCKVBllbRodhbV1ipmGjEFIlaaSThghippUi9oalnn64KaahanopqRYq2gxEBra42khA9imLdoLu1wuXg56EX0IrvpnCYVsqaZahmeXXUJjx0Db+6D9+rjmTkot0eiw70OkSLIt6CnnPf0RWQilbSZK52rUc3WXdlW2ZSyZATE7mDZ2tdtVjekIKG1pgatJrYqCAXaTvqS5iRSUtzPFXpHhcVXugwNoKWOqfUjwKasOlMijxp6JWHLHFpv47ascYX6yxxyF/LJaNDN9JlLLOunnwrV4mRdKRtEX3b7MtRwjjtQbXu+eFqW3Us8yhuRGn0DZXmcmmNiM8LtLz/uzaoQw615+qzdKsW4Llxlb0aJh8LZ1NAuUa7YlIwjnnnXDde147/S5o9aKvSS3obfBaxq/LyHoJHrJvg1zzwySLnHHhgB++MeKjykz4PNZw803kj2/ZQzk4kreLOTcjBnl00fS9O99wjwi4ip7H6brFiZ0zOfCOBy4MJbX1qSdtnXO2l51JnMzoMtNJ7MI7oBC5B50tv6EumLZRu6s77i7tZnpWX0WVHNmpjw45b6fDjm5Qw28GDpsJJXK55vZByUXCHFTfZ/mTpZsNt+zXmgpa0M7MiopgnC6wq6RnXjn6yWJyliOg+7qRPQAWUIEHbKABH6hA4QUQgiw4iwUviMEManCDHOygBz8IwhCKcIQkLKEJT4jCFKpwhSxsoQtfCMMYynCGNKyhDW+IQxMWAAA7";
+casioFont.src = "data:image/gif;base64,R0lGODlhAAYIAIABAAQEBP///yH5BAEKAAEALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXu6zKvNBuwDN95stf5DwwKd7zYjTfxJRUxS2NWHOqCuCbOYbVekUWPDHvNQmnGqq2s5HbV2++mFo7D4U4s0H6mmqdSo3Dv1yOY19RneIiYqAjlw/Q3suIm2SaGMcK4iLiHV0XzpRVpqdIC1kj1AHpX18biJdoKaej6RLo2Cch3hGezlKkZ6xq8SjeWKjx6DIvsRLTsrAwdmiwNXP1Mff2KHa2aPa2dR8Y7h1Y+bi6eHr4uh85Ofh6v3i7/7k4/D49LmF8sZwZwUKCBvuo5WmcKyQ9c/c5EiULoTqOGFB0SDOiOoMX+jYwg6LNXL0wgfCDVTel0ytzCIftWngLUMmWugjRj0pR58c/HOJ8U+iTzsNMnnDIxzgyIshxJnkxE9vTzgaUShIOAjixJVeo9UzozWh24KatElxFN3uyzdKdapYWmYk27NW7ItXPlVoRbN+9dunvtvuX79+pVvH31BjZM+HDhxYobJ378ESfQOmPFla1ssCZUkVV1TNIINXLQXL2GjutAd7DAy4JPivXkiDE9PonztgZtep/QnpQKSSKNeg0Rt+Gs2tIyhjdyWo+flmFmFKxfpryUY6pwJHv1sC1Yvzrag/M/j57IE78MW/hUpgqTq57uHDHXoghLbRb6HiVMOrD+b9v5X1xvkE1HjmnFOAbYgIado6BsCT5IYITySehgRp01iCCFGU7IYYUdbughY0SFp510WlXFBkzMkNVfRKwZ+NxDuriHliaulWdCTjF+tl133Mno2Wkh2bddb63lY5aOGnGnmU+CeHTfYLmxyM8c2H140H7vZdaFiQfpgYZsl3z5ExvLZUkZZ6SN5d1CSVXXFDEGlYLac2yJ4ZRRQ2HYlkW1uTmlmhOBVpdTbCKVBllbRodhbV1ipmGjEFIlaaSThghippUi9oalnn64KaahanopqRYq2gxEBra42khA9imLdoLu1wuXg56EX0IrvpnCYVsqaZahmeXXUJjx0Db+6D9+rjmTkot0eiw70OkSLIt6CnnPf0RWQilbSZK52rUc3WXdlW2ZSyZATE7mDZ2tdtVjekIKG1pgatJrYqCAXaTvqS5iRSUtzPFXpHhcVXugwNoKWOqfUjwKasOlMijxp6JWHLHFpv47ascYX6yxxyF/LJaNDN9JlLLOunnwrV4mRdKRtEX3b7MtRwjjtQbXu+eFqW3Us8yhuRGn0DZXmcmmNiM8LtLz/uzaoQw615+qzdKsW4Llxlb0aJh8LZ1NAuUa7YlIwjnnnXDde147/S5o9aKvSS3obfBaxq/LyHoJHrJvg1zzwySLnHHhgB++MeKjykz4PNZw803kj2/ZQzk4kreLOTcjBnl00fS9O99wjwi4ip7H6brFiZ0zOfCOBy4MJbX1qSdtnXO2l51JnMzoMtNJ7MI7oBC5B50tv6EumLZRu6s77i7tZnpWX0WVHNmpjw45b6fDjm5Qw28GDpsJJXK55vZByUXCHFTfZ/mTpZsNt+zXmgpa0M7MiopgnC6wq6RnXjn6yWJyliOg+7qRPQAWUIEHbKABH6hA4QUQgiw4iwUviMEManCDHOygBz8IwhCKcIQkLKEJT4jCFKpwhSxsoQtfCMMYynCGNKyhDW+IQxMWAAA7";
+casioFont.src = "data:image/gif;base64,R0lGODlhAAYIAKEBAAQEBP///////////yH5BAEKAAIALAAAAAAABggAAAL+FH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegWuK8RMbNSyfdN6Tif7jNsJh8Riz8dryCy9pWPp9D2VRiHQ+kNOn0zqdjTjNqlOnOTXBIal37WW3UnLb2rzhWxFBvPFa9WPNgS4Z6ejV4WYqLjImDWmYOSx4hZ1RBk1+XDU2Ag4FXQWhokBRsol9Ui0Mpp3askiaQpbihjrxdTG2ifYRdfLuRgrXDoB6Ws5Oqwim6nM0jq77NxMXC1tHZ1Nfc2tzczbve2dMVdTd15+Rpduh77+bs7uHg+vTn9vn98uz18v8AIjib4rcdb5ORgoFSFg+owVEigqIZp5awwhjPRoYD/+ehEVUlRoI+LBCvv8fazD4+TGiwRVlcOyS9EgeIY4eQKG02VOhhIXpixpThSqoer0GO0IE2MSQhdfulN5DMIYoTk+KA35sOa7jhr91VqZ6CPHVDdRxkyI0OzOrybBQq049SdUfEC70p1rN2/dvXj5uv3bNvBdwIN/yiWst69ixH4FJ2a82HHjwnQBBiAbEpcgmk21hgJps6rajDXdIPXMzqFqgr24Bn2s9d7SpqOxjv48FPLmw17tGgbtWmeZoMigXIIo9Y2jqhmLOjz1hmglL26p+trSsyXlgUK7Wzy2KXwKmMX2qBkRe/ZDdHFCJY/rMR5JKHHPzWeNSrJ9/an+/6QWIxprvLU0iH2f/UYGductyNt2kznHVH4ORjYhWGPxh2GFGcKmYYccfvjgbh6GSCGIJZKo24YoqniiZaA5pd1SScUG3SG6JHUgU4Gc9lqMCX5yFlvMuWeCeteZdt0dOq42kXx3Adhjcb9p1FB8IN201n3mGTeVhFrKOM8+Wvb1nIhklglKeH1QZSJ6q3UHB5L03VFlegVayQuNkEgFXkNiFETchdSJhhZzKs5pnYPgNHinoVg8BV+hpXU54152pqioFjqdyCljU644YqcsYmoiqXxtYKqooabK6qiurvoqAy7K+ApLk87UKB4CBvNdVgtlMumnRh5lZ2t6Aur+G1BG0mVYorRlpqyT9ujJqJOy+fhrT4ygSlM7XeBXJZaqiXlqdKd9YpZ1OY6U3pbUunaSd4HSN9+c49r4FDaryOaTmUrgJm2kWDWmFkqdieSpefD2R6tYkubiLZGaIsgsKNFJCbGqeoWVLqilHgohrCJ/PLLHJmvsa7Uor9xqySzHejJjs37FYEkzLbuutr26m1WM2jnccXPZ+SecynOcW2jQAyN87EaGMr1efcaFe2XRNxMtcrteFRIme5ORJ9yBuVl7CLY802p0n8aMWdSu9t4bLK9khYk1lYH6uVXaBQsMqclwp302abWl7K+4iAJHGuLt9u0yw3I3DvPLkE/zTnLlMUee+OWh6vvNNJ1z7nnooI8ezufLzHz1tP3yGXalOu+86HDFAFmzrhadd5XWVRdnYM1tsP4K18rJxS2zUG7ip1G3U1vxgnCsiesvwX9r7nDINTv807klzyPftCOPmUj1KonmuFmUTtTFP4oAu/SE2uK62ZGQ7s2gfLKBcQi1Ikp/22+Wbr3bPeN8NgIH8JrjvALhQn14MIP6RIc+99Wif6YbB+egIY4MVlCDELRgBD/owRBqEIMbLGF51oLCFKpwhSxsoQtfCMMYynCGNKyhDW+IwxzqcIc87KEPfwjEIApxiEQsohGPiMQkKnGJjCgAADs=";
+changeColorOnImage(casioFont);
 
 var casioFontGfx = new Image();
 casioFontGfx.src = "data:image/gif;base64,R0lGODlhAAYIAIABAAQEBP///yH5BAEKAAEALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXuy7yuBBtyLN95stf5DwwKb7wZEecwIovJBoxZHPaCuBkUSdwtj88q02atgsExMRY7VmjL5uW5hrbRlN06NSr+4XXSdN4bNxSo1ldoSGh0qCj1ZSU4ssIm6RbWxWLhuKj4twdHFnYJiYGZNKj3AJrXchWqMurqoaon6rR6lcoINKGzq7kY+9rKglhhB3wsigxLuyYcGfys7AxNLR2djL2sPT27fe2N4Uk3LideTj53rp7OPtb+hu4uD78+b/5+bx9/2kPv9GZmio+BiXzxcvdHYDs++fzhCShoID56AQdBNJem4ML+J2p40KDoyZQXffb8yWPIMJ0ufhkRafRzsKDMlQI7kvPTBk6ZNQ0l1qOEMqMsku92eiRUjE0Wji0JUnGaMKhKeCDPJPVhNNGHiFpPKvxENGyfqk6f7psTKKGpmj5jNjXI9WfPeFQzdQ1Llu5cuXr78v2Lz29gwHj3Dj5cWHBir3kJN0b8eDFkw5IrR75MGfPMzWhJ0ZzKtuvGbmNvAgJaK3UTjbeY2sW5eiedEq6FIkTNrlPKkQc/ltsS0qXtzGChBm051KzdJm1wP6ytHHRwCIqBGycu2zTLmbwnKzEKfmmx2kdXa8U0PJjUfm1/U//4Hut631D4FEV6JLt3OVn+q5elWU8taMSmX3HqpPQPY1xUgk5rmjkmTnbGEOdfhYSd8+B+GlpGIYQWbpihVwiGSGKHIJrI4Ycpesjihr5Mxdtmod2Gi0EOHZfeSzEe+BaApclHXz5uXeQXTCCN6MhoYKkEE3YH7tgUkb+IJeRxR95DZJCfWLecjyOR5RtBnDCSFYgjvFZeKWrWV6OSMqlikRC6JXVfgKUk+N04QA14kWwhdtniHQWuNeBTdd311ZCvcVflmyhGRoxZJar4p4KTBnrpiZQ+yildG3SKKaiahrppqaSe6uKM+UH05Vtw2vFmctsx11pqrKEGG6wu6daCo9+FKRybDCJHEa9+NmL+p5VaBrsgo/3FiitPgj4C3XPkLbUPSrkBVByUL2ErEa8YimhrjicN2lB4/Im3KyBasNQZOJ5JGVcKv927UHc6RiimfNoimmpOleF4JYKqHfUrf8y1l+1psNK6p6hUkulTpisiNq6po258cccWWwyvxxJ/PHLJGot88lqFbLtvj+kBSy+2ssJF81hSyjrUzDXvzHPPPv8MdNBCD0100ebmnJm6413VLrjMYrSytibVW9K6yWacV1r+toyuYk8P/F/BDMsJtVBxvPqtjDfzm3Kjh5Dcdtyoojw33HVLnDbHl2UzjTXV8P1N34D/Le/gfvcyZcxJUq2qjE4bDTnaPkKCC3nlll+Oeeaab145slF0I/ive7IyHprmYRW4LFE5Lqjg4Ai4OFLO0damG65T19Fp3JSLC+KW6JwBgBB/XvvsCjloePKnr6z87akTTjz0zx/e/PTVS4899YUvr73zvXIOfvjij09++eafj3766q/Pfvvuvw9//PLPT3/99t+P//wFAAA7";
+changeColorOnImage(casioFontGfx);
 
 var gfxFontSize = "4444444444444444444444444444444442444444444444444444444444444444444444444445466446444446444444444444444442444654445444464444444";
 
@@ -26,6 +56,64 @@ var casioScreenH = 63;
 
 var c1, c2, ctx1, ctx2, c, ctx;
 var zoomW, zoomH, dx, dy;
+
+function chooseColorScheme(colorSchemeName) {
+  var oldForegroundColor = FOREGROUND_COLOR;
+  var oldBackgroundColor = BACKGROUND_COLOR;
+  if (colorSchemeName == "black&white") {
+    FOREGROUND_COLOR = BLACK;
+    BACKGROUND_COLOR = WHITE;
+  } else if (colorSchemeName == "blue&green") {
+    FOREGROUND_COLOR = BLUE;
+    BACKGROUND_COLOR = GREEN;
+  }
+  swapColor(ctx1, oldForegroundColor, FOREGROUND_COLOR);
+  swapColor(ctx2, oldForegroundColor, FOREGROUND_COLOR);
+  swapColor(ctx1, oldBackgroundColor, BACKGROUND_COLOR);
+  swapColor(ctx2, oldBackgroundColor, BACKGROUND_COLOR);
+  changeColorOnImage(casioFont);
+  changeColorOnImage(casioFontGfx);
+}
+
+function swapColor(context, fromColor, toColor) {
+    var imageData = context.getImageData(0, 0, c.width, c.height);
+    var data = imageData.data;
+
+    for(var i = 0; i < data.length; i += 4) {
+
+        if (data[i] == fromColor[0]
+            && data[i+1] == fromColor[1]
+            && data[i+2] == fromColor[2]) {
+            data[i] = toColor[0];
+            data[i + 1] = toColor[1];
+            data[i + 2] = toColor[2];
+        }
+    }
+    // overwrite original image
+    context.putImageData(imageData, 0, 0);
+}
+
+function changeColorOnImage(img) {
+
+  String.prototype.replaceAt=function(index, replacement) {
+    return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
+  }
+
+  var imageData = img.src;
+  var binaryImageData = atob(imageData.replace(/^data:image\/(gif|png|jpeg|jpg);base64,/, ''));
+
+  // Replace color #0
+  binaryImageData = binaryImageData.replaceAt(13, String.fromCharCode(FOREGROUND_COLOR[0]));
+  binaryImageData = binaryImageData.replaceAt(14, String.fromCharCode(FOREGROUND_COLOR[1]));
+  binaryImageData = binaryImageData.replaceAt(15, String.fromCharCode(FOREGROUND_COLOR[2]));
+
+  // Replace color #1
+  binaryImageData = binaryImageData.replaceAt(16, String.fromCharCode(BACKGROUND_COLOR[0]));
+  binaryImageData = binaryImageData.replaceAt(17, String.fromCharCode(BACKGROUND_COLOR[1]));
+  binaryImageData = binaryImageData.replaceAt(18, String.fromCharCode(BACKGROUND_COLOR[2]));
+
+  img.src = "data:image/gif;base64," + btoa(binaryImageData);
+}
 
 function cbiInit() {
 
@@ -250,7 +338,7 @@ function swapToTextScreen() {
 
 // Clear the current display
 function clearDisplay() {
-    ctx.fillStyle = "#FFFFFF";
+    ctx.fillStyle = getFillStyleFromColor(BACKGROUND_COLOR)
     ctx.fillRect(1, 1, 127, 63);
 }
 
@@ -341,32 +429,34 @@ var yscl = 0;
 
 function getPixelColor(x, y) {
     var imgd = ctx.getImageData(x * gtm.a + gtm.e, y * gtm.d + gtm.f, 1, 1);
-    var pix = imgd.data;
-
-    if (pix[0] == 255 && pix[1] == 255 && pix[2] == 255) {
-        return "white";
-    }
-
-    if (pix[0] == 0 && pix[1] == 0 && pix[2] == 0) {
-        return "black";
-    }
-
-    return ""; // undefined
+    return imgd.data;
 }
 
 function setPixelOn(x, y) {
-    setPixel(x, y, "black");
+    setPixel(x, y, FOREGROUND_COLOR);
 }
 
 function setPixelOff(x, y) {
-    setPixel(x, y, "white");
+    setPixel(x, y, BACKGROUND_COLOR);
 }
 
 function setPixel(x, y, color) {
     x = Math.round(x);
     y = Math.round(y);
-    ctx.fillStyle = color;
+    ctx.fillStyle = getFillStyleFromColor(color);
     ctx.fillRect(x, y, 1, 1);
+}
+
+function getFillStyleFromColor(color) {
+    var pad = "00";
+    return "#"
+        + strPad(color[0].toString(16), pad)
+        + strPad(color[1].toString(16), pad)
+        + strPad(color[2].toString(16), pad);
+}
+
+function strPad(str, pad) {
+    return pad.substring(0, pad.length - str.length) + str;
 }
 
 // draw a line using "Bresenham's line algorithm"
@@ -397,7 +487,9 @@ function bline(x0, y0, x1, y1) {
 
 function plotChg(x, y) {
     var color = getPixelColor(xtoR(x), ytoR(y));
-    if (color == "black") {
+    if (color[0] == FOREGROUND_COLOR[0]
+        && color[1] == FOREGROUND_COLOR[1]
+        && color[2] == FOREGROUND_COLOR[2]) {
         plotOff(x, y);
     } else {
         plotOn(x, y);
@@ -429,7 +521,9 @@ function plot(x, y, mode) {
 
 function pixelTest(x, y) {
     var color = getPixelColor(x, y);
-    if (color == "black") {
+    if (color[0] == FOREGROUND_COLOR[0]
+        && color[1] == FOREGROUND_COLOR[1]
+        && color[2] == FOREGROUND_COLOR[2]) {
         return 1;
     } else {
         return 0;
@@ -438,7 +532,9 @@ function pixelTest(x, y) {
 
 function pixelChg(x, y) {
     var color = getPixelColor(x, y);
-    if (color == "black") {
+    if (color[0] == FOREGROUND_COLOR[0]
+        && color[1] == FOREGROUND_COLOR[1]
+        && color[2] == FOREGROUND_COLOR[2]) {
         pixelOff(x, y);
     } else {
         pixelOn(x, y);

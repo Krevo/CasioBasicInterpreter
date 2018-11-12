@@ -303,7 +303,9 @@ function clignoteCurseur() {
 function calcHandleOnKeyPress(e) {
     if (editMode) {
         var charCode = e.charCode;
-        if (charCode == 46 || (charCode >= 48 && charCode <= 57)) {
+        if (charCode == 45 // "-"
+          || charCode == 46 // "."
+          || (charCode >= 48 && charCode <= 57)) { // from "0" to "9"
             var currentLineIndex = textScreenLines.length - 1;
             if (currentLineBuffer !== null && currentLineBuffer.length < 20) {
                 currentLineBuffer += String.fromCharCode(charCode);

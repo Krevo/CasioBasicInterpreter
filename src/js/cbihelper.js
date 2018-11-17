@@ -128,9 +128,11 @@ function cbiInit() {
     if (window.addEventListener){
         window.addEventListener("keypress", calcHandleOnKeyPress, false);
         window.addEventListener("keydown", calcHandleOnKeyDown, false);
+        window.addEventListener("keyup", calcKeyUp, false);
     } else if (window.attachEvent){ // IE sucks !
         window.attachEvent("keypress", calcHandleOnKeyPress, false);
         window.attachEvent("keydown", calcHandleOnKeyDown, false);
+        window.attachEvent("keyup", calcKeyUp, false);
     }
 
     zoomW = c.width  / casioScreenW;
@@ -163,6 +165,14 @@ function prepareDisplay(ctx) {
     gtm = gtm.scaleNonUniform(zoomW,zoomH); // Apply zoom
     gtm = gtm.translate(dx,dy); // Translate so coords starts from (1,1) and go to (127,63);
     ctx.transform(gtm.a, gtm.b, gtm.c, gtm.d, gtm.e, gtm.f); // Apply transform to canvas
+}
+
+function calcKeyDown(keyCode) {
+    getkey = keyCode; // Test recup code
+}
+
+function calcKeyUp() {
+    getkey = 0;
 }
 
 function calcHandleOnKeyDown(e) {
@@ -216,6 +226,7 @@ function unpauseProgramExec() {
 function reset() {
     editMode = false;
     paused = false;
+    getkey = 0;
     stockVarName = ""; // Destination of input
     cursorMode = "_";
     cursorCol = 1;

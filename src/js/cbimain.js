@@ -71,6 +71,7 @@ var OP_PXL_TEST = 56;
 var OP_FLINE = 57;
 var OP_HORIZONTAL = 58;
 var OP_VERTICAL = 59;
+var OP_GETKEY = 60;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -79,6 +80,7 @@ var callStack = new Array();
 
 var v_names = new Array();
 var v_values = new Array();
+var getKey = 0;
 
 var DEBUG = 1;
 
@@ -435,6 +437,13 @@ function execute(node) {
                     break;
                 case OP_MCL:
                     mcl();
+                    break;
+                case OP_GETKEY:
+                    if (node.children.length == 1) {
+                        ret = (getkey == execute(node.children[0]));
+                    } else {
+                        ret = getkey;
+                    }
                     break;
             }
             break;

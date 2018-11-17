@@ -2,6 +2,36 @@
   <meta charset="UTF-8">
   <head>
     <script type="text/javascript" src="js/cbi.js"></script>
+<style>
+button {
+  border-radius: 4px;
+  margin: 2px;
+}
+
+.buttonVert {
+  display: inline-block;
+  padding: 2px 4px;
+  margin: 3px 2px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #85db85;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 2px 2px #999;
+}
+
+.buttonVert:hover {background-color: #52c452}
+
+.buttonVert:active {
+  background-color: #52c452;
+  box-shadow: 0 0 #666;
+  transform: translateY(2px) translateX(2px);
+}
+</style>
   </head>
   <body style="background-color: lightsteelblue">
     <div style="text-align: center">
@@ -12,10 +42,41 @@
         <canvas id="canvas1" width="508" height="252"></canvas>
         <canvas id="canvas2" width="508" height="252"></canvas>
        <br>
-         <button onclick="chooseColorScheme('black&white');">Black/White</button>
-         <button onclick="chooseColorScheme('blue&green');">Blue/Green</button>
-         <button onclick="swap();">G ↔ T</button>
-         <button style="display: none;" onclick="clignoteCurseurGraphOn();">Clignote</button>
+        <div style="display: block; padding-bottom: 4px;" >
+         <i>(WARNING: For now, this virtual keyboard is not for input but only for the 'GetKey' function)</i><br>
+         <button class="buttonVert" onmousedown="calcKeyDown(79)" onmouseup="calcKeyUp()" >F1</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(69)" onmouseup="calcKeyUp()" >F2</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(59)" onmouseup="calcKeyUp()" >F3</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(49)" onmouseup="calcKeyUp()" >F4</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(39)" onmouseup="calcKeyUp()" >F5</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(29)" onmouseup="calcKeyUp()" >F6</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(38)" onmouseup="calcKeyUp()" >←</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(28)" onmouseup="calcKeyUp()" >↑</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(37)" onmouseup="calcKeyUp()" >↓</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(27)" onmouseup="calcKeyUp()" >→</button>
+        <br>
+         <button class="buttonVert" onmousedown="calcKeyDown(71)" onmouseup="calcKeyUp()" >0</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(72)" onmouseup="calcKeyUp()" >1</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(62)" onmouseup="calcKeyUp()" >2</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(52)" onmouseup="calcKeyUp()" >3</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(73)" onmouseup="calcKeyUp()" >4</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(63)" onmouseup="calcKeyUp()" >5</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(53)" onmouseup="calcKeyUp()" >6</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(74)" onmouseup="calcKeyUp()" >7</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(64)" onmouseup="calcKeyUp()" >8</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(54)" onmouseup="calcKeyUp()" >9</button>
+        <br>
+         <button class="buttonVert" onmousedown="calcKeyDown(61)" onmouseup="calcKeyUp()" >.</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(42)" onmouseup="calcKeyUp()" >+</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(32)" onmouseup="calcKeyUp()" >-</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(43)" onmouseup="calcKeyUp()" >×</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(33)" onmouseup="calcKeyUp()" >÷</button>
+         <button class="buttonVert" onmousedown="calcKeyDown(31)" onmouseup="calcKeyUp()" >Exe</button>
+        </div>
+         <button class="" onclick="chooseColorScheme('black&white');">Black/White</button>
+         <button class="" onclick="chooseColorScheme('blue&green');">Blue/Green</button>
+         <button class="" onclick="swap();">G ↔ T</button>
+         <button class="buttonVert" style="display: none;" onclick="clignoteCurseurGraphOn();">Clignote</button>
        <br><br>
         <textarea id="srcCode" cols="80" rows="15">
         </textarea>
@@ -313,6 +374,17 @@ K<360=>Goto 1
 "Have a break ?"◢
 "Bye."
        </textarea>
+        <textarea style="display: none" id="srcCode11">
+Locate 3,4,"GetKey :"
+Lbl 0
+Getkey→Z
+If Z≠O
+Then Locate 12,4,"   "
+IfEnd
+Locate 12,4,Z
+Z→O
+Goto 0
+       </textarea>
         <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
@@ -323,10 +395,8 @@ K<360=>Goto 1
         <br>
         </div>
         <br>
- List of <a href="availablefunctions.html">currently implemented functions</a><br>
- (and list of <a href="knownproblems.html">known problems</a>)<br>
- <br>
- Sample programs :<br><br>
+ List of <a href="availablefunctions.html">currently implemented functions</a> (and list of <a href="knownproblems.html">known problems</a>)<br>
+ Sample programs :<br>
         <button onclick="loadProg(0);">Hello World !</button>  
         <button onclick="loadProg(1);">5,4,3,...</button>  
         <button onclick="loadProg(2);">Screen saver</button>  
@@ -338,7 +408,9 @@ K<360=>Goto 1
         <button onclick="loadProg(7);">Calendrier</button>
         <button onclick="loadProg(8);">City</button>  
         <button onclick="loadProg(9);">Polygon</button>
-        <button onclick="loadProg(10);">Hello ◢</button>   <br><br>
+        <button onclick="loadProg(10);">Hello ◢</button>
+        <button onclick="loadProg(11);">GetKey</button>
+        <br><br>
       </div>
     </div>
     <script type="text/javascript">

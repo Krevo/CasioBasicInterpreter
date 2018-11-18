@@ -163,7 +163,7 @@ function prepareDisplay(ctx) {
     var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     gtm = svgElement.createSVGMatrix();
     gtm = gtm.scaleNonUniform(zoomW,zoomH); // Apply zoom
-    gtm = gtm.translate(dx,dy); // Translate so coords starts from (1,1) and go to (127,63);
+    gtm = gtm.translate(dx,dy); // Translate so coords starts from (1,1) and go to (casioScreenW, casioScreenH);
     ctx.transform(gtm.a, gtm.b, gtm.c, gtm.d, gtm.e, gtm.f); // Apply transform to canvas
 }
 
@@ -351,7 +351,7 @@ function swapToTextScreen() {
 // Clear the current display
 function clearDisplay() {
     ctx.fillStyle = getFillStyleFromColor(BACKGROUND_COLOR)
-    ctx.fillRect(1, 1, 127, 63);
+    ctx.fillRect(1, 1, casioScreenW, casioScreenH);
 }
 
 //Interpreting functions
@@ -433,10 +433,10 @@ function drawTextGfx(y, x, str) {
 
 var plots = Array();
 var xmin = 1;
-var xmax = 127;
+var xmax = casioScreenW;
 var xscl = 0;
 var ymin = 1;
-var ymax = 63;
+var ymax = casioScreenH;
 var yscl = 0;
 
 function getPixelColor(x, y) {

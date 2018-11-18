@@ -385,6 +385,34 @@ Locate 12,4,Z
 Z→O
 Goto 0
        </textarea>
+        <textarea style="display: none" id="srcCode12">
+Locate 5,1,"== MENU =="
+Locate 9,3,"Prog 1"
+Locate 9,4,"Prog 2"
+Locate 9,5,"Prog 3"
+Locate 9,6,"Exit"
+
+0->K
+1->A
+Lbl 1
+GetKey->K
+A->O
+K=28=>A-1->A
+K=37=>A+1->A
+A>4=>1->A
+A<1=>4->A
+A<>O=>Locate 6,O+2,"  "
+Locate 6,A+2,"=>"
+K=31=>Goto 2
+Goto 1
+Lbl 2
+ClrText
+Locate 1,1,"You choose..."
+A=1=>Locate 2,2,"... prog 1"
+A=2=>Locate 2,2,"... prog 2"
+A=3=>Locate 2,2,"... prog 3"
+A=4=>Locate 2,2,"... to exit !"
+       </textarea>
         <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
@@ -402,14 +430,15 @@ Goto 0
         <button onclick="loadProg(2);">Screen saver</button>  
         <button onclick="loadProg(3);">Random dots</button>  
         <button onclick="loadProg(5);">Random num</button>
+        <button onclick="loadProg(6);">IMC</button>
         <br>
         <button onclick="loadProg(4);">Maze generator</button>
-        <button onclick="loadProg(6);">IMC</button>
         <button onclick="loadProg(7);">Calendrier</button>
         <button onclick="loadProg(8);">City</button>  
         <button onclick="loadProg(9);">Polygon</button>
         <button onclick="loadProg(10);">Hello ◢</button>
         <button onclick="loadProg(11);">GetKey</button>
+        <button onclick="loadProg(12);">Text Menu</button>
         <br><br>
       </div>
     </div>

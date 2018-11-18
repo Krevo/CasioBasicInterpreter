@@ -10,6 +10,9 @@
 - ~~multiplication sans opérateur '*'~~ 2018-11-04
 - ~~ajout While/WhileEnd~~ 2018-11-05
 - ~~ajout Do/LpWhile~~ 2018-11-05
+- ~~GetKey~~ 2018-11-18
+- rho / theta vars
+- Ans
 - ajout déplacement curseur (Plot x,y◢ ) , valid et recup coordonnées
 - ajout For/To/Step/Next
 - ajout And/Or/not

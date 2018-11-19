@@ -508,6 +508,7 @@ function jsccRun(str, finishCallBack) {
     cls();
 
     var nbErrors = 0;
+    var where = "";
 
     // Bon, maintenant faut parser tout les elts de programSrc
     for (var progName in programsSrc) {
@@ -520,6 +521,7 @@ function jsccRun(str, finishCallBack) {
             programs[progName]['error_cnt'] = parsedProg.error_cnt;
             programs[progName]['error_off'] = parsedProg.error_off;
             nbErrors += parsedProg.error_cnt;
+            if (where == "") { where = parsedProg.where; } // first error
         }
     }
 
@@ -538,7 +540,7 @@ function jsccRun(str, finishCallBack) {
         idTimerMain = setTimeout('executeNextLine()', 10);
         debug("timeout id = " + idTimerMain);
     } else {
-        finish(EXIT_SYNTAX_ERROR, "Syntax error", programs);
+        finish(EXIT_SYNTAX_ERROR, "Syntax error "+where, programs);
     }
 
 }
@@ -549,6 +551,7 @@ function parse(str, name) {
 
     var nodes = new Array();
     var labels = new Array();
+    var where = "";
 
     str = str + ":"; // Add a final ":" 
     str = str.replace(/(\u00A0)/g, ' '); // Replace "non breakable space" by space
@@ -569,6 +572,7 @@ function parse(str, name) {
     if ((error_cnt = __parse(str, error_off, error_la, nodes, labels)) > 0) {
         for (i = 0; i < error_cnt; i++) {
             //alert("SYNTAX ERROR Line " + nodes.length + " near " + str.substr(error_off[i], 30));
+            where = " near " + str.substr(error_off[i], 30);
             break;
         }
     }
@@ -580,7 +584,8 @@ function parse(str, name) {
         nodes: nodes,
         labels: labels,
         error_cnt: error_cnt,
-        error_off: error_off
+        error_off: error_off,
+        where: where
     }
 }
 

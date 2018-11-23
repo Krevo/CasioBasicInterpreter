@@ -466,7 +466,7 @@ function cut(name, arrayOfLines, startIndexIncluded, stopIndexExcluded) {
         if (arrayOfLines[i].substr(0, 1) == "'" || arrayOfLines[i].substr(0, 1) == "#" || arrayOfLines[i].substr(0, 2) == "@@" || arrayOfLines[i].trim() == "") {
             continue;
         }
-        prog.push(arrayOfLines[i]);
+        prog.push((i+1) + "|" + arrayOfLines[i]);
     }
     return prog;
 }
@@ -487,6 +487,8 @@ function jsccRun(str, finishCallBack) {
 
     this.finishCallBack = finishCallBack;
     
+    str = str.replace(/(?:\r\n|\r|\n)/g, "\n");
+
     var arrayOfLines = str.split("\n");
     debug(arrayOfLines);
     var progName = "main"; // default prog name
@@ -514,7 +516,7 @@ function jsccRun(str, finishCallBack) {
     for (var progName in programsSrc) {
         if (programsSrc.hasOwnProperty(progName)) {
             debug("parsing " + progName + " ...");
-            parsedProg = parse(programsSrc[progName].join(":"), progName);
+            parsedProg = parse(programsSrc, progName);
             programs[progName] = new Array();
             programs[progName]['nodes'] = parsedProg.nodes;
             programs[progName]['labels'] = parsedProg.labels;
@@ -522,6 +524,7 @@ function jsccRun(str, finishCallBack) {
             programs[progName]['error_off'] = parsedProg.error_off;
             nbErrors += parsedProg.error_cnt;
             if (where == "") { where = parsedProg.where; } // first error
+            if (parsedProg.error_cnt > 0) { break; } // Stop parsing onfirst error !
         }
     }
 
@@ -540,28 +543,54 @@ function jsccRun(str, finishCallBack) {
         idTimerMain = setTimeout('executeNextLine()', 10);
         debug("timeout id = " + idTimerMain);
     } else {
-        finish(EXIT_SYNTAX_ERROR, "Syntax error "+where, programs);
+        finish(EXIT_SYNTAX_ERROR, "Syntax error " + where, programs);
     }
 
 }
 
-function parse(str, name) {
+// Calculate begin /end offset of each line
+function calculateLinesOffset(linesOfSourceCode) {
+    var lineOffsets = new Array();
+    var baseOffset = 0;
+    for (var i = 0; i<linesOfSourceCode.length; i++) {
+        var currentLineNum = linesOfSourceCode[i].substr(0, linesOfSourceCode[i].indexOf('|'));
+        linesOfSourceCode[i] = linesOfSourceCode[i].substr(linesOfSourceCode[i].indexOf('|') + 1); // Remove line number indicator at the start
+        lineOffsets[currentLineNum] = [baseOffset, baseOffset + linesOfSourceCode[i].length]; // .. not linesOfSourceCode[i].length - 1 because a ':' will be append to it
+        baseOffset += linesOfSourceCode[i].length + 1;
+    }
+    return lineOffsets;
+}
 
-    debug("Parsing " + name + " ...");
+function giveLineFromOffset(lineOffsets, offset) {
+    for (var key in lineOffsets) {
+        if (key === 'length' || !lineOffsets.hasOwnProperty(key)) continue;
+        if (offset >= lineOffsets[key][0] && offset <= lineOffsets[key][1]) {
+        return key; // Line num found from offset !!
+        }
+    }
+    return -1; // unknown line (should never append)
+}
 
+function giveLineFromSourceCode(lineNum, lines) {
+    for (i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith(lineNum+"|")) {
+            return lines[i].substr((lineNum+"|").length);
+        }
+    }
+    return "";
+}
+
+function parse(programsSrc, progName) {
+
+    var linesOfSourceCode = programsSrc[progName].map(cbiReplace);
+    var lineOffsets = calculateLinesOffset(linesOfSourceCode); // Calculate offsets and remove line number indicator (ie "xx|" at the beginning)
+    var str = linesOfSourceCode.join(":");
+    str = str + ":"; // Add a final ":" 
+
+    debug("Parsing " + progName + " ...");
     var nodes = new Array();
     var labels = new Array();
     var where = "";
-
-    str = str + ":"; // Add a final ":" 
-    str = str.replace(/(\u00A0)/g, ' '); // Replace "non breakable space" by space
-    str = str.replace(/(\u2192)/g, '->'); // Replace "right arrow" by "->"
-    str = str.replace(/(\u21D2)/g, '=>'); // Replace "rightwards double arrow" by "=>"
-    str = str.replace(/(\u2260)/g, '<>'); // Replace "not equal to" by "<>"
-    str = str.replace(/(\u2264)/g, '<='); // Replace "lower or equal" by "<="
-    str = str.replace(/(\u2265)/g, '>='); // Replace "lower or equal" by ">="
-    str = str.replace(/(\u25E2:|_:)/g, ':_Disp_:'); // Replace "black lower right triangle" or "_" by "_Disp_"
-    str = str.replace(/(?:\r\n|\r|\n)/g, ':'); // Replace CR / LF with ":" (our instruction separator)
 
     var error_cnt = 0;
     var error_off = new Array();
@@ -571,8 +600,8 @@ function parse(str, name) {
 
     if ((error_cnt = __parse(str, error_off, error_la, nodes, labels)) > 0) {
         for (i = 0; i < error_cnt; i++) {
-            //alert("SYNTAX ERROR Line " + nodes.length + " near " + str.substr(error_off[i], 30));
-            where = " near " + str.substr(error_off[i], 30);
+            var lineNum = giveLineFromOffset(lineOffsets, error_off[i]);
+            if (lineNum != -1) { where = " line " + lineNum + " ( " + giveLineFromSourceCode(lineNum, programsSrc[progName]) + " )"; }
             break;
         }
     }
@@ -587,6 +616,18 @@ function parse(str, name) {
         error_off: error_off,
         where: where
     }
+}
+
+function cbiReplace(str) {
+    str = str.replace(/(\u00A0)/g, ' '); // Replace "non breakable space" by space
+    str = str.replace(/(\u2192)/g, '->'); // Replace "right arrow" by "->"
+    str = str.replace(/(\u21D2)/g, '=>'); // Replace "rightwards double arrow" by "=>"
+    str = str.replace(/(\u2260)/g, '<>'); // Replace "not equal to" by "<>"
+    str = str.replace(/(\u2264)/g, '<='); // Replace "lower or equal" by "<="
+    str = str.replace(/(\u2265)/g, '>='); // Replace "greater or equal" by ">="
+    str = str.replace(/(\u25E2:|_:)/g, ':_Disp_:'); // Replace "black lower right triangle" or "_" by "_Disp_"
+    //str = str.replace(/(?:\r\n|\r|\n)/g, ':'); // Replace CR / LF with ":" (our instruction separator)
+    return str;
 }
 
 function unstack() {

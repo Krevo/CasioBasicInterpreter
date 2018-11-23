@@ -1,7 +1,10 @@
 <html>
   <meta charset="UTF-8">
   <head>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-linedtextarea.js"></script>
     <script type="text/javascript" src="js/cbi.js"></script>
+    <link href="css/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
 <style>
 button {
   border-radius: 4px;
@@ -78,8 +81,13 @@ button {
          <button class="" onclick="swap();">G ↔ T</button>
          <button class="buttonVert" style="display: none;" onclick="clignoteCurseurGraphOn();">Clignote</button>
        <br><br>
-        <textarea id="srcCode" cols="80" rows="15">
-        </textarea>
+         <center>
+          <table><tr><td>
+          <textarea id="srcCode" class="lined" cols="80" rows="15">
+          </textarea>
+          </td></tr></table>
+         </center>
+        
         <textarea style="display: none" id="srcCode0">
 ""
 ""
@@ -495,6 +503,11 @@ A=4=>Locate 2,2,"... to exit !"
       window.onload = function() {
           loadProg(0);
       }
+
+$(function() {
+	$(".lined").linedtextarea(
+	);
+});
 
       //executeCode();
     </script>

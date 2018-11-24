@@ -125,14 +125,14 @@ function cbiInit() {
     c = c1;
     ctx = ctx1;
 
+    reverseKeyCode();
+
     if (window.addEventListener){
-        window.addEventListener("keypress", calcHandleOnKeyPress, false);
         window.addEventListener("keydown", calcHandleOnKeyDown, false);
-        window.addEventListener("keyup", calcKeyUp, false);
+        window.addEventListener("keyup", calcHandleOnKeyUp, false);
     } else if (window.attachEvent){ // IE sucks !
-        window.attachEvent("keypress", calcHandleOnKeyPress, false);
         window.attachEvent("keydown", calcHandleOnKeyDown, false);
-        window.attachEvent("keyup", calcKeyUp, false);
+        window.attachEvent("keyup", calcHandleOnKeyUp, false);
     }
 
     zoomW = c.width  / casioScreenW;
@@ -167,29 +167,108 @@ function prepareDisplay(ctx) {
     ctx.transform(gtm.a, gtm.b, gtm.c, gtm.d, gtm.e, gtm.f); // Apply transform to canvas
 }
 
-function calcKeyDown(keyCode) {
-    getkey = keyCode; // Test recup code
+var casioKeyCode2PCKeyboard = {
+    "79": "F1",
+    "69": "F2",
+    "59": "F3",
+    "49": "F4",
+    "39": "F5",
+    "29": "F6",
+    "38": "ArrowLeft",
+    "28": "ArrowUp",
+    "37": "ArrowDown",
+    "27": "ArrowRight",
+    "71": "0",
+    "72": "1",
+    "62": "2",
+    "52": "3",
+    "73": "4",
+    "63": "5",
+    "53": "6",
+    "74": "7",
+    "64": "8",
+    "54": "9",
+    "61": ".",
+    "42": "+",
+    "32": "-",
+    "43": "*",
+    "33": "/",
+    "31": "Enter"
+};
+
+var PCKeyBoard2CasioKey = {};
+
+function reverseKeyCode() {
+    for (var key in casioKeyCode2PCKeyboard) {
+        if (casioKeyCode2PCKeyboard.hasOwnProperty(key)) {
+            PCKeyBoard2CasioKey[casioKeyCode2PCKeyboard[key]] = key;
+        }
+    }
 }
 
 function calcKeyUp() {
     getkey = 0;
 }
 
+function calcKeyDown(keyCode) {
+    getkey = keyCode;
+    handleOnKeyDown({key: casioKeyCode2PCKeyboard[keyCode]});
+}
+
+function calcHandleOnKeyUp(e) {
+    getkey = 0;
+}
+
 function calcHandleOnKeyDown(e) {
+    if (typeof PCKeyBoard2CasioKey[e.key] !== 'undefined') {
+        getkey = PCKeyBoard2CasioKey[e.key];
+    }
+    handleOnKeyDown(e);
+}
+
+function handleOnKeyDown(e) {
+    var doPrevent = false;
 
     // Disable back button acting like history previous / back
-    var doPrevent = false;
-    if (e.keyCode === 8) {
+    // ... and arrow down acting like moving page down 
+    // ...
+    if (e.key == "Backspace"
+         || e.key == "Enter"
+         || e.key == "ArrowUp"
+         || e.key == "ArrowDown"
+         || e.key == "ArrowLeft"
+         || e.key == "ArrowRight") {
         var d = e.srcElement || e.target;
-        if ((d.tagName.toUpperCase() === 'INPUT' && (d.type.toUpperCase() === 'TEXT' || d.type.toUpperCase() === 'PASSWORD'))
-            || d.tagName.toUpperCase() === 'TEXTAREA') {
+        if (d && ((d.tagName.toUpperCase() === 'INPUT' && (d.type.toUpperCase() === 'TEXT' || d.type.toUpperCase() === 'PASSWORD'))
+            || d.tagName.toUpperCase() === 'TEXTAREA')) {
             doPrevent = d.readOnly || d.disabled;
         } else {
             doPrevent = true;
         }
     }
+/*
+    if (e.key == "Backspace"
+         || e.key == "Enter"
+         || e.key == "ArrowUp"
+         || e.key == "ArrowDown"
+         || e.key == "ArrowLeft"
+         || e.key == "ArrowRight") {
+        doPrevent = true;
+    }
+*/
+    if (editMode) {
+        if (e.key == '-' || e.key == '.' || (e.key >= '0' && e.key <= '9')) {
+            var currentLineIndex = textScreenLines.length - 1;
+            if (currentLineBuffer !== null && currentLineBuffer.length < 20) {
+                currentLineBuffer += e.key;
+                textScreenLines[currentLineIndex] = currentLineBuffer;
+                drawTextLine(currentLineIndex + 1, currentLineBuffer);
+                cursorCol += 1;
+            }
+        }
+    }
 
-    if ((e.keyCode == 8 || e.keyCode == 46) && editMode && currentLineBuffer.length > 0) {
+    if ((e.key == "Backspace" || e.key === "Delete") && editMode && currentLineBuffer.length > 0) {
         currentLineBuffer = currentLineBuffer.substring(0, currentLineBuffer.length - 1);
         cursorMode = " ";
         clignoteCurseur(); // Clear old position
@@ -199,14 +278,12 @@ function calcHandleOnKeyDown(e) {
         clignoteCurseur(); // Cursor at new pos
     }
 
-    if (e.keyCode == 13 && editMode) { // 13 is "ENTER / CARRIAGE RETURN"
-        doPrevent = true;
+    if (e.key == "Enter" && editMode) {
         editModeOff();
         unpauseProgramExec();
     }
 
-    if (e.keyCode == 13 && dispMode) { // 13 is "ENTER / CARRIAGE RETURN"
-        doPrevent = true;
+    if (e.key == "Enter" && dispMode) {
         dispModeOff();
         unpauseProgramExec();
     }
@@ -308,23 +385,6 @@ function clignoteCurseur() {
         cursorMode = " ";
     } else {
         cursorMode = "_";
-    }
-}
-
-function calcHandleOnKeyPress(e) {
-    if (editMode) {
-        var charCode = e.charCode;
-        if (charCode == 45 // "-"
-          || charCode == 46 // "."
-          || (charCode >= 48 && charCode <= 57)) { // from "0" to "9"
-            var currentLineIndex = textScreenLines.length - 1;
-            if (currentLineBuffer !== null && currentLineBuffer.length < 20) {
-                currentLineBuffer += String.fromCharCode(charCode);
-                textScreenLines[currentLineIndex] = currentLineBuffer;
-                drawTextLine(currentLineIndex + 1, currentLineBuffer);
-                cursorCol += 1;
-            }
-        }
     }
 }
 

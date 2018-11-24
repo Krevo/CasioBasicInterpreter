@@ -47,6 +47,7 @@ button {
        <br>
         <div style="display: block; padding-bottom: 4px;" >
          <i>(WARNING: For now, this virtual keyboard is not for input but only for the 'GetKey' function)</i><br>
+		 <!-- onclick="calcKeyDown(79); setTimeout(calcKeyUp, 200)" -->
          <button class="buttonVert" onmousedown="calcKeyDown(79)" onmouseup="calcKeyUp()" >F1</button>
          <button class="buttonVert" onmousedown="calcKeyDown(69)" onmouseup="calcKeyUp()" >F2</button>
          <button class="buttonVert" onmousedown="calcKeyDown(59)" onmouseup="calcKeyUp()" >F3</button>
@@ -484,6 +485,7 @@ A=4=>Locate 2,2,"... to exit !"
 
       function executeCode() {
         var srcCode = document.getElementById("srcCode").value;
+		document.getElementById("srcCode").focus();
         document.getElementById("srcCode").disabled = true;
         document.getElementById("status").innerHTML = '';
         if (idTimerMain == 0) {

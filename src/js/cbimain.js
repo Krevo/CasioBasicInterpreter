@@ -82,7 +82,7 @@ var v_names = new Array();
 var v_values = new Array();
 var getKey = 0;
 
-var DEBUG = 1;
+var DEBUG = 0;
 
 var EXIT_SUCCESS = 0;
 var EXIT_STOPPED = 14;

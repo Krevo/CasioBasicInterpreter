@@ -1,19 +1,19 @@
-- ~~gestion programmes / sous-programmes (appel Prog "xyz", Return, ...)~~ 2014-12-15
+- ~~manage progs / sub progs (Prog "xyz" calls, Return, ...)~~ 2014-12-15
 - ~~mode Deg, Rad, Grad~~ 2014-12-15
-- ~~fonction trigo (sin, cos, tan)~~ 2014-12-16
+- ~~trig function trigo (sin, cos, tan)~~ 2014-12-16
 - ~~Pol() / Rec()~~ 2014-12-16
-- ~~ajout affectation à un ensemble de variable genre 1→A~Z~~  2014-12-22
-- ~~gestion commentaire 1 line : 'commentaire~~  2014-12-22
-- ~~ajout Text x,y,"..."~~ 2014-12-23
-- ~~ajout pause affichage : ◢ , [EXE] pour continuer~~ 2015-01-17
-- ~~ajout If/Then/Else/IfEnd~~ 2016-01-12
-- ~~multiplication sans opérateur '*'~~ 2018-11-04
-- ~~ajout While/WhileEnd~~ 2018-11-05
-- ~~ajout Do/LpWhile~~ 2018-11-05
+- ~~add asign to multiple vars  1→A~Z~~  2014-12-22
+- ~~manage 1 comment : 'comment~~  2014-12-22
+- ~~add Text x,y,"..."~~ 2014-12-23
+- ~~add display pause : ◢ , [EXE] to go on~~ 2015-01-17
+- ~~add If/Then/Else/IfEnd~~ 2016-01-12
+- ~~multiply without '*' operator '*'~~ 2018-11-04
+- ~~add While/WhileEnd~~ 2018-11-05
+- ~~add Do/LpWhile~~ 2018-11-05
 - ~~GetKey~~ 2018-11-18
-- rho / theta vars
+- add And/Or/Xor/Not
+- add For/To/Step/Next
+- add rho / theta vars
 - Ans
-- ajout déplacement curseur (Plot x,y◢ ) , valid et recup coordonnées
-- ajout For/To/Step/Next
-- ajout And/Or/not
-- autres fonctions trigo
+- add move cursor (Plot x,y◢ ) , validate and get coords
+- other trigo functions

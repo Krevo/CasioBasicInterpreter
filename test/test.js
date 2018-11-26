@@ -1,16 +1,16 @@
 QUnit.config.testTimeout = 5000;
 
 QUnit.test("No syntax errors - test", function( assert ) {
-  assert.equal(parse('"    Hello World !"').error_cnt, 0, "Hello world");
-  assert.equal(parse('5->A:Lbl 1:A:Dsz A:Goto 1:"      Ignition !"',"TestProg").error_cnt, 0, "Dsz parse test");
-  assert.equal(parse('Goto 1:Lbl 1:"Done."').error_cnt, 0, "Label declared after goto using it.");
-  assert.equal(parse('Int(Ran#*100+1)->R').error_cnt, 0, "Int(Ran#) affected to a var");
-  assert.equal(parse('5->A:If A>0:Then "A > 0":IfEnd').error_cnt, 0, "If...Then..IfEnd");
+  assert.equal(parse({main: ['1|"    Hello World !"']}, "main").error_cnt, 0, "Hello world");
+  assert.equal(parse({main: ['1|5->A:Lbl 1:A:Dsz A:Goto 1:"      Ignition !"']}, "main").error_cnt, 0, "Dsz parse test");
+  assert.equal(parse({main: ['1|Goto 1:Lbl 1:"Done."']}, "main").error_cnt, 0, "Label declared after goto using it.");
+  assert.equal(parse({main: ['1|Int(Ran#*100+1)->R']}, "main").error_cnt, 0, "Int(Ran#) affected to a var");
+  assert.equal(parse({main: ['1|5->A:If A>0:Then "A > 0":IfEnd']}, "main").error_cnt, 0, "If...Then..IfEnd");
 });
 
 QUnit.test("Syntax errors - test", function( assert ) {
-  assert.notEqual(parse('Gato 1:Lbl 1:"Done."').error_cnt, 0, "Uncorrectly named 'Goto' instruction");
-  assert.notEqual(parse('5->A:If A>0 Then "A > 0" IfEnd').error_cnt, 0, "If...Then..IfEnd (mono line)");
+  assert.notEqual(parse({main: ['1|Gato 1:Lbl 1:"Done."']}, "main").error_cnt, 0, "Uncorrectly named 'Goto' instruction");
+  assert.notEqual(parse({main: ['1|5->A:If A>0 Then "A > 0" IfEnd']}, "main").error_cnt, 0, "If...Then..IfEnd (mono line)");
 });
 
 QUnit.test("jsccRun - test", function( assert ) {

@@ -421,6 +421,33 @@ A=2=>Locate 2,2,"... prog 2"
 A=3=>Locate 2,2,"... prog 3"
 A=4=>Locate 2,2,"... to exit !"
        </textarea>
+        <textarea style="display: none" id="srcCode13">
+Text 10,15,"A"
+Text 10,25,"B"
+Text 10,35,"And"
+Text 10,49,"Or"
+Text 10,60,"Xor"
+Text 10,75,"Not A"
+Text 10,98,"Not B"
+
+0->A
+20->I
+Do
+0->B
+Do
+Text I,15,A
+Text I,25,B
+Text I,40,A And B
+Text I,51,A Or B
+Text I,63,A Xor B
+Text I,82,Not A
+Text I,105,Not B
+I+7->I
+B+1->B
+LpWhile B<2
+A+1->A
+LpWhile A<2
+       </textarea>
         <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
@@ -433,20 +460,21 @@ A=4=>Locate 2,2,"... to exit !"
         <br>
  List of <a href="availablefunctions.html">currently implemented functions</a> (and list of <a href="knownproblems.html">known problems</a>)<br>
  Sample programs :<br>
-        <button onclick="loadProg(0);">Hello World !</button>  
-        <button onclick="loadProg(1);">5,4,3,...</button>  
-        <button onclick="loadProg(2);">Screen saver</button>  
-        <button onclick="loadProg(3);">Random dots</button>  
+        <button onclick="loadProg(0);">Hello World !</button>
+        <button onclick="loadProg(1);">5,4,3,...</button>
+        <button onclick="loadProg(2);">Screen saver</button>
+        <button onclick="loadProg(3);">Random dots</button>
         <button onclick="loadProg(5);">Random num</button>
         <button onclick="loadProg(6);">IMC</button>
+        <button onclick="loadProg(8);">City</button>
         <br>
         <button onclick="loadProg(4);">Maze generator</button>
         <button onclick="loadProg(7);">Calendrier</button>
-        <button onclick="loadProg(8);">City</button>  
         <button onclick="loadProg(9);">Polygon</button>
         <button onclick="loadProg(10);">Hello ◢</button>
         <button onclick="loadProg(11);">GetKey</button>
         <button onclick="loadProg(12);">Text Menu</button>
+        <button onclick="loadProg(13);">Bool. table</button>
         <br><br>
       </div>
     </div>

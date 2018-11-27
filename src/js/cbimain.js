@@ -72,6 +72,10 @@ var OP_FLINE = 57;
 var OP_HORIZONTAL = 58;
 var OP_VERTICAL = 59;
 var OP_GETKEY = 60;
+var OP_NOT = 61;
+var OP_AND = 62;
+var OP_OR = 63;
+var OP_XOR = 64;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -152,6 +156,20 @@ function execute(node) {
     switch (node.type) {
         case NODE_OP:
             switch (node.value) {
+                case OP_NOT:
+                    ret = !execute(node.children[0]) ? 1 : 0;
+                    break;
+                case OP_AND:
+                    ret = (execute(node.children[0]) && execute(node.children[1])) ? 1 : 0;
+                    break;
+                case OP_OR:
+                    ret = (execute(node.children[0]) || execute(node.children[1])) ? 1 : 0;
+                    break;
+                case OP_XOR:
+                    var node0 = execute(node.children[0]);
+                    var node1 = execute(node.children[1]);
+                    ret = ((node0 && !node1) || (!node0 && node1)) ? 1 : 0;
+                    break;
                 case OP_NONE:
                     if (node.children[0]) {
                         execute(node.children[0]);
@@ -343,22 +361,22 @@ function execute(node) {
                     dispModeOn();
                     break;
                 case OP_EQU:
-                    ret = execute(node.children[0]) == execute(node.children[1]);
+                    ret = (execute(node.children[0]) == execute(node.children[1])) ? 1 : 0;
                     break;
                 case OP_NEQ:
-                    ret = execute(node.children[0]) != execute(node.children[1]);
+                    ret = (execute(node.children[0]) != execute(node.children[1])) ? 1 : 0;
                     break;
                 case OP_GRT:
-                    ret = execute(node.children[0]) > execute(node.children[1]);
+                    ret = (execute(node.children[0]) > execute(node.children[1])) ? 1 : 0;
                     break;
                 case OP_LOT:
-                    ret = execute(node.children[0]) < execute(node.children[1]);
+                    ret = (execute(node.children[0]) < execute(node.children[1])) ? 1 : 0;
                     break;
                 case OP_GRE:
-                    ret = execute(node.children[0]) >= execute(node.children[1]);
+                    ret = (execute(node.children[0]) >= execute(node.children[1])) ? 1 : 0;
                     break;
                 case OP_LOE:
-                    ret = execute(node.children[0]) <= execute(node.children[1]);
+                    ret = (execute(node.children[0]) <= execute(node.children[1])) ? 1 : 0;
                     break;
                 case OP_ADD:
                     ret = execute(node.children[0]) + execute(node.children[1]);

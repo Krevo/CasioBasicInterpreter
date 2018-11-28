@@ -12,8 +12,8 @@
 - ~~add Do/LpWhile~~ 2018-11-05
 - ~~GetKey~~ 2018-11-18
 - ~~add And/Or/Xor/Not~~ 2018-11-27
+- ~~add rho / theta vars~~ 2018-11-28
 - add For/To/Step/Next
-- add rho / theta vars
 - Ans
 - add move cursor (Plot x,y◢ ) , validate and get coords
 - other trigo functions

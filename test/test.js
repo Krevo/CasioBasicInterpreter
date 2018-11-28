@@ -7,6 +7,7 @@ QUnit.test("No syntax errors - test", function( assert ) {
   assert.equal(parse({main: ['1|Int(Ran#*100+1)->R']}, "main").error_cnt, 0, "Int(Ran#) affected to a var");
   assert.equal(parse({main: ['1|5->A:If A>0:Then "A > 0":IfEnd']}, "main").error_cnt, 0, "If...Then..IfEnd");
   assert.equal(parse({main: ['1|1->A:0->B:A And B:A Or B:A Xor B:Not A']}, "main").error_cnt, 0, "And/Or/Xor/Not");
+  assert.equal(parse({main: ['1|Mcl:2->θ:3->r:5rθ:']}, "main").error_cnt, 0, "Rho / Theta");
 });
 
 QUnit.test("Syntax errors - test", function( assert ) {
@@ -130,7 +131,17 @@ QUnit.test("jsccRun - test", function( assert ) {
         (Not A And B) Or (A And Not B)
       `,
       answer: 0
-  }];
+    },
+    {
+      name: 'Rho Theta',
+      srcCode: `
+        Mcl
+        2->θ
+        3->r
+        5rθ
+      `,
+      answer: 30
+ }];
 
   assert.expect(testsToRun.length * 2);
   var done = assert.async(testsToRun.length);

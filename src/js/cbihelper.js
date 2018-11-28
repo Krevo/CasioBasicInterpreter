@@ -193,7 +193,8 @@ var casioKeyCode2PCKeyboard = {
     "32": "-",
     "43": "*",
     "33": "/",
-    "31": "Enter"
+    "31": "Enter",
+    "44": "Backspace"
 };
 
 var PCKeyBoard2CasioKey = {};
@@ -288,7 +289,7 @@ function handleOnKeyDown(e) {
         unpauseProgramExec();
     }
 
-    if (doPrevent) {
+    if (doPrevent && e.preventDefault) {
         e.preventDefault();
     }
 

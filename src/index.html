@@ -366,17 +366,18 @@ A<=0=>Goto 1
 Deg
 Mcl
 Range 1,127,0,1,63,0
-" POLYGON "
+" -- POLYGON -- "
 "NB COTE "?->N
+"RAYON (px) "?->r
 360/N->A
-Plot 94,32
-0->K
+Plot 64+r,32
+0->θ
 Lbl 1
-K+A->K
-Rec(30,K)
+θ+A->θ
+Rec(r,θ)
 Plot I+64,J+32
 Line
-K<360=>Goto 1
+θ<360=>Goto 1
        </textarea>
         <textarea style="display: none" id="srcCode10">
 "Hello !"

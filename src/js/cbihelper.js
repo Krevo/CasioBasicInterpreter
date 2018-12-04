@@ -39,7 +39,7 @@ casioFont.src = "data:image/gif;base64,R0lGODlhAAYIAKEBAAQEBP///////////yH5BAEKA
 changeColorOnImage(casioFont);
 
 var casioFontGfx = new Image();
-casioFontGfx.src = "data:image/gif;base64,R0lGODlhAAYIAIABAAQEBP///yH5BAEKAAEALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXuy7yuBBtyLN95stf5DwwKb7wZEecwIovJBoxZHPaCuBkUSdwtj88q02atgsExMRY7VmjL5uW5hrbRlN06NSr+4XXSdN4bNxSo1ldoSGh0qCj1ZSU4ssIm6RbWxWLhuKj4twdHFnYJiYGZNKj3AJrXchWqMurqoaon6rR6lcoINKGzq7kY+9rKglhhB3wsigxLuyYcGfys7AxNLR2djL2sPT27fe2N4Uk3LideTj53rp7OPtb+hu4uD78+b/5+bx9/2kPv9GZmio+BiXzxcvdHYDs++fzhCShoID56AQdBNJem4ML+J2p40KDoyZQXffb8yWPIMJ0ufhkRafRzsKDMlQI7kvPTBk6ZNQ0l1qOEMqMsku92eiRUjE0Wji0JUnGaMKhKeCDPJPVhNNGHiFpPKvxENGyfqk6f7psTKKGpmj5jNjXI9WfPeFQzdQ1Llu5cuXr78v2Lz29gwHj3Dj5cWHBir3kJN0b8eDFkw5IrR75MGfPMzWhJ0ZzKtuvGbmNvAgJaK3UTjbeY2sW5eiedEq6FIkTNrlPKkQc/ltsS0qXtzGChBm051KzdJm1wP6ytHHRwCIqBGycu2zTLmbwnKzEKfmmx2kdXa8U0PJjUfm1/U//4Hut631D4FEV6JLt3OVn+q5elWU8taMSmX3HqpPQPY1xUgk5rmjkmTnbGEOdfhYSd8+B+GlpGIYQWbpihVwiGSGKHIJrI4Ycpesjihr5Mxdtmod2Gi0EOHZfeSzEe+BaApclHXz5uXeQXTCCN6MhoYKkEE3YH7tgUkb+IJeRxR95DZJCfWLecjyOR5RtBnDCSFYgjvFZeKWrWV6OSMqlikRC6JXVfgKUk+N04QA14kWwhdtniHQWuNeBTdd311ZCvcVflmyhGRoxZJar4p4KTBnrpiZQ+yildG3SKKaiahrppqaSe6uKM+UH05Vtw2vFmctsx11pqrKEGG6wu6daCo9+FKRybDCJHEa9+NmL+p5VaBrsgo/3FiitPgj4C3XPkLbUPSrkBVByUL2ErEa8YimhrjicN2lB4/Im3KyBasNQZOJ5JGVcKv927UHc6RiimfNoimmpOleF4JYKqHfUrf8y1l+1psNK6p6hUkulTpisiNq6po258cccWWwyvxxJ/PHLJGot88lqFbLtvj+kBSy+2ssJF81hSyjrUzDXvzHPPPv8MdNBCD0100ebmnJm6413VLrjMYrSytibVW9K6yWacV1r+toyuYk8P/F/BDMsJtVBxvPqtjDfzm3Kjh5Dcdtyoojw33HVLnDbHl2UzjTXV8P1N34D/Le/gfvcyZcxJUq2qjE4bDTnaPkKCC3nlll+Oeeaab145slF0I/ive7IyHprmYRW4LFE5Lqjg4Ai4OFLO0damG65T19Fp3JSLC+KW6JwBgBB/XvvsCjloePKnr6z87akTTjz0zx/e/PTVS4899YUvr73zvXIOfvjij09++eafj3766q/Pfvvuvw9//PLPT3/99t+P//wFAAA7";
+casioFontGfx.src = "data:image/gif;base64,R0lGODlhAAYIAKECAAQEBP///v///////yH5BAEKAAIALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXuy7yuBBtyLN95stf5DwwKb7wZEecwIovJBoxZHPaCuBkUSdwtj88q02atgsExMRY7VmjL5uW5hrbRlN06NSr+4XXSdN4bNxSo1ldoSGh0qCj1ZSU4ssIm6RbWxWLhuKj4twdHFnYJiYGZNKj3AJrXchWqMurqoaon6rR6lcoINKGzq7kY+9rKglhhB3wsigxLuyYcGfys7AxNLR2djL2sPT27fe2N4Uk3LideTj53rp7OPtb+hu4uD78+b/5+bx9/2kPv9GZmio+BiXzxcvdHYDs++fzhCShoID56AQdBNJem4ML+J2p40KDoyZQXffb8yWPIMJ0ufhkRafRzsKDMlQI7kvPTBk6ZNQ0l1qOEMqMsku92eiRUjE0Wji0JUnGaMKhKeCDPJPVhNNGHiFpPKvxENGyfqk6f7psTKKGpmj5jNjXI9WfPeFQzdQ1Llu5cuXr78v2Lz29gwHj3Dj5cWHBir3kJN0b8eDFkw5IrR75MGfPMzWhJ0ZzKtuvGbmNvAgJaK3UTjbeY2sW5eiedEq6FIkTNrlPKkQc/ltsS0qXtzGChBm051KzdJm1wP6ytHHRwCIqBGycu2zTLmbwnKzEKfmmx2kdXa8U0PJjUfm1/U//4Hut631D4FEV6JLt3OVn+q5elWU8taMSmX3HqpPQPY1xUgk5rmjkmTnbGEOdfhYSd8+B+GlpGIYQWbpihVwiGSGKHIJrI4Ycpesjihr5Mxdtmod2Gi0EOHZfeSzEe+BaApclHXz5uXeQXTCCN6MhoYKkEE3YH7tgUkb+IJeRxR95DZJCfWLecjyOR5RtBnDCSFYgjvFZeKWrWV6OSMqlikRC6JXVfgKUk+N04QA14kWwhdtniHQWuNeBTdd311ZCvcVflmyhGRoxZJar4p4KTBnrpiZQ+yildG3SKKaiahrppqaSe6uKM+UH05Vtw2vFmctsx11pqrKEGG6wu6daCo9+FKRybDCJHEa9+NmL+p5VaBrsgo/3FiitPgj4C3XPkLbUPSrkBVByUL2ErEa8YimhrjicN2lB4/Im3KyBasNQZOJ5JGVcKv927UHc6RiimfNoimmpOleF4JYKqHfUrf8y1l+1psNK6p6hUkulTpisiNq6po258cccWWwyvxxJ/PHLJGot88lqFbLtvj+kBSy+2ssJF81hSyjrUzDXvzHPPPv8MdNBCD0100ebmnJm6413VLrjMYrSytibVW9K6yWacV1r+toyuYk8P/F/BDMsJtVBxvPqtjDfzm3Kjh5Dcdtyoojw33HVLnDbHl2UzjTXV8P1N34D/Le/gfvcyZcxJUq2qjE4bDTnaPkKCC3nlll+Oeeaab145slF0I/ive7IyHprmYRW4LFE5Lqjg4Ai4OFLO0damG65T19Fp3JSLC+KW6JwBgBB/XvvsCjloePKnr6z87akTTjz0zx/e/PTVS4899YUvr73zvXIOfvjij09++eafj3766q/Pfvvuvw9//PLPT3/99t+P//wFAAA7";
 changeColorOnImage(casioFontGfx);
 
 var gfxFontSize = "4444444444444444444444444444444442444444444444444444444444444444444444444445466446444446444444444444444442444654445444464444444";
@@ -483,12 +483,13 @@ function drawTextLine(lineNb, str) {
 }
 
 function drawTextGfx(y, x, str) {
-    var charW = 6;
+    var srcCharW = 6;
     var charH = 8;
     swapToGraphicScreen();
     for (var i = 0; i < str.length; i++) {
-        ctx.drawImage(casioFontGfx, str.charCodeAt(i) * charW, 0, charW, charH, x, y, charW, charH);
-        x += parseInt(gfxFontSize[str.charCodeAt(i)]); // add witdh of char which has just been drawn (variable font width)
+        var charW = parseInt(gfxFontSize[str.charCodeAt(i)]);
+        ctx.drawImage(casioFontGfx, str.charCodeAt(i) * srcCharW, 0, charW, charH, x, y, charW, charH);
+        x += charW; // add witdh of char which has just been drawn (variable font width)
     }
 }
 

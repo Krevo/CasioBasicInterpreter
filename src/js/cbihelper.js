@@ -344,6 +344,7 @@ function dispModeOff() {
 }
 
 function editModeOn() {
+    debug("editModeOn");
     editMode = true;
     currentLineBuffer = "";
     print("");
@@ -360,6 +361,7 @@ function editModeOff() {
     } else {
 
     }
+    debug("editModeOff");
     letvar(stockVarName, parseFloat(currentLineBuffer));
     currentLineBuffer = null;
     clearInterval(idTimerCursor);

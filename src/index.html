@@ -450,6 +450,44 @@ LpWhile B<2
 A+1->A
 LpWhile A<2
        </textarea>
+        <textarea style="display: none" id="srcCode14">
+{0,1,2,3,4,5}->List 1
+6->Dim List 2
+Seq(X*X, X, 0, 5, 1->List 3
+Locate 1,1,"List 1[6] = "
+Locate 1,2,"List 2[6] = "
+Locate 1,3,"List 3[6] = "
+Locate 13,1,List 1[6]
+Locate 13,2,List 2[6]
+Locate 13,3,List 3[6]
+       </textarea>
+        <textarea style="display: none" id="srcCode15">
+{1,2,3,4}->List 1
+{7,8,9,10,11->List 2
+7→Dim List 3
+Locate 1,1,"Dim List 1 ="
+Locate 1,2,"Dim List 2 ="
+Locate 1,3,"Dim List 3 ="
+Locate 14,1,Dim List 1
+Locate 14,2,Dim List 2
+Locate 14,3,Dim List 3
+       </textarea>
+        <textarea style="display: none" id="srcCode16">
+Dim List 3_
+List 3[4]_
+26->List 3[4]
+27->List 3[5]
+File 2
+15→Dim List 1
+{4,3,2,1}->List 2
+{5,3,2,1->List 3
+Dim List 3_
+List 3[4]_
+26->List 3[4]
+27->List 3[5]
+File 1
+List 3[4]_
+       </textarea>
         <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
@@ -477,6 +515,10 @@ LpWhile A<2
         <button onclick="loadProg(11);">GetKey</button>
         <button onclick="loadProg(12);">Text Menu</button>
         <button onclick="loadProg(13);">Bool. table</button>
+        <br>
+        <button onclick="loadProg(14);">List 1</button>
+        <button onclick="loadProg(15);">List 2</button>
+        <button onclick="loadProg(16);">List 3</button>
         <br><br>
       </div>
     </div>

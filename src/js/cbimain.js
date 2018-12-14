@@ -76,6 +76,16 @@ var OP_NOT = 61;
 var OP_AND = 62;
 var OP_OR = 63;
 var OP_XOR = 64;
+var OP_ASSIGN_TO_LIST = 65;
+var OP_PUSH_TO_ARRAY = 66;
+var OP_SET_DIM_LIST = 67;
+var OP_GET_DIM_LIST = 68;
+var OP_SET_LIST_ELEM = 69;
+var OP_GET_LIST_ELEM = 70;
+var OP_CLEARLIST = 71;
+var OP_INPUT_LIST_ELEM = 72;
+var OP_SELECTFILE = 73;
+var OP_SEQ_TO_LIST = 74;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -84,6 +94,11 @@ var callStack = new Array();
 
 var v_names = new Array();
 var v_values = new Array();
+//var lists = new Array();
+var files = new Array();
+var currentFile = 1; // Current file of lists files[currentFile]
+files[currentFile] = [];
+
 var getKey = 0;
 
 var DEBUG = 0;
@@ -99,19 +114,37 @@ function debug(msg) {
 }
 
 function letvar(vname, value) {
-    var i;
-    for (i = 0; i < v_names.length; i++) {
-        if (v_names[i].toString() == vname.toString()) {
-            break;
+
+    debug("enter function letVar()");
+    debug(vname);
+    debug(Array.isArray(vname));
+    debug(typeof vname);
+
+    if (typeof vname === 'string') {
+        var i;
+        for (i = 0; i < v_names.length; i++) {
+            if (v_names[i].toString() == vname.toString()) {
+                break;
+            }
+        }
+
+        if (i == v_names.length) {
+            v_names.push(vname);
+            v_values.push(0);
+        }
+        debug("letvar v_values[" + i + "] => " + value);
+        v_values[i] = value;
+    } else if (Array.isArray(vname)) {
+        var n = vname[0];
+        var index = vname[1];
+        debug("Set list "+n+"["+index+"] with value "+value);
+        debug(typeof files[currentFile][n][index]);
+        if (typeof files[currentFile][n] != "undefined" && (typeof files[currentFile][n][index] != "undefined" || index <= files[currentFile][n].length)) {
+            files[currentFile][n][index] = value;
+        } else {
+            ret = 0; // Should be tested on a calc, but ideally return an error
         }
     }
-
-    if (i == v_names.length) {
-        v_names.push(vname);
-        v_values.push(0);
-    }
-    debug("letvar v_values[" + i + "] => " + value);
-    v_values[i] = value;
 }
 
 function getvar(vname) {
@@ -462,6 +495,120 @@ function execute(node) {
                     } else {
                         ret = getkey;
                     }
+                    break;
+                case OP_ASSIGN_TO_LIST:
+                    var n = Number(node.children[1]);
+                    debug(n);
+                    files[currentFile][n] = execute(node.children[0]);
+                    debug(files);
+                    break;
+                case OP_PUSH_TO_ARRAY:
+                    var t;
+                    var node0 = execute(node.children[0]); // Expr List donc un nombre seul ou un array
+                    debug(Array.isArray(node0));
+                    if (!Array.isArray(node0)) {
+                        t = [];
+                        debug(t);
+                        t[0] = ""; // element at index 0 is a string which is the list name
+                        t[1] = node0;
+                    } else {
+                        t = node0;
+                    }
+                    t.push(execute(node.children[1]));
+                    debug(t);
+                    ret = t;
+                    break;
+                case OP_SET_DIM_LIST:
+                    var n = Number(node.children[1]);
+                    var size = execute(node.children[0]);
+                    debug(files);
+                    files[currentFile][n] = [];
+                    files[currentFile][n][0] = ""; // element at index 0 is a string which is the list name
+                    for(var i = 0; i < size; i++) {
+                        files[currentFile][n].push(0);
+                    }
+                    debug(files);
+                    break;
+                case OP_GET_DIM_LIST:
+                    var n = Number(node.children[0]);
+                    debug(node);
+                    debug("get DIM LIST "+n);
+                    debug(files);
+                    if (typeof files[currentFile][n] != undefined) {
+                        ret = files[currentFile][n].length - 1;
+                    } else {
+                        ret = 0; // Should be tested on a calc, but ideally return an error
+                    }
+                    break;
+                case OP_INPUT_LIST_ELEM:
+                    paused = true; // pause program execution
+                    print(node.children[0] + "?");
+                    var n = Number(node.children[1]);
+                    var index = execute(node.children[2]);
+                    stockVarName = [n, index];
+                    debug("stock Var is =>" + stockVarName);
+                    editModeOn();
+                    break;
+                case OP_SET_LIST_ELEM:
+                    var value = execute(node.children[0]);
+                    var n = Number(node.children[1]);
+                    var index = execute(node.children[2]);
+                    letvar([n, index], value);
+                    debug(files);
+                    break;
+                case OP_GET_LIST_ELEM:
+                    var n = Number(node.children[0]);
+                    var index = execute(node.children[1]);
+                    if (typeof files[currentFile][n] != undefined && typeof files[currentFile][n][index] != undefined) {
+                        ret = files[currentFile][n][index];
+                    } else {
+                        ret = 0; // Should be tested on a calc, but ideally return an error
+                    }
+                    debug(files);
+                    break;
+                case OP_CLEARLIST:
+                    if (node.children.length == 1) {
+                        var n = Number(node.children[0]);
+                        debug("Clear list "+n);
+                        lists.splice(n); // ClrList n : clear list n
+                    } else {
+                        lists = []; // ClrList : clear all lists
+                        debug("Clear all lists ");
+                    }
+                    debug(files);
+                    break;
+                case OP_SELECTFILE:
+                    var n = Number(node.children[0]);
+                    currentFile = n;
+                    if (typeof files[currentFile] === "undefined") {
+                        files[currentFile] = [];
+                    }
+                    debug(files);
+                    break;
+                case OP_SEQ_TO_LIST:
+                    var start = execute(node.children[2]);
+                    var stop = execute(node.children[3]);
+                    var step = execute(node.children[4]);
+                    var n = Number(node.children[5]);
+                    if (node.children[1].type == NODE_VAR) {
+                        varTabIndex = letterToIndexSupp(node.children[1].value) + 1;
+                    } else {
+                        child0 = node.children[0];
+                        varTabIndex = letterToIndexSupp(child0.children[0]) + execute(child0.children[1]);
+                    }
+                    // + il faudra prevoir l'utilisation d'un element de liste au lieu d'une var
+                    
+                    letvar("A_" + varTabIndex, start);
+                    var t = [];
+                    t[0] = "";
+                    for (var i = start; i <= stop; i += step)
+                    {
+                        letvar("A_" + varTabIndex, i);
+                        var val = execute(node.children[0]);
+                        t.push(val);
+                    }
+                    files[currentFile][n] = t;
+                    debug(files);
                     break;
             }
             break;

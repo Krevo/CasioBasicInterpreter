@@ -13,8 +13,8 @@
 - ~~GetKey~~ 2018-11-18
 - ~~add And/Or/Xor/Not~~ 2018-11-27
 - ~~add rho / theta vars~~ 2018-11-28
+- add List (2018-12-14 ...)
 - add For/To/Step/Next
-- add List
 - add Matrix
 - Ans
 - add move cursor (Plot x,y◢ ) , validate and get coords

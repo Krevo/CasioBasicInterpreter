@@ -8,6 +8,7 @@ QUnit.test("No syntax errors - test", function( assert ) {
   assert.equal(parse({main: ['1|5->A:If A>0:Then "A > 0":IfEnd']}, "main").error_cnt, 0, "If...Then..IfEnd");
   assert.equal(parse({main: ['1|1->A:0->B:A And B:A Or B:A Xor B:Not A']}, "main").error_cnt, 0, "And/Or/Xor/Not");
   assert.equal(parse({main: ['1|Mcl:2->θ:3->r:5rθ:']}, "main").error_cnt, 0, "Rho / Theta");
+  assert.equal(parse({main: ['1|Dim List 1:8->Dim List 1:Seq(X, X, 0, 5, 1->List 1:List 1[4]:File2']}, "main").error_cnt, 0, "List Syntax Elmt");
 });
 
 QUnit.test("Syntax errors - test", function( assert ) {
@@ -102,6 +103,13 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 48
     },
     {
+      name: '5 + 3 = 8 ?',
+      srcCode: `
+        5+3
+      `,
+      answer: 8
+    },
+    {
       name: 'Do / LpWhile test',
       srcCode: `
         1->A
@@ -141,7 +149,48 @@ QUnit.test("jsccRun - test", function( assert ) {
         5rθ
       `,
       answer: 30
- }];
+    },
+    {
+      name: 'List: test Seq',
+      srcCode: `
+         Seq(X, X, 0, 5, 1->List 1
+         Seq(3*X, X, 0, 5, 1)->List 2
+         Seq(X*X, X, 0, 5, 1->List 3
+         List 1[6]*List 2[6]*List 3[6]
+       `,
+      answer: 1875
+    },
+    {
+      name: 'List: init lists',
+      srcCode: `
+       {1,2,3,4}->List 1
+       {1,2,3,5->List 2
+       List 2[4]
+       `,
+      answer: 5
+    },
+    {
+      name: 'List: dim list',
+      srcCode: `
+        7→Dim List 1
+        5->Dim List 2
+        3->Dim List 3
+        Dim List 1
+       `,
+      answer: 7
+    },
+    {
+      name: 'List: File test',
+      srcCode: `
+       File1
+       {5,6,7,8}->List 1
+       File2
+       {1,2,3,4}->List 1
+       File1
+       List 1[3]
+       `,
+      answer: 7
+  }];
 
   assert.expect(testsToRun.length * 2);
   var done = assert.async(testsToRun.length);

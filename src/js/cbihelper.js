@@ -504,7 +504,7 @@ var ymax = casioScreenH;
 var yscl = 0;
 
 function getPixelColor(x, y) {
-    var imgd = ctx.getImageData(x * gtm.a + gtm.e, y * gtm.d + gtm.f, 1, 1);
+    var imgd = ctx2.getImageData(x * gtm.a + gtm.e, y * gtm.d + gtm.f, 1, 1);
     return imgd.data;
 }
 

@@ -138,7 +138,6 @@ function letvar(vname, value) {
         var n = vname[0];
         var index = vname[1];
         debug("Set list "+n+"["+index+"] with value "+value);
-        debug(typeof files[currentFile][n][index]);
         if (typeof files[currentFile][n] != "undefined" && (typeof files[currentFile][n][index] != "undefined" || index <= files[currentFile][n].length)) {
             files[currentFile][n][index] = value;
         } else {
@@ -558,7 +557,7 @@ function execute(node) {
                 case OP_GET_LIST_ELEM:
                     var n = Number(node.children[0]);
                     var index = execute(node.children[1]);
-                    if (typeof files[currentFile][n] != undefined && typeof files[currentFile][n][index] != undefined) {
+                    if (typeof files[currentFile][n] !== "undefined" && typeof files[currentFile][n][index] !== "undefined") {
                         ret = files[currentFile][n][index];
                     } else {
                         ret = 0; // Should be tested on a calc, but ideally return an error

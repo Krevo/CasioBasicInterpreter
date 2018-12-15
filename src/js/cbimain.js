@@ -531,10 +531,9 @@ function execute(node) {
                     break;
                 case OP_GET_DIM_LIST:
                     var n = Number(node.children[0]);
-                    debug(node);
                     debug("get DIM LIST "+n);
                     debug(files);
-                    if (typeof files[currentFile][n] != undefined) {
+                    if (typeof files[currentFile][n] !== "undefined") {
                         ret = files[currentFile][n].length - 1;
                     } else {
                         ret = 0; // Should be tested on a calc, but ideally return an error
@@ -570,9 +569,9 @@ function execute(node) {
                     if (node.children.length == 1) {
                         var n = Number(node.children[0]);
                         debug("Clear list "+n);
-                        lists.splice(n); // ClrList n : clear list n
+                        files[currentFile].splice(n); // ClrList n : clear list n
                     } else {
-                        lists = []; // ClrList : clear all lists
+                        files[currentFile] = []; // ClrList : clear all lists
                         debug("Clear all lists ");
                     }
                     debug(files);

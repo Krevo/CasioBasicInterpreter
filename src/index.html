@@ -160,80 +160,65 @@ LpWhile A<=7
 Int(P/(T*T)*100)/100
        </textarea>
         <textarea style="display: none" id="srcCode7">
-# ---------------------
-# CALENDRIER UNIVERSEL
-# ---------------------
-
-Prog 1
-
-@@ Prog 1 ( )
-
-Range 1,127,0,1,63,0 
-Plot 76,8
-Plot 76,55:Line
+#Program name: CALUNIV
+#Password: <no password>
+'
+'CALENDRIER UNIVERSEL
+'
+' v1.0 by Krevo_
+'
+ViewWindow 1,127,0,1,63,0 
+F-Line 76,8,76,55
 7->E
 Lbl 4
-Plot 10*E-4,8
-Plot 10*E-4,55:Line
-Plot 6,8*E-1
-Plot 76,8*E-1:Line
+F-Line 10*E-4,8,10*E-4,55
+F-Line 6,8*E-1,76,8*E-1
 Dsz E
 Goto 4
 7->E:0->C
-Prog 7
+Text 3,10,"L"
+Text 3,19,"M"
+Text 3,29,"M"
+Text 3,40,"J"
+Text 3,50,"V"
+Text 3,60,"S"
+Text 3,70,"D"
 "CALENDRIER UNIVERSEL"
 Lbl 1
 "ANNEE "?->Y
 "MOIS "?->N
 1->D
-N<>Int (N)=>Goto 1
-Y<>Int (Y)=>Goto 1
-D<>Int (D)=>Goto 1
-Int((14-N)/12)->C
+N!=Int (N)=>Goto 1
+Y!=Int (Y)=>Goto 1
+D!=Int (D)=>Goto 1
+Int ((14-N)/12)->C
 Y-C->A
 N+12*C-2->M
-D+A+Int(A/4)-Int(A/100)+Int(A/400)+Int((31*M)/12)->J
-J-Int(J/7)*7->P
+D+A+Int (A/4)-Int (A/100)+Int (A/400)+Int ((31*M)/12)->J
+J-Int (J/7)*7->P
 P=0=>7->P
 30->J
-(N/2)<>Int (N/2)=>N<=7=>31->J
-(N/2)=Int (N/2)=>N>=8=>31->J     
+(N/2)!=Int (N/2)=>N<=7=>31->J
+(N/2)=Int (N/2)=>N>=8=>31->J
 N=2=>28->J
-N=2=>Frac(Y/4)=0=>Frac(Y/100)>0=>29->J
-N=2=>Frac(Y/400)=0=>29->J
+N=2=>Frac (Y/4)=0=>Frac (Y/100)>0=>29->J
+N=2=>Frac (Y/400)=0=>29->J
 1->N
 Lbl 5
 N+P-1->O
 Int ((O-1)/7)+2->E
 O-(E-2)*7->D
-8-E->E:Prog F
+8-E->E
+(D-1)*10+8->A
+E*8+5->B
 Int (N/10)->C
-C<>0=>Prog G
-C=0=>A+4->A
+C!=0=>Text 64-B,A,C
+A+4->A
 Frac (N/10)*10->C
-Prog G
+Text 64-B,A,C
 Isz N
 N<=J=>Goto 5
-
-@@ Prog 7 ( )
-
-Text 3,10,"L"
-Text 3,18,"M"
-Text 3,28,"M"
-Text 3,39,"J"
-Text 3,49,"V"
-Text 3,59,"S"
-Text 3,69,"D"
-
-@@ Prog F ( )
-
-(D-1)*10+8-1->A
-E*8+5->B
-
-@@ Prog G ( )
-
-Text 64-B,A,C
-A+4->A
+#End of part
        </textarea>
         <textarea style="display: none" id="srcCode8">
 # 

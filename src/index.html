@@ -104,24 +104,26 @@ LpWhile A>0
 Locate 6,6,"Ignition !"
         </textarea>
         <textarea style="display: none" id="srcCode2">
-Range 1,10,0,10,1,0
-Mcl:1->A:1->B
+ViewWindow 1,10,0,10,1,0
+Lbl 0
+Cls
+1->A:1->B
 Lbl 1
-Plot 1,A:Plot B,10:Line
+F-Line 1,A,B,10
 Isz A:Isz B:A<>11=>Goto 1
-Mcl:1->A:10->B
+1->A:10->B
 Lbl 2
-Plot A,10:Plot 10,B:Line
+F-Line A,10,10,B
 Isz A:Dsz B:Goto 2
-Mcl:10->A:10->B
+10->A:10->B
 Lbl 3
-Plot A,1:Plot 10,B:Line
+F-Line A,1,10,B
 Dsz A:Dsz B:Goto 3
-Mcl:10->A:1->B
+10->A:1->B
 Lbl 4
-Plot A,1:Plot 1,B:Line
+F-Line A,1,1,B
 Isz B:Dsz A:Goto 4
-Cls:Mcl:Goto 1
+Goto 0
         </textarea>
         <textarea style="display: none" id="srcCode3">
 -500->A

@@ -226,29 +226,30 @@ N<=J=>Goto 5
 # 1 ou 2 Joueurs
 # 
 # VOUS ETES LE PERSONNAGE DE GAUCHE SUR L' ECRAN GRAPHIQUE. VOTRE BUT : TUER
-# AVEC UN TIR DE MORTIER BIEN PLACE VOTRE ENNEMIE DE TOUJOURS 
-# POUR CELA, VOUS DEVEZ INDIQUEZ L'ANGLE (EN DEGRE), PUIS LA FORCE DE TIR (ENTRE 50 ET 100 ENVIRON).
+# AVEC UN TIR DE MORTIER BIEN PLACE VOTRE ENNEMI DE TOUJOURS 
+# POUR CELA, VOUS DEVEZ INDIQUER L'ANGLE (EN DEGRE), PUIS LA FORCE DE TIR (ENTRE 50 ET 100 ENVIRON).
 # --------------------
 
-Prog 1
+Prog "CITY"
 
-@@ Prog 1 ( ) 
+@@ Prog "CITY" ( ) 
 
-Range 4,645,0,400,4,0
+ViewWindow 4,645,0,400,4,0
 Deg
-Mcl
+0->A~Z
+10->Dim List 1
 10->D
 Lbl 0
-Int(Ran#*230)+170->E[D]
+Int (Ran# *230)+170->List 1[D]
 Dsz D
 Goto 0
-Prog 9
-2->S:101->T:Prog 8
-9->S:548->T:Prog 8
+Prog "CITY3"
+2->S:101->T:Prog "CITY2"
+9->S:548->T:Prog "CITY2"
 0->R
 Lbl 5
 "JOUEURS 1 2 "?->E
-E<>1=>E<>2=>Goto 5
+E!=1=>E!=2=>Goto 5
 1->P
 Plot X,Y
 Lbl 1
@@ -267,54 +268,54 @@ C+Q->C
 S*C+.5*R*C*C->A
 P=1=>101+A->A
 P=2=>548+A->A
-E[7*P-5]+(.5*9.81*C*C)-50-T*C->B
+List 1[7*P-5]+(.5*9.81*C*C)-50-T*C->B
 Plot A,B
 Int ((A-5)/64)+1->D
-P=1=>A>533=>A<563=>B<E[D]=>B>E[D]-58=>Goto 4
-P=2=>A>90=>A<111=>B<E[D]=>B>E[D]-58=>Goto 4
-B<E[D]=>D>0=>D<11=>Goto 2
+P=1=>A>533=>A<563=>B<List 1[D]=>B>List 1[D]-58=>Goto 4
+P=2=>A>90=>A<111=>B<List 1[D]=>B>List 1[D]-58=>Goto 4
+D>0=>D<11=>B<List 1[D]=>Goto 2
 E=2=>3-P->P
 Goto 1
 Lbl 4
 9->S:548->T
 P=2=>2->S
 P=2=>101->T
-Prog Y
+Prog "CITY4"
 Plot X,Y:Line
 "GAGNE"
 E=1=>"PTS"
 E=2=>"GAGNANT:"
-E=1=>240-40*Z
-E=2=>P
+E=1=>240-40*Z◢
+E=2=>P◢
 ""
 
-@@ Prog 8 ( ) 
+@@ Prog "CITY2" ( ) 
 
 16->D
-Plot T-D,E[S]
-Plot T,E[S]-25
+Plot T-D,List 1[S]
+Plot T,List 1[S]-25
 Line
-Plot T+D,E[S]
+Plot T+D,List 1[S]
 Line
-Plot T-D,E[S]-32
-Plot T+D,E[S]-32
+Plot T-D,List 1[S]-32
+Plot T+D,List 1[S]-32
 Line
-Plot T,E[S]-45
-Plot T,E[S]-25
+Plot T,List 1[S]-45
+Plot T,List 1[S]-25
 Line
-Plot T,E[S]-45
+Plot T,List 1[S]-45
 Plot T-(D/3),Y
 Line
-Plot X,E[S]-58
+Plot X,List 1[S]-58
 Line
 Plot T+(D/3),Y
 Line
-Plot X,E[S]-45
+Plot X,List 1[S]-45
 Line
-Plot T,E[S]-45
+Plot T,List 1[S]-45
 Line
 
-@@ Prog 9 ( ) 
+@@ Prog "CITY3" ( ) 
 
 Cls
 0->D
@@ -322,24 +323,24 @@ Lbl 1
 Isz D
 64*(D-1)+5->W
 Plot W,400
-Plot W,E[D]
+Plot W,List 1[D]
 Line
-Plot W+64,E[D]
+Plot W+64,List 1[D]
 Line
 Plot W+64,400
 Line
 D<10=>Goto 1
 
-@@ Prog Y ( )
+@@ Prog "CITY4" ( )
 
 Deg
 -180->A
 Lbl 1
 Rec(45,A)
 I+T->X
-J+E[S]->Y
+J+List 1[S]->Y
 Plot X,Y
-Plot T,E[S]
+Plot T,List 1[S]
 Line
 15+A->A
 A<=0=>Goto 1

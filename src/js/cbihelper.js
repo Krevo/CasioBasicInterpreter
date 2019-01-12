@@ -217,9 +217,12 @@ function setColorsOnImage(img, fgColor, bgColor) {
 }
 
 function getColorFromColorName(colorName) {
+  debug("getColorFromColorName" + colorName);
   var colorIndex = COLOR_NAMES[colorName];
-  return (colorIndex < currentPalette.length) ? currentPalette[colorIndex] : currentPalette[currentPalette.length - 1];
-}
+  var color = (colorIndex < currentPalette.length) ? currentPalette[colorIndex] : currentPalette[currentPalette.length - 1];
+  debug(color);
+  return color;
+  }
 
 function cbiInit() {
 
@@ -569,15 +572,21 @@ function drawTextLine(lineNb, str) {
     }
 }
 
+function imgLoaded(imgElement) {
+  return imgElement.complete && imgElement.naturalHeight !== 0;
+}
+
 function drawTextGfx(y, x, str) {
     var srcCharW = gfxCharW; //6;
     var charH = gfxCharH; //8;
     swapToGraphicScreen();
     setColorsOnImage(currentFontGfx, currentDrawColor, currentPalette[0]);
-    for (var i = 0; i < str.length; i++) {
-        var charW = parseInt(currentGfxFontSize[str.charCodeAt(i)], 16);
-        ctx.drawImage(currentFontGfx, 1 + str.charCodeAt(i) * srcCharW, 0, charW, charH, x, y, charW, charH);
-        x += charW; // add witdh of char which has just been drawn (variable font width)
+    currentFontGfx.onload = function(){
+      for (var i = 0; i < str.length; i++) {
+          var charW = parseInt(currentGfxFontSize[str.charCodeAt(i)], 16);
+          ctx.drawImage(currentFontGfx, 1 + str.charCodeAt(i) * srcCharW, 0, charW, charH, x, y, charW, charH);
+          x += charW; // add witdh of char which has just been drawn (variable font width)
+      }
     }
 }
 

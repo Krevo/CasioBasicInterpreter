@@ -370,12 +370,17 @@ function execute(node) {
                     locate(execute(node.children[0]), execute(node.children[1]), str);
                     break;
                 case OP_TEXT: // Efface l'écran texte puis affiche le texte demandé à la position demandée
+                    var prevDrawColor = currentDrawColor;
+                    if (node.children[3]) {
+                        currentDrawColor = getColorFromColorName(node.children[3]);
+                    }
                     if (typeof node.children[2].type != 'undefined') {
                         str = "" + execute(node.children[2]); // 3rd arg is an expression to evaluate
                     } else {
                         str = node.children[2]; // 3rd arg is a string
                     }
                     drawTextGfx(execute(node.children[0]), execute(node.children[1]), str);
+                    currentDrawColor = prevDrawColor;
                     break;
                 case OP_INPUT:
                     paused = true; // pause program execution

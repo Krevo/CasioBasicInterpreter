@@ -119,30 +119,85 @@ ViewWindow 1,10,0,10,1,0
 Lbl 0
 Cls
 1->A:1->B
+Prog "RNDCOLOR"
 Lbl 1
 F-Line 1,A,B,10
 Isz A:Isz B:A<>11=>Goto 1
 1->A:10->B
+Prog "RNDCOLOR"
 Lbl 2
 F-Line A,10,10,B
 Isz A:Dsz B:Goto 2
 10->A:10->B
+Prog "RNDCOLOR"
 Lbl 3
 F-Line A,1,10,B
 Dsz A:Dsz B:Goto 3
 10->A:1->B
+Prog "RNDCOLOR"
 Lbl 4
 F-Line A,1,1,B
 Isz B:Dsz A:Goto 4
 Goto 0
+
+@@ Prog "RNDCOLOR" ( ) 
+
+1+Int (7Ran# ) -> F
+If F = 1
+Then Plot/Line-Color Black
+Else If F = 2
+Then Plot/Line-Color Blue
+Else If F = 3
+ThenPlot/Line-Color Red
+Else If F = 4
+ThenPlot/Line-Color Magenta
+Else If F = 5
+ThenPlot/Line-Color Green
+Else If F = 6
+ThenPlot/Line-Color Cyan
+Else If F = 7
+Then Plot/Line-Color Yellow
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+IfEnd
         </textarea>
         <textarea style="display: none" id="srcCode3">
 -500->A
 Lbl 1
-Range 1,127,0,1,63,0
+ViewWindow 1,127,0,1,63,0
+Prog "RNDCOLOR"
 Plot Ran#*127, Ran#*63
 Isz A
 Goto 1        
+        
+@@ Prog "RNDCOLOR" ( ) 
+
+1+Int (7Ran# ) -> F
+If F = 1
+Then Plot/Line-Color Black
+Else If F = 2
+Then Plot/Line-Color Blue
+Else If F = 3
+ThenPlot/Line-Color Red
+Else If F = 4
+ThenPlot/Line-Color Magenta
+Else If F = 5
+ThenPlot/Line-Color Green
+Else If F = 6
+ThenPlot/Line-Color Cyan
+Else If F = 7
+Then Plot/Line-Color Yellow
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+IfEnd
         </textarea>
         <textarea style="display: none" id="srcCode4">
 Range 1,127,0,63,1,0
@@ -488,6 +543,40 @@ List 3[4]_
 File 1
 List 3[4]_
        </textarea>
+        <textarea style="display: none" id="srcCode17">
+-100->A
+Lbl 1
+ViewWindow 1,127,0,1,63,0
+Prog "RNDCOLOR"
+F-Line 127Ran# ,63Ran# ,127Ran# ,63Ran# 
+Isz A
+Goto 1
+
+@@ Prog "RNDCOLOR" ( ) 
+
+1+Int (7Ran# ) -> F
+If F = 1
+Then Plot/Line-Color Black
+Else If F = 2
+Then Plot/Line-Color Blue
+Else If F = 3
+ThenPlot/Line-Color Red
+Else If F = 4
+ThenPlot/Line-Color Magenta
+Else If F = 5
+ThenPlot/Line-Color Green
+Else If F = 6
+ThenPlot/Line-Color Cyan
+Else If F = 7
+Then Plot/Line-Color Yellow
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+       </textarea>
         <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
@@ -503,10 +592,10 @@ List 3[4]_
         <button onclick="loadProg(0);">Hello World !</button>
         <button onclick="loadProg(1);">5,4,3,...</button>
         <button onclick="loadProg(2);">Screen saver</button>
+        <button onclick="loadProg(17);">Lines</button>
         <button onclick="loadProg(3);">Random dots</button>
         <button onclick="loadProg(5);">Random num</button>
         <button onclick="loadProg(6);">IMC</button>
-        <button onclick="loadProg(8);">City</button>
         <br>
         <button onclick="loadProg(4);">Maze generator</button>
         <button onclick="loadProg(7);">Calendrier</button>
@@ -514,8 +603,9 @@ List 3[4]_
         <button onclick="loadProg(10);">Hello ◢</button>
         <button onclick="loadProg(11);">GetKey</button>
         <button onclick="loadProg(12);">Text Menu</button>
-        <button onclick="loadProg(13);">Bool. table</button>
+        <button onclick="loadProg(8);">City</button>
         <br>
+        <button onclick="loadProg(13);">Bool. table</button>
         <button onclick="loadProg(14);">List 1</button>
         <button onclick="loadProg(15);">List 2</button>
         <button onclick="loadProg(16);">List 3</button>

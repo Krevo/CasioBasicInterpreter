@@ -161,6 +161,8 @@ Stmt:
 		| LOCATE Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
 		| TEXT Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_TEXT, %2, %4, %6); *]
 		| TEXT Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_TEXT, %2, %4, %6); *]
+		| Color TEXT Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_TEXT, %3, %5, %7, %1); *]
+		| Color TEXT Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_TEXT, %3, %5, %7, %1); *]
 		| RETURN ':' [* %% = createNode( NODE_OP, OP_RETURN ); *]
 		| DEG ':' [* %% = createNode( NODE_OP, OP_DEG ); *]
 		| RAD ':' [* %% = createNode( NODE_OP, OP_RAD ); *]

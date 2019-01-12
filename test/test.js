@@ -9,6 +9,7 @@ QUnit.test("No syntax errors - test", function( assert ) {
   assert.equal(parse({main: ['1|1->A:0->B:A And B:A Or B:A Xor B:Not A']}, "main").error_cnt, 0, "And/Or/Xor/Not");
   assert.equal(parse({main: ['1|Mcl:2->θ:3->r:5rθ:']}, "main").error_cnt, 0, "Rho / Theta");
   assert.equal(parse({main: ['1|Dim List 1:8->Dim List 1:Seq(X, X, 0, 5, 1->List 1:List 1[4]:File2']}, "main").error_cnt, 0, "List Syntax Elmt");
+  assert.equal(parse({main: ['1|RanInt#(3,5):']}, "main").error_cnt, 0, "RanInt");
 });
 
 QUnit.test("Syntax errors - test", function( assert ) {
@@ -190,6 +191,20 @@ QUnit.test("jsccRun - test", function( assert ) {
        List 1[3]
        `,
       answer: 7
+    },
+    {
+      name: 'RanInt: < max',
+      srcCode: `
+       RanInt#(3,7)<=7
+       `,
+      answer: 1
+    },
+    {
+      name: 'RanInt: > min',
+      srcCode: `
+       RanInt#(3,7)>=3
+       `,
+      answer: 1
   }];
 
   assert.expect(testsToRun.length * 2);

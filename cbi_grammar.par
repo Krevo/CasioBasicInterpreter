@@ -51,6 +51,7 @@
   "SEQ\("
   "MCL"
   "RAN"
+  "RANINT#"
   "DEG"
   "RAD"
   "GRAD"
@@ -253,6 +254,7 @@ Value:
 FinalVariable:
 		GETKEY [* %% = createNode( NODE_OP, OP_GETKEY ); *]
 		| RAN '#' [* %% = createNode( NODE_OP, OP_RANDOM ); *]
+		| "RANINT#" '(' Expression ',' Expression ')' [* %% = createNode( NODE_OP, OP_RANINT, %3, %5 ); *]
 		| DIM LIST Integer [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, %3 ); *]
 		| VariableCasio
 		| ListElem

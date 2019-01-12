@@ -87,6 +87,7 @@ var OP_INPUT_LIST_ELEM = 72;
 var OP_SELECTFILE = 73;
 var OP_SEQ_TO_LIST = 74;
 var OP_SET_DRAW_COLOR = 76;
+var OP_RANINT = 77;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -226,6 +227,11 @@ function execute(node) {
                     break;
                 case OP_RANDOM:
                     ret = Math.random();
+                    break;
+                case OP_RANINT:
+                    var min = execute(node.children[0]);
+                    var max = execute(node.children[1]);
+                    ret = Math.floor(Math.random() * Math.floor(max - min + 1)) + min;
                     break;
                 case OP_DECR:
                     if (node.children[0].type == NODE_VAR) {

@@ -6,6 +6,10 @@
     <script type="text/javascript" src="js/cbi.js"></script>
     <link href="css/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
 <style>
+form {
+  margin-block-end: 0;
+}
+
 button {
   border-radius: 4px;
   margin: 2px;
@@ -77,8 +81,15 @@ button {
          <button class="buttonVert" onmousedown="calcKeyDown(44)" onmouseup="calcKeyUp()" >DEL</button>
          <button class="buttonVert" onmousedown="calcKeyDown(31)" onmouseup="calcKeyUp()" >Exe</button>
         </div>
-         <button class="" onclick="chooseColorScheme('black&white');">Black/White</button>
-         <button class="" onclick="chooseColorScheme('blue&green');">Blue/Green</button>
+         <form action="">
+           <input type="radio" name="colorScheme" onchange="chooseColorScheme('black&white');" >Black/White
+           <input type="radio" name="colorScheme" onchange="chooseColorScheme('blue&green');" >Blue/Green
+           <input type="radio" name="colorScheme" onchange="chooseColorScheme('polychrome');" checked="checked">Multicolor
+         </form>
+         <form action="">
+           <input type="radio" name="res" onchange="selectResolution('low');" >LowRes
+           <input type="radio" name="res" onchange="selectResolution('hi');" checked="checked">HiRes
+         </form>
          <button class="" onclick="swap();">G ↔ T</button>
          <button class="buttonVert" style="display: none;" onclick="clignoteCurseurGraphOn();">Clignote</button>
        <br><br>

@@ -65,6 +65,7 @@
   "REC\("
   "POL\("
   "_DISP_"
+  "PLOT/LINE-COLOR"
   ','
   '~'
   '{'
@@ -95,6 +96,7 @@
   '\"([^\"]|\"\")*\"'		String		[* %match = %match.substr( 1, %match.length - 2 ); %match = %match.replace( /''/g, "\'" );	*]
   '[0-9]+'			Integer
   '[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'	Float
+  'Black|Blue|Red|Magenta|Green|Cyan|Yellow'	Color
   ;
 
 ##
@@ -137,18 +139,24 @@ Stmt:
 		| DSZ VariableCasio ':'[* %% = createNode( NODE_OP, OP_DECR, %2 ); *]
 		| PLOT Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT, %2, %4 ); *]
 		| PLOTON Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT_ON, %2, %4 ); *]
+		| Color PLOT Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT, %3, %5, %1 ); *]
+		| Color PLOTON Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT_ON, %3, %5, %1 ); *]
 		| PLOTOFF Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT_OFF, %2, %4 ); *]
 		| PLOTCHG Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT_CHG, %2, %4 ); *]
 		| PXLON Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PXL_ON, %2, %4 ); *]
+		| Color PXLON Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PXL_ON, %3, %5, %1 ); *]
 		| PXLOFF Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PXL_OFF, %2, %4 ); *]
 		| PXLCHG Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PXL_CHG, %2, %4 ); *]
 		| "REC\(" Expression ',' Expression '\)' ':' [* %% = createNode( NODE_OP, OP_REC, %2, %4 ); *]
 		| "POL\(" Expression ',' Expression '\)' ':' [* %% = createNode( NODE_OP, OP_POL, %2, %4 ); *]
 		| HORIZONTAL Expression ':' [* %% = createNode( NODE_OP, OP_HORIZONTAL, %2 ); *]
+		| Color HORIZONTAL Expression ':' [* %% = createNode( NODE_OP, OP_HORIZONTAL, %3, %1 ); *]
 		| VERTICAL Expression ':' [* %% = createNode( NODE_OP, OP_VERTICAL, %2 ); *]
+		| Color VERTICAL Expression ':' [* %% = createNode( NODE_OP, OP_VERTICAL, %3, %1 ); *]
 		| RANGE Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
 		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
 		| F-LINE Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_FLINE, %2, %4, %6, %8 ); *]
+		| Color F-LINE Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_FLINE, %3, %5, %7, %9, %1 ); *]
 		| LOCATE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
 		| LOCATE Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
 		| TEXT Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_TEXT, %2, %4, %6); *]
@@ -159,6 +167,7 @@ Stmt:
 		| GRAD ':' [* %% = createNode( NODE_OP, OP_GRAD ); *]
 		| _DISP_ ':' [* %% = createNode( NODE_OP, OP_DISP ); *]
 		| LINE ':' [* %% = createNode( NODE_OP, OP_LINE ); *]
+		| Color LINE ':' [* %% = createNode( NODE_OP, OP_LINE, %1 ); *]
 		| CLRTEXT ':' [* %% = createNode( NODE_OP, OP_CLEARTEXT ); *]
 		| CLRLIST ':' [* %% = createNode( NODE_OP, OP_CLEARLIST ); *]
 		| CLRLIST Integer ':' [* %% = createNode( NODE_OP, OP_CLEARLIST, %2 ); *]
@@ -170,6 +179,7 @@ Stmt:
 		| "SEQ\(" Expression ',' VariableCasio ',' Expression ',' Expression ',' Expression ')' '->' LIST Integer	[* %% = createNode( NODE_OP, OP_SEQ_TO_LIST, %2, %4, %6, %8, %10, %14); *]
 		| "SEQ\(" Expression ',' VariableCasio ',' Expression ',' Expression ',' Expression '->' LIST Integer	[* %% = createNode( NODE_OP, OP_SEQ_TO_LIST, %2, %4, %6, %8, %10, %13); *]
 		| Expression '->' DIM LIST Integer	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, %5 ); *]
+		| "PLOT/LINE-COLOR" Color 	[* %% = createNode( NODE_OP, OP_SET_DRAW_COLOR, %2 ); *]
 		| ':' [* %% = createNode( NODE_OP, OP_NONE ); *]
 		;
 

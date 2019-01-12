@@ -86,6 +86,7 @@ var OP_CLEARLIST = 71;
 var OP_INPUT_LIST_ELEM = 72;
 var OP_SELECTFILE = 73;
 var OP_SEQ_TO_LIST = 74;
+var OP_SET_DRAW_COLOR = 76;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -101,7 +102,7 @@ files[currentFile] = [];
 
 var getKey = 0;
 
-var DEBUG = 0;
+var DEBUG = 1;
 
 var EXIT_SUCCESS = 0;
 var EXIT_STOPPED = 14;
@@ -428,7 +429,12 @@ function execute(node) {
                     break;
                 case OP_PLOT_ON:
                 case OP_PLOT:
+                    var prevDrawColor = currentDrawColor;
+                    if (node.children[2]) {
+                        currentDrawColor = getColorFromColorName(node.children[2]);
+                    }
                     plotOn(execute(node.children[0]), execute(node.children[1]));
+                    currentDrawColor = prevDrawColor;
                     break;
                 case OP_PLOT_OFF:
                     plotOff(execute(node.children[0]), execute(node.children[1]));
@@ -437,7 +443,12 @@ function execute(node) {
                     plotChg(execute(node.children[0]), execute(node.children[1]));
                     break;
                 case OP_PXL_ON:
+                    var prevDrawColor = currentDrawColor;
+                    if (node.children[2]) {
+                        currentDrawColor = getColorFromColorName(node.children[2]);
+                    }
                     pixelOn(execute(node.children[1]), execute(node.children[0]));
+                    currentDrawColor = prevDrawColor;
                     break;
                 case OP_PXL_OFF:
                     pixelOff(execute(node.children[1]), execute(node.children[0]));
@@ -467,16 +478,36 @@ function execute(node) {
                     ret = parseFloat((n % 1).toPrecision(15));
                     break;
                 case OP_LINE:
+                    var prevDrawColor = currentDrawColor;
+                    if (node.children[0]) {
+                        currentDrawColor = getColorFromColorName(node.children[0]);
+                    }
                     line();
+                    currentDrawColor = prevDrawColor;
                     break;
                 case OP_FLINE:
+                    var prevDrawColor = currentDrawColor;
+                    if (node.children[4]) {
+                        currentDrawColor = getColorFromColorName(node.children[4]);
+                    }
                     fline(execute(node.children[0]), execute(node.children[1]), execute(node.children[2]), execute(node.children[3]));
+                    currentDrawColor = prevDrawColor;
                     break;
                 case OP_HORIZONTAL:
+                    var prevDrawColor = currentDrawColor;
+                    if (node.children[1]) {
+                        currentDrawColor = getColorFromColorName(node.children[1]);
+                    }
                     horizontal(execute(node.children[0]));
+                    currentDrawColor = prevDrawColor;
                     break;
                 case OP_VERTICAL:
+                    var prevDrawColor = currentDrawColor;
+                    if (node.children[1]) {
+                        currentDrawColor = getColorFromColorName(node.children[1]);
+                    }
                     vertical(execute(node.children[0]));
+                    currentDrawColor = prevDrawColor;
                     break;
                 case OP_CLS:
                     cls();
@@ -608,6 +639,9 @@ function execute(node) {
                     files[currentFile][n] = t;
                     debug(files);
                     break;
+                case OP_SET_DRAW_COLOR:
+                    currentDrawColor = getColorFromColorName(node.children[0]);
+                    break;
             }
             break;
         case NODE_VAR:
@@ -658,7 +692,7 @@ function jsccRun(str, finishCallBack) {
     var currentBoundary = 0;
     for (i = 0; i < arrayOfLines.length; i++) {
         var line = arrayOfLines[i];
-        var res = line.match(/@@\s?Prog(?:ram)?\s+"?([a-zA-Z0-9]*)"?\s?.?/);
+        var res = line.match(/@@\s?Prog(?:ram)?\s+"?([a-zA-Z0-9\-]*)"?\s?.?/);
         if (res != null) {
             debug(res); // It matched and res[0] contain the all string, res[1] the sub-matched part ie the programe name or number
             // cut from old boundary to i, then i become new boundary

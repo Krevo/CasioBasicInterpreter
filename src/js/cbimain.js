@@ -103,7 +103,8 @@ files[currentFile] = [];
 
 var getKey = 0;
 
-var DEBUG = 0;
+var DEBUG = false;
+var currentExecutionTimeout = 10; // time to wait between each executeNextLine(), in milliseconds
 
 var EXIT_SUCCESS = 0;
 var EXIT_STOPPED = 14;
@@ -113,6 +114,25 @@ function debug(msg) {
     if (DEBUG) {
         console.log(msg);
     }
+}
+
+function debugToggle() {
+    DEBUG = !DEBUG;
+    return DEBUG;
+}
+
+function adjustTimeout(delta) {
+    currentExecutionTimeout += delta;
+    // Minimal value
+    if (currentExecutionTimeout<1) {
+      currentExecutionTimeout = 1;
+    }
+    return currentExecutionTimeout;
+}
+
+function debugToggle() {
+    DEBUG = !DEBUG;
+    return DEBUG;
 }
 
 function letvar(vname, value) {
@@ -748,7 +768,7 @@ function jsccRun(str, finishCallBack) {
     //if (programs['main']['error_cnt'] == 0) {
     if (nbErrors == 0) {
         debug("nextLine = " + nextLine);
-        idTimerMain = setTimeout('executeNextLine()', 10);
+        idTimerMain = setTimeout('executeNextLine()', currentExecutionTimeout);
         debug("timeout id = " + idTimerMain);
     } else {
         finish(EXIT_SYNTAX_ERROR, "Syntax error " + where, programs);
@@ -866,7 +886,7 @@ function executeNextLine() {
     debug("[" + idTimerMain + "] prog " + currentPrgName + " - executeNextLine " + nextLine + " / " + programs[currentPrgName]['nodes'].length);
     this.Ans = execute(programs[currentPrgName]['nodes'][nextLine++]);
     if (!paused) {
-        idTimerMain = setTimeout('executeNextLine()', 10);
+        idTimerMain = setTimeout('executeNextLine()', currentExecutionTimeout);
     }
 }
 

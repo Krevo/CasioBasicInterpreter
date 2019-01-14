@@ -580,6 +580,12 @@ IfEnd
         <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
+        <!-- Hidden features for experts/developpers -->
+        <span style="display: none">
+          <button onclick="displayStatusMsg('DEBUG is '+(debugToggle()?'On':'Off'))">Debug On/Off</button>
+          <button onclick="displayStatusMsg('Timeout is '+adjustTimeout(-1)+' ms')">Speed +</button>
+          <button onclick="displayStatusMsg('Timeout is '+adjustTimeout(1)+' ms')">Speed -</button>
+        </span>
         <br>
         <div style="display: none">
         Load raw content from URL : <input type="text" size="60" id="urlLoader">        
@@ -644,6 +650,10 @@ IfEnd
         executeCode();
       }
 
+      function displayStatusMsg(statusMsg) {
+        document.getElementById("status").innerHTML = statusMsg;
+      }
+
       function executeCode() {
         var srcCode = document.getElementById("srcCode").value;
         document.getElementById("canvas1").focus();
@@ -652,7 +662,7 @@ IfEnd
         if (idTimerMain == 0) {
           jsccRun(srcCode, function(errorCode, msg, programs) {
               if (errorCode > 0) {
-                  document.getElementById("status").innerHTML = msg;
+                  displayStatusMsg(msg);
               }
               document.getElementById("srcCode").disabled = false;
           });

@@ -386,7 +386,7 @@ function handleOnKeyDown(e) {
 function unpauseProgramExec() {
     /* unpause program execution */
     paused = false;
-    idTimerMain = setTimeout('executeNextLine()', 10);
+    idTimerMain = setTimeout('executeNextLine()', currentExecutionTimeout);
 }
 
 function reset() {

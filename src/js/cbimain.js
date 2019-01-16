@@ -124,8 +124,8 @@ function debugToggle() {
 function adjustTimeout(delta) {
     currentExecutionTimeout += delta;
     // Minimal value
-    if (currentExecutionTimeout<1) {
-      currentExecutionTimeout = 1;
+    if (currentExecutionTimeout<0) {
+      currentExecutionTimeout = 0;
     }
     return currentExecutionTimeout;
 }

@@ -581,7 +581,7 @@ IfEnd
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
         <!-- Hidden features for experts/developpers -->
-        <span style="display: none">
+        <span id="devButtons" style="display: none">
           <button onclick="displayStatusMsg('DEBUG is '+(debugToggle()?'On':'Off'))">Debug On/Off</button>
           <button onclick="displayStatusMsg('Timeout is '+adjustTimeout(-1)+' ms')">Speed +</button>
           <button onclick="displayStatusMsg('Timeout is '+adjustTimeout(1)+' ms')">Speed -</button>

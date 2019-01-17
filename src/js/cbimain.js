@@ -396,9 +396,9 @@ function execute(node) {
                     locate(execute(node.children[0]), execute(node.children[1]), str);
                     break;
                 case OP_TEXT: // Efface l'écran texte puis affiche le texte demandé à la position demandée
-                    var prevDrawColor = currentDrawColor;
+                    var prevDrawColor = currentDrawColorIdx;
                     if (node.children[3]) {
-                        currentDrawColor = getColorFromColorName(node.children[3]);
+                        currentDrawColorIdx = getColorIndexFromColorName(node.children[3]);
                     }
                     if (typeof node.children[2].type != 'undefined') {
                         str = "" + execute(node.children[2]); // 3rd arg is an expression to evaluate
@@ -406,7 +406,7 @@ function execute(node) {
                         str = node.children[2]; // 3rd arg is a string
                     }
                     drawTextGfx(execute(node.children[0]), execute(node.children[1]), str);
-                    currentDrawColor = prevDrawColor;
+                    currentDrawColorIdx = prevDrawColor;
                     break;
                 case OP_INPUT:
                     paused = true; // pause program execution
@@ -460,12 +460,12 @@ function execute(node) {
                     break;
                 case OP_PLOT_ON:
                 case OP_PLOT:
-                    var prevDrawColor = currentDrawColor;
+                    var prevDrawColor = currentDrawColorIdx;
                     if (node.children[2]) {
-                        currentDrawColor = getColorFromColorName(node.children[2]);
+                        currentDrawColorIdx = getColorIndexFromColorName(node.children[2]);
                     }
                     plotOn(execute(node.children[0]), execute(node.children[1]));
-                    currentDrawColor = prevDrawColor;
+                    currentDrawColorIdx = prevDrawColor;
                     break;
                 case OP_PLOT_OFF:
                     plotOff(execute(node.children[0]), execute(node.children[1]));
@@ -474,12 +474,12 @@ function execute(node) {
                     plotChg(execute(node.children[0]), execute(node.children[1]));
                     break;
                 case OP_PXL_ON:
-                    var prevDrawColor = currentDrawColor;
+                    var prevDrawColor = currentDrawColorIdx;
                     if (node.children[2]) {
-                        currentDrawColor = getColorFromColorName(node.children[2]);
+                        currentDrawColorIdx = getColorIndexFromColorName(node.children[2]);
                     }
                     pixelOn(execute(node.children[1]), execute(node.children[0]));
-                    currentDrawColor = prevDrawColor;
+                    currentDrawColorIdx = prevDrawColor;
                     break;
                 case OP_PXL_OFF:
                     pixelOff(execute(node.children[1]), execute(node.children[0]));
@@ -509,36 +509,36 @@ function execute(node) {
                     ret = parseFloat((n % 1).toPrecision(15));
                     break;
                 case OP_LINE:
-                    var prevDrawColor = currentDrawColor;
+                    var prevDrawColor = currentDrawColorIdx;
                     if (node.children[0]) {
-                        currentDrawColor = getColorFromColorName(node.children[0]);
+                        currentDrawColorIdx = getColorIndexFromColorName(node.children[0]);
                     }
                     line();
-                    currentDrawColor = prevDrawColor;
+                    currentDrawColorIdx = prevDrawColor;
                     break;
                 case OP_FLINE:
-                    var prevDrawColor = currentDrawColor;
+                    var prevDrawColor = currentDrawColorIdx;
                     if (node.children[4]) {
-                        currentDrawColor = getColorFromColorName(node.children[4]);
+                        currentDrawColorIdx = getColorIndexFromColorName(node.children[4]);
                     }
                     fline(execute(node.children[0]), execute(node.children[1]), execute(node.children[2]), execute(node.children[3]));
-                    currentDrawColor = prevDrawColor;
+                    currentDrawColorIdx = prevDrawColor;
                     break;
                 case OP_HORIZONTAL:
-                    var prevDrawColor = currentDrawColor;
+                    var prevDrawColor = currentDrawColorIdx;
                     if (node.children[1]) {
-                        currentDrawColor = getColorFromColorName(node.children[1]);
+                        currentDrawColorIdx = getColorIndexFromColorName(node.children[1]);
                     }
                     horizontal(execute(node.children[0]));
-                    currentDrawColor = prevDrawColor;
+                    currentDrawColorIdx = prevDrawColor;
                     break;
                 case OP_VERTICAL:
-                    var prevDrawColor = currentDrawColor;
+                    var prevDrawColor = currentDrawColorIdx;
                     if (node.children[1]) {
-                        currentDrawColor = getColorFromColorName(node.children[1]);
+                        currentDrawColorIdx = getColorIndexFromColorName(node.children[1]);
                     }
                     vertical(execute(node.children[0]));
-                    currentDrawColor = prevDrawColor;
+                    currentDrawColorIdx = prevDrawColor;
                     break;
                 case OP_CLS:
                     cls();
@@ -671,7 +671,7 @@ function execute(node) {
                     debug(files);
                     break;
                 case OP_SET_DRAW_COLOR:
-                    currentDrawColor = getColorFromColorName(node.children[0]);
+                    currentDrawColorIdx = getColorIndexFromColorName(node.children[0]);
                     break;
             }
             break;

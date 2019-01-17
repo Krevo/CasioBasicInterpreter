@@ -13,9 +13,7 @@ var CYAN    = [0x00, 0xFF, 0xFE];
 var YELLOW  = [0xFD, 0xFE, 0x00];
 var MAGENTA = [0xFF, 0x00, 0xFD];
 var GREEN   = [0x00, 0xFF, 0x00];  
-  
-//var MONO_NB_COLOR = [WHITE, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK]
-//var MONO_BLUEGREEN_COLOR = [MONO_GREEN, MONO_BLUE, MONO_BLUE, MONO_BLUE, MONO_BLUE, MONO_BLUE, MONO_BLUE, MONO_BLUE]
+
 var MONO_NB_COLOR = [WHITE, BLACK];
 var MONO_BLUEGREEN_COLOR = [MONO_GREEN, MONO_BLUE];
 var POLY_COLOR = [WHITE, BLACK, BLUE, RED, MAGENTA, GREEN, CYAN, YELLOW];
@@ -34,11 +32,8 @@ var COLOR_NAMES = {
   // A: Clear
 }
 
-var FOREGROUND_COLOR = MONO_BLUE; // Normalement devrais plus servir car remplacé par currentPalette[1]
-var BACKGROUND_COLOR = MONO_GREEN; // Normalement devrais plus servir car remplacé par currentPalette[0]
-
 var currentPalette = POLY_COLOR;
-var currentDrawColor = getColorFromColorName("Blue");
+var currentDrawColorIdx = getColorIndexFromColorName("Blue");
 
 var DEG = 1;
 var RAD = 2;
@@ -46,26 +41,41 @@ var GRAD = 3;
 
 var angleMode = DEG;
 
-var currentFont = new Image();
-var currentFontGfx = new Image();
-
-var casioFont = new Image();
-casioFont.src = "data:image/gif;base64,R0lGODlhAAYIAKEBAAQEBP///////////yH5BAEKAAIALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXu6zKvNBuwDN95stf5DwwKd7zYjTfxJRUxS2NWHOqCuCbOYbVekUWPDHvNQmnGqq2s5HbV2++mFo7D4U4s0H6mmqdSo3Dv1yOY19RneIiYqAjlw/Q3suIm2SaGMcK4iLiHV0XzpRVpqdIC1kj1AHpX18biJdoKaej6RLo2Cch3hGezlKkZ6xq8SjeWKjx6DIvsRLTsrAwdmiwNXP1Mff2KHa2aPa2dR8Y7h1Y+bi6eHr4uh85Ofh6v3i7/7k4/D49LmF8sZwZwUKCBvuo5WmcKyQ9c/c5EiULoTqOGFB0SDOiOoMX+jYwg6LNXL0wgfCDVTel0ytzCIftWngLUMmWugjRj0pR58c/HOJ8U+iTzsNMnnDIxzgyIshxJnkxE9vTzgaUShIOAjixJVeo9UzozWh24KatElxFN3uyzdKdapYWmYk27NW7ItXPlVoRbN+9dunvtvuX79+pVvH31BjZM+HDhxYobJ378ESfQOmPFla1ssCZUkVV1TNIINXLQXL2GjutAd7DAy4JPivXkiDE9PonztgZtep/QnpQKSSKNeg0Rt+Gs2tIyhjdyWo+flmFmFKxfpryUY6pwJHv1sC1Yvzrag/M/j57IE78MW/hUpgqTq57uHDHXoghLbRb6HiVMOrD+b9v5X1xvkE1HjmnFOAbYgIado6BsCT5IYITySehgRp01iCCFGU7IYYUdbughY0SFp510WlXFBkzMkNVfRKwZ+NxDuriHliaulWdCTjF+tl133Mno2Wkh2bddb63lY5aOGnGnmU+CeHTfYLmxyM8c2H140H7vZdaFiQfpgYZsl3z5ExvLZUkZZ6SN5d1CSVXXFDEGlYLac2yJ4ZRRQ2HYlkW1uTmlmhOBVpdTbCKVBllbRodhbV1ipmGjEFIlaaSThghippUi9oalnn64KaahanopqRYq2gxEBra42khA9imLdoLu1wuXg56EX0IrvpnCYVsqaZahmeXXUJjx0Db+6D9+rjmTkot0eiw70OkSLIt6CnnPf0RWQilbSZK52rUc3WXdlW2ZSyZATE7mDZ2tdtVjekIKG1pgatJrYqCAXaTvqS5iRSUtzPFXpHhcVXugwNoKWOqfUjwKasOlMijxp6JWHLHFpv47ascYX6yxxyF/LJaNDN9JlLLOunnwrV4mRdKRtEX3b7MtRwjjtQbXu+eFqW3Us8yhuRGn0DZXmcmmNiM8LtLz/uzaoQw615+qzdKsW4Llxlb0aJh8LZ1NAuUa7YlIwjnnnXDde147/S5o9aKvSS3obfBaxq/LyHoJHrJvg1zzwySLnHHhgB++MeKjykz4PNZw803kj2/ZQzk4kreLOTcjBnl00fS9O99wjwi4ip7H6brFiZ0zOfCOBy4MJbX1qSdtnXO2l51JnMzoMtNJ7MI7oBC5B50tv6EumLZRu6s77i7tZnpWX0WVHNmpjw45b6fDjm5Qw28GDpsJJXK55vZByUXCHFTfZ/mTpZsNt+zXmgpa0M7MiopgnC6wq6RnXjn6yWJyliOg+7qRPQAWUIEHbKABH6hA4QUQgiw4iwUviMEManCDHOygBz8IwhCKcIQkLKEJT4jCFKpwhSxsoQtfCMMYynCGNKyhDW+IQxMWAAA7";
-changeColorOnImage(casioFont);
-var casioFontHi = new Image();
-casioFontHi.src = "data:image/gif;base64,R0lGODdhoA8WAIAAAAQC/Pz+/CwAAAAAoA8WAAAC/oyPqcvtD6OctNqLs968+w+G4kiWHGCm6sq27gvH8kzX9o3n+s6TANoLCofEovGITCqXzKbzCY1Kp9Sq9YrNarfcrvcLDovH5LL5/PhB1AG2g+1mAOW/+boeid/f9r1Wj1DXtyDIV2gI2ICnINiIOGjQ6Eg4Sbc4duhxSSl5t3nQqSj5GTkKWZoZOAhomtgWmsCqR8oo2/fp+pprmkaLmspJ24q7envqlvsKmhjnOjtsyZxc6xt7mjFNka15bVF5sW09kbz9jfYRfq6+zt7u/g4fLz9PX29/j5+vv8/f7/8P0Eo2ON0iLUsjCliwagclDCyo6s8xWNSq8VqosCJG/osUl1201tFjxi0fF/baVRKkOV0rf4Vk2RImKVkVX8qERBOkJ5U6I9YU1mojzpQiFQ57VksctYacfDpFtVRVUJOUtI2UCtEquqwd0p1k6Eerw27lrvrzGjCt2rVs27p9Czeu3Ll069q9izev3r1KHpbqxbQmocB0AoU9XPhNQ7RFnM3xRVBRT6VQH1Uda4frzGa2PIZBhtImS1GTpcZK6hl1Hs2zVBOmvHoo7NSIsJZW5lra7b+vcVe+XZBcsd2cSZum/TocSsDeggNhzIcbC+iXT3B9yjzxWLfU+Xr/Dj68+PHky5s/jz69+vXs29/161v7xI7Fo4tFLBmwmu5B/hxnnuYVWL8NBhRmGOg2W3y6mAHUfwldk1OC1fEmoXaGrOZahidN6N8emSmYSoQDUogciCIuWKF9FpLIookrxieNg7EZp+I4ZMm4A3/3baBjby4EeB0+PbpHZJFGHolkkkouyWSTTj4JZZRS2ugHgM8N9ZxBp7WoYXZe1vgghkg41iV2G+5UWIFigiNbgifGEKRhGmw24WITaSigicNth9+LwlnVpoLHRfcYCs/UZ+abxOC5p5l9JtcoYWSitpyPZXKZIo2M/ngVQQ9xFFk0840STYueQmiWTGBWmmaoSqXa6ZXCufoqqDESdWKMlsIYKYpuEjVlsMIOS2yxxh6L/myyyi7LbLM5wHfrVBSiGmKvj16aqUhrNjapo95aMuNlal77JaTEURuujdSlqimmCHZr7ramXvcpn98KeiGlN0K035Uugrbpr8YEnGic+MaL3aLTYnkwb8o5J++j8JYgLVYx3YTlS8BC8xOdNl3s0o33zoqroTFtDCzGd4ZUcsXzEtzwoY6+qbKzNt+Mc84678xzzz7/DHTQRgx5FKL7FnqnCOkw1G/DmPbA6q5OY1uiTw3GCpO9uQVqaZ55Zq1SSiA3BdsibU5MZ8Q0vxgVfn+qW5WV/GbZBotN261oMf9ZK/Nu5RbM4Z6X+Aex11ZG/DcOSGk04oh6a1sa0/tC/m7b05ZnCjCYPdH6S2+b3Fr14JB9nqHImuddYYTjSn250K6/Dnvsss9Oe+223477GUMyNZ+W6TIOApD54fb20KhSLbyoxzeOsfICSj5S32SfaZlQ0bPrq5whN3r19VrPizKpg34l2tR+j/18lpzDISnq42f/ctWqIo7wUzkdEponrJF7L9U8dDazrEivftga4IAkRyXjwEc+hYqc+96Xqw7l63sww9vA6uSw5bFud7nroAc/CMIQinCEJCyhCYvEQeJR62GEaoZ1dtSuGPbHdJzz365Es7fBvO+Ah3tE7zqngrHxCHrVEd3WrIdBP+lNfGEDxuc2k7LW7XB+4GIO/v4uuD4AFsUcUGwiyRaIQQTF74oJ0R/9ssW6/v2Pb49DTNpGZrrQWUuNNzTZGX2TOQIK6oF6lGLyYijGPTbQXQhMYwpPiMhEKnKRjGykIx8JyUgG0WCKsVz5egijFyYwcSr7Gpxo6C/Nsa2KZXsYGzn5ROcdkpQp4AgDAec5Y8wxjLNMogP5aEP54QFUYcljBi3IKI3lTYguEWUffbkY4oWJf8zLpfnSSIOSVZCVFoxizHDptKUdTYBxRCY2vznLsrDwdFxT3SCBFzhmSnKd7GynO98Jz3jKc57D6lHRVqhFJ+KIkmikI/mYeCBiUvBXnPRniQxIzgJGjZA1HIFA/gNaPMqswoG0zCU2ZXiuaRoUfgsrY3a82UCEri2jpYQbRuOnLzloyY5NAeNJ+ynFmH5SmgRFU8I4NkqOXhSa2RRi8UA6TXCWyZRgwWQsj4qiiCbGpfRsqlOfCtWoSnWqVK3qPe5ZycWF7KbPLKgzB4qNh/JvpK3zZPtwmlDMxRGaq6xex07Grm5N1GIr0WJMd2rLHeK1q8wDzQ+NqdW7wdKfuNSmMVFaq1LVbVJMdeYfvRpNrepRnKVjTP5qCsdNisuoqgEqZid7yrx6NKeItdrKlBEaiE2trVZtrWtfC9vYyna2tJ1qQ3X4UxwVc4gw1OQQmMrZtsGwaGqrZU8t/srPORnlKGHryjn1BFDw+a2yxu2nUF8q3MA0SGIXNMh13darryn1s6ZVbEYQRVqZPvawNviu/Kj7VUvKUqM8zW1B8yjZ0goyqEmrwHjJa6c0eXdlb/tvbQ+M4AQreMEMbrCDe/bcrK5Vt830b5AOydrgzS2H7DXre6c4vT5ejqw8daiHKdcV2nAmtHrlpoQMa1P9GrhuqesuiL0l2eWS1I17zSwgIXRNpLWxwqu9sJFdPMNz2diQ84Wpj+WoUM0e8aX4XfJ+BUbe0bFJg6zU8nLUx7AiB/fBZC6zmc+M5jSrec1f2B0ynWKybu6Nw7w1kIbBGlbV9rKxRAYFT6in/r1mrhi7T8TJjTma3uH5d8s0AmgXbxpmP5eSa5DlIX2fNug6PRqwNl4uhdX7aUHeIrtqpTM6b3np4/a20hn27Wj+jGhctM3TjOiwX1ksWrXe2JUdHSxyQNc40U1M05NTUaxSK+hQozi+bG62s58N7WhLe9rPdvNjfJg+fbosoHgOa7cZzV664tPT0a1ZjLeY2mPr73roGycReF0ZZR+q3NtbIrvprU2WsVFsKbNrJ+W95O6t7p+BPGv5xAwydR/U33Dctkz9mNxJOsIWOMR3+C7pnHIPk95Plq8+eWflaAl8dBz/FMZb0glka6rgPR039qgN85jLfOY0r7nNQ2jt/rIK9N6hrLM6KRbxEMfXLNtG6xZN+pN1h/voywT00m9QyMTNO67nTbjDgaRlgVk86pAuCdqaHAzsCiaJxPDphus12itf6osfMxifFUfGWpl8hZimuhnVDilrqrrhgY3wSLH2avP2l3yYIVzd9SxqUtdR7zdvvOMfD/nIS37ysQt6C5QTWcs3Z2cnnqHmpdrqtFh2bkcKfaIFEnHTt/nzlG+9618P+9jLfvbiYf0kf+4D29s5Z6q/fO/b+Xt+QGfM6gn+RqXAH+NnofO0b77znw/96Et/+p8ZE+lnoHyfZd8EHK+t7tsiVreix9S+x0Tqv0+G7VN//exvv/vfD//4LfdlrXB6J/qh/nL5cyH8Dwr6Pe/vBd1nYvlHBckHgAFIgPqngAvIgA3ogDJQAAA7";
-changeColorOnImage(casioFontHi);
+var casioFontSrc = "data:image/gif;base64,R0lGODlhAAYIAKEBAAQEBP///////////yH5BAEKAAIALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXu6zKvNBuwDN95stf5DwwKd7zYjTfxJRUxS2NWHOqCuCbOYbVekUWPDHvNQmnGqq2s5HbV2++mFo7D4U4s0H6mmqdSo3Dv1yOY19RneIiYqAjlw/Q3suIm2SaGMcK4iLiHV0XzpRVpqdIC1kj1AHpX18biJdoKaej6RLo2Cch3hGezlKkZ6xq8SjeWKjx6DIvsRLTsrAwdmiwNXP1Mff2KHa2aPa2dR8Y7h1Y+bi6eHr4uh85Ofh6v3i7/7k4/D49LmF8sZwZwUKCBvuo5WmcKyQ9c/c5EiULoTqOGFB0SDOiOoMX+jYwg6LNXL0wgfCDVTel0ytzCIftWngLUMmWugjRj0pR58c/HOJ8U+iTzsNMnnDIxzgyIshxJnkxE9vTzgaUShIOAjixJVeo9UzozWh24KatElxFN3uyzdKdapYWmYk27NW7ItXPlVoRbN+9dunvtvuX79+pVvH31BjZM+HDhxYobJ378ESfQOmPFla1ssCZUkVV1TNIINXLQXL2GjutAd7DAy4JPivXkiDE9PonztgZtep/QnpQKSSKNeg0Rt+Gs2tIyhjdyWo+flmFmFKxfpryUY6pwJHv1sC1Yvzrag/M/j57IE78MW/hUpgqTq57uHDHXoghLbRb6HiVMOrD+b9v5X1xvkE1HjmnFOAbYgIado6BsCT5IYITySehgRp01iCCFGU7IYYUdbughY0SFp510WlXFBkzMkNVfRKwZ+NxDuriHliaulWdCTjF+tl133Mno2Wkh2bddb63lY5aOGnGnmU+CeHTfYLmxyM8c2H140H7vZdaFiQfpgYZsl3z5ExvLZUkZZ6SN5d1CSVXXFDEGlYLac2yJ4ZRRQ2HYlkW1uTmlmhOBVpdTbCKVBllbRodhbV1ipmGjEFIlaaSThghippUi9oalnn64KaahanopqRYq2gxEBra42khA9imLdoLu1wuXg56EX0IrvpnCYVsqaZahmeXXUJjx0Db+6D9+rjmTkot0eiw70OkSLIt6CnnPf0RWQilbSZK52rUc3WXdlW2ZSyZATE7mDZ2tdtVjekIKG1pgatJrYqCAXaTvqS5iRSUtzPFXpHhcVXugwNoKWOqfUjwKasOlMijxp6JWHLHFpv47ascYX6yxxyF/LJaNDN9JlLLOunnwrV4mRdKRtEX3b7MtRwjjtQbXu+eFqW3Us8yhuRGn0DZXmcmmNiM8LtLz/uzaoQw615+qzdKsW4Llxlb0aJh8LZ1NAuUa7YlIwjnnnXDde147/S5o9aKvSS3obfBaxq/LyHoJHrJvg1zzwySLnHHhgB++MeKjykz4PNZw803kj2/ZQzk4kreLOTcjBnl00fS9O99wjwi4ip7H6brFiZ0zOfCOBy4MJbX1qSdtnXO2l51JnMzoMtNJ7MI7oBC5B50tv6EumLZRu6s77i7tZnpWX0WVHNmpjw45b6fDjm5Qw28GDpsJJXK55vZByUXCHFTfZ/mTpZsNt+zXmgpa0M7MiopgnC6wq6RnXjn6yWJyliOg+7qRPQAWUIEHbKABH6hA4QUQgiw4iwUviMEManCDHOygBz8IwhCKcIQkLKEJT4jCFKpwhSxsoQtfCMMYynCGNKyhDW+IQxMWAAA7";
+var casioFontHiSrc = "data:image/gif;base64,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";
+var casioFontGfxSrc = "data:image/gif;base64,R0lGODlhAAYIAKECAAQEBP///v///////yH5BAEKAAIALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXuy7yuBBtyLN95stf5DwwKbwmBwBYwOpRFAY3JgCadzSU1ehzqgrgZr+FjuoyKKU+KPlZt6ZnZ7Xwpa7hYTDwFl/PVNfYZ5wY42Ne184UkhHgXmCeXhYVExqb29zhmBPmGeZYl5OmIKTMpV0bGOApKCrTaSuSzxzWyYsdj4VVbN/sAY6j1++PrAGtDg+RBi7GrV6e1govYO/yFrKxizTLxW818O9z9zQWkTXcLfC57Xb3u3Uxtu8uuHk9/HVyfjZ8snz/v3w9wnz5sAv/5IoiQ3z46DAU1LPbQGESHFCdalIgxUUb+dxE1euRYcWNHkBc9BjtJEgxHQyx7bCGGDiWlTnA0zbHE6dGgmZRi+Uwkzk1IiDc3vcFpdE7OSKh43sEh5oNDS0hpID219KhRq1onIRXq0uK4k0r5RHLKJ2vZOZlUNcJqxpgxNZxQ+YkC9UrXOFWJ8o0bBWbLoCXd2dlTQZDcLosOE1Yk+OTLih/BilRcptmxzZkPwjqsOaxcy5WHbhsJk3DGiaGBmoYs2fXqmLRJk7xcuGGtLY5zD71d2rdw3MSDFweOHPVv5cONO0++PLrJ58yPV6cu3Xp27M2hd7/uXXvJ2Lq9jRU72CVXsPc88+7JyIr8QoAd/aF/ijFjIuH+elslEVdOaumVBiFMiTITVHlxxWCCWSWWVoRFTfiXY3Bd2Ehq7j2G31sEfmiFKVQg2FZNgEhSYWZJ7ERVgGOgiCKLWln414WRTQYaeKDt+Eox+vWYgmTkpOfBZLJNtxIEEHVg0n46MKjLe4Yhxp9/3EEo3mxDAMeMD/1Z2ZtYn6mEJH/SRPQOmOCtyZmZV74Z3pussfnddnHeSWeWcObpXGx64mknn4DWSeifgh4a6Gu0SeSTk7CJBk84izKEYV41XYpWpT1tuiU6TjbY4lo1erhgpnTtNVepFCl5VSA5eiXhqDJypamAYbE3aaik8iRKU7piQSFN8S0JByG9fmX+06nBokWrsm954UyOf44AbS+KRZpLlNDkiCt7B7XmWo+2JTbleNOQidmcuJD2k2ZqblftZnGOY0tHfnYbnbvnHemuMKJN5y2izcXi2buF7plomQkbujDCBw/K8MMjbSBwxBY7fDHEGG+s8by30itpmOuR99ki4gKj330q1wdrgU3E2GGjjrYQ8LV+CXtfXa2KaGCsh4Fo77DHEotHpS/bJa/P9KWjSDSHuJifWVIbPSCwzvZc1GhXX8LrGDQleGBar5JaxI1jtnkcjz4CKfPJP5WmEC9ibvgvk6Ca+x52remLo1Aa41ovvKn1+a8eXdqcDLv8nr1u44Z/c27DHkf+O2bHFfc5muSXW6555xJ7rmXlm48OOsekf456xvbWhlHg6j5WGbgbUvOJW6nczjWCuofCe9RG0u2ee63YnnvvxO8+fA7HA5N87bgjv/wPze9eW23TG/889lyXWPz1rGTv/fLXryK9+Gbja9vE6WKpYtvWur0f3eT9SJkzqP1nGrcGZw4U3+mjLadohKY4RvpfuAD2KEYBboD72tu+AKeb04XuHJxLnelKV0HVYVCCFxxPmTL4nIHEbYQiLKFBEmLCgKDwhOTI1cdeMTsNdWpLwmuLDW+IwxzqcIc7fODgupUyTPBwiEQsohGPiMQkKlGJ1aPNEp8IxShKcYpLFJelttKhwnqZYxppksr7oBEUFfqwfzEh4QkPpyTE6GKNANpWvMyYRi+6kRuGq1LiDiEpLCrQMl38VjvWeKaXQA5bBcniMhaVwkIqcoUsaI8hWZhIRi4SjpOMJCUR4shKQtIeTeykJz8JylCKcpSkLKUpf0HFVOLwlFpQpStfCctY3pCVqZClLW+JSyPScpe87KUvfwnMYApzmMQspjGPicxkKnOZzCwAADs=";
+var casioFontGfxHiSrc = "data:image/gif;base64,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";
 
 var txtCharW, txtCharH;
 
-var casioFontGfx = new Image();
-casioFontGfx.src = "data:image/gif;base64,R0lGODlhAAYIAKECAAQEBP///v///////yH5BAEKAAIALAAAAAAABggAAAL+DH6GoNi5WHxy0Tuz1Y7DDXbhJ5bkWZkpegXuy7yuBBtyLN95stf5DwwKbwmBwBYwOpRFAY3JgCadzSU1ehzqgrgZr+FjuoyKKU+KPlZt6ZnZ7Xwpa7hYTDwFl/PVNfYZ5wY42Ne184UkhHgXmCeXhYVExqb29zhmBPmGeZYl5OmIKTMpV0bGOApKCrTaSuSzxzWyYsdj4VVbN/sAY6j1++PrAGtDg+RBi7GrV6e1govYO/yFrKxizTLxW818O9z9zQWkTXcLfC57Xb3u3Uxtu8uuHk9/HVyfjZ8snz/v3w9wnz5sAv/5IoiQ3z46DAU1LPbQGESHFCdalIgxUUb+dxE1euRYcWNHkBc9BjtJEgxHQyx7bCGGDiWlTnA0zbHE6dGgmZRi+Uwkzk1IiDc3vcFpdE7OSKh43sEh5oNDS0hpID219KhRq1onIRXq0uK4k0r5RHLKJ2vZOZlUNcJqxpgxNZxQ+YkC9UrXOFWJ8o0bBWbLoCXd2dlTQZDcLosOE1Yk+OTLih/BilRcptmxzZkPwjqsOaxcy5WHbhsJk3DGiaGBmoYs2fXqmLRJk7xcuGGtLY5zD71d2rdw3MSDFweOHPVv5cONO0++PLrJ58yPV6cu3Xp27M2hd7/uXXvJ2Lq9jRU72CVXsPc88+7JyIr8QoAd/aF/ijFjIuH+elslEVdOaumVBiFMiTITVHlxxWCCWSWWVoRFTfiXY3Bd2Ehq7j2G31sEfmiFKVQg2FZNgEhSYWZJ7ERVgGOgiCKLWln414WRTQYaeKDt+Eox+vWYgmTkpOfBZLJNtxIEEHVg0n46MKjLe4Yhxp9/3EEo3mxDAMeMD/1Z2ZtYn6mEJH/SRPQOmOCtyZmZV74Z3pussfnddnHeSWeWcObpXGx64mknn4DWSeifgh4a6Gu0SeSTk7CJBk84izKEYV41XYpWpT1tuiU6TjbY4lo1erhgpnTtNVepFCl5VSA5eiXhqDJypamAYbE3aaik8iRKU7piQSFN8S0JByG9fmX+06nBokWrsm954UyOf44AbS+KRZpLlNDkiCt7B7XmWo+2JTbleNOQidmcuJD2k2ZqblftZnGOY0tHfnYbnbvnHemuMKJN5y2izcXi2buF7plomQkbujDCBw/K8MMjbSBwxBY7fDHEGG+s8by30itpmOuR99ki4gKj330q1wdrgU3E2GGjjrYQ8LV+CXtfXa2KaGCsh4Fo77DHEotHpS/bJa/P9KWjSDSHuJifWVIbPSCwzvZc1GhXX8LrGDQleGBar5JaxI1jtnkcjz4CKfPJP5WmEC9ibvgvk6Ca+x52remLo1Aa41ovvKn1+a8eXdqcDLv8nr1u44Z/c27DHkf+O2bHFfc5muSXW6555xJ7rmXlm48OOsekf456xvbWhlHg6j5WGbgbUvOJW6nczjWCuofCe9RG0u2ee63YnnvvxO8+fA7HA5N87bgjv/wPze9eW23TG/889lyXWPz1rGTv/fLXryK9+Gbja9vE6WKpYtvWur0f3eT9SJkzqP1nGrcGZw4U3+mjLadohKY4RvpfuAD2KEYBboD72tu+AKeb04XuHJxLnelKV0HVYVCCFxxPmTL4nIHEbYQiLKFBEmLCgKDwhOTI1cdeMTsNdWpLwmuLDW+IwxzqcIc7fODgupUyTPBwiEQsohGPiMQkKlGJ1aPNEp8IxShKcYpLFJelttKhwnqZYxppksr7oBEUFfqwfzEh4QkPpyTE6GKNANpWvMyYRi+6kRuGq1LiDiEpLCrQMl38VjvWeKaXQA5bBcniMhaVwkIqcoUsaI8hWZhIRi4SjpOMJCUR4shKQtIeTeykJz8JylCKcpSkLKUpf0HFVOLwlFpQpStfCctY3pCVqZClLW+JSyPScpe87KUvfwnMYApzmMQspjGPicxkKnOZzCwAADs=";
-changeColorOnImage(casioFontGfx);
+/*
+Pour chaque palette, creer les 4 fonts pour chaque couleurs
+*/
+function makeFonts(palette) {
+  var fontsForThePalette;
 
-var casioFontGfxHi = new Image();
-casioFontGfxHi.src = "data:image/gif;base64,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";
-//changeColorOnImage(casioFontGfxHi);
-setColorsOnImage(casioFontGfxHi, getColorFromColorName("Blue"), currentPalette[0]);
+  var casioFontByColor = [];
+  var casioFontHiByColor = [];
+  var casioFontGfxByColor = [];
+  var casioFontGfxHiByColor = [];
+
+  for (var i=1; i<palette.length; i++) {
+    casioFontByColor.push(getNewImage(casioFontSrc, palette[i], palette[0]));
+    casioFontHiByColor.push(getNewImage(casioFontHiSrc, palette[i], palette[0]));
+    casioFontGfxByColor.push(getNewImage(casioFontGfxSrc, palette[i], palette[0]));
+    casioFontGfxHiByColor.push(getNewImage(casioFontGfxHiSrc, palette[i], palette[0]));
+  }
+
+  fontsForThePalette = [casioFontByColor, casioFontHiByColor, casioFontGfxByColor, casioFontGfxHiByColor];
+  return fontsForThePalette;
+}
+
+var MONO_NB_COLOR_fonts = makeFonts(MONO_NB_COLOR);
+var MONO_BLUEGREEN_COLOR_fonts = makeFonts(MONO_BLUEGREEN_COLOR);
+var POLY_COLOR_fonts = makeFonts(POLY_COLOR);
+
+var fonts = POLY_COLOR_fonts; // default
+var currentFontDeltaIndx;
 
 var gfxCharW, gfxCharH;
 
@@ -99,8 +109,9 @@ function setRes(res) {
   ctx = ctx1;
 
   if (res == "low") {
-    currentFont = casioFont;
-    currentFontGfx = casioFontGfx;
+    //currentFont = casioFont;
+    //currentFontGfx = casioFontGfx;
+    currentFontDeltaIndx = 0;
     casioScreenW = 127;
     casioScreenH = 63;
     plotSize = 1;
@@ -110,8 +121,9 @@ function setRes(res) {
     gfxCharH = 8;
     currentGfxFontSize = gfxFontSize;
   } else if (res == "hi") {
-    currentFont = casioFontHi;
-    currentFontGfx = casioFontGfxHi;
+    //currentFont = casioFontHi;
+    //currentFontGfx = casioFontGfxHi;
+    currentFontDeltaIndx = 1;
     casioScreenW = 379;
     casioScreenH = 187;
     plotSize = 3;
@@ -147,19 +159,17 @@ function chooseColorScheme(colorSchemeName) {
   var oldPalette = currentPalette;
   if (colorSchemeName == "black&white") {
     currentPalette = MONO_NB_COLOR;
-    currentDrawColor = currentPalette[1];
+    currentDrawColorIdx = 1;
+    fonts = MONO_NB_COLOR_fonts;
   } else if (colorSchemeName == "blue&green") {
     currentPalette = MONO_BLUEGREEN_COLOR;
-    currentDrawColor = currentPalette[1];
+    currentDrawColorIdx = 1;
+    fonts = MONO_BLUEGREEN_COLOR_fonts;
   } else if (colorSchemeName == "polychrome") {
     currentPalette = POLY_COLOR;
-    currentDrawColor = getColorFromColorName("Blue");
+    currentDrawColorIdx = getColorIndexFromColorName("Blue");
+    fonts = POLY_COLOR_fonts;
   }
-
-  //changeColorOnImage(currentFont);
-  //changeColorOnImage(currentFontGfx);
-  setColorsOnImage(currentFont, currentPalette[1], currentPalette[0]);
-  setColorsOnImage(currentFontGfx, currentDrawColor, currentPalette[0]); // Sur l'écran graphique le texte est écrit dans la currentDrawColor
 
   for (var i = 0; i < oldPalette.length; i++) {
     var destColor = (i < currentPalette.length) ? currentPalette[i] : currentPalette[currentPalette.length - 1]; // new palette may have fewer colors
@@ -187,20 +197,12 @@ function swapColor(context, fromColor, toColor) {
     context.putImageData(imageData, 0, 0);
 }
 
-function changeColorOnImage(img) {
-  debug(currentPalette);
-  debug(currentPalette[0]);
-  debug(currentPalette[0][1]);
-  setColorsOnImage(img, currentPalette[1], currentPalette[0]);
-}
-
-function setColorsOnImage(img, fgColor, bgColor) {
-
+function getNewImage(imgSrc, fgColor, bgColor) {
   String.prototype.replaceAt=function(index, replacement) {
     return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
   }
 
-  var imageData = img.src;
+  var imageData = imgSrc;
   var binaryImageData = atob(imageData.replace(/^data:image\/(gif|png|jpeg|jpg);base64,/, ''));
 
   // Replace color #0
@@ -213,16 +215,15 @@ function setColorsOnImage(img, fgColor, bgColor) {
   binaryImageData = binaryImageData.replaceAt(17, String.fromCharCode(bgColor[1]));
   binaryImageData = binaryImageData.replaceAt(18, String.fromCharCode(bgColor[2]));
 
-  img.src = "data:image/gif;base64," + btoa(binaryImageData);
+  var newImg = new Image();
+  newImg.src = "data:image/gif;base64," + btoa(binaryImageData);
+  return newImg;
 }
 
-function getColorFromColorName(colorName) {
-  debug("getColorFromColorName" + colorName);
+function getColorIndexFromColorName(colorName) {
   var colorIndex = COLOR_NAMES[colorName];
-  var color = (colorIndex < currentPalette.length) ? currentPalette[colorIndex] : currentPalette[currentPalette.length - 1];
-  debug(color);
-  return color;
-  }
+  return (colorIndex < currentPalette.length) ? colorIndex : currentPalette.length - 1;
+}
 
 function cbiInit() {
 
@@ -471,7 +472,7 @@ function clignoteCurseur() {
     var charH = txtCharH; //8;
     var y = (cursorLine - 1) * charH + 1;
     var x = (cursorCol - 1) * charW + 1;
-    ctx1.drawImage(currentFont, 1 + cursorMode.charCodeAt(0) * charW, 0, charW, charH, x, y, charW, charH);
+    ctx1.drawImage(fonts[currentFontDeltaIndx][0], 1 + cursorMode.charCodeAt(0) * charW, 0, charW, charH, x, y, charW, charH);
     if (cursorMode == "_") {
         cursorMode = " ";
     } else {
@@ -568,7 +569,7 @@ function drawTextLine(lineNb, str) {
     str = str.substring(0, 21); // 21 first char
     for (var i = 0; i < str.length; i++) {
         x = i * charW + 1;
-        ctx.drawImage(currentFont, 1 + str.charCodeAt(i) * charW, 0, charW, charH, x, y, charW, charH);
+        ctx.drawImage(fonts[currentFontDeltaIndx][0], 1 + str.charCodeAt(i) * charW, 0, charW, charH, x, y, charW, charH);
     }
 }
 
@@ -576,17 +577,28 @@ function imgLoaded(imgElement) {
   return imgElement.complete && imgElement.naturalHeight !== 0;
 }
 
-function drawTextGfx(y, x, str) {
+function addLoadEvent(obj, func) {
+  var oldonload = obj.onload;
+  if (typeof obj.onload != 'function') {
+    obj.onload = func;
+  } else {
+    obj.onload = function() {
+      if (oldonload) {
+        oldonload();
+      }
+      func();
+    }
+  }
+}
+
+function drawTextGfx(y, x, str, color) {
     var srcCharW = gfxCharW; //6;
     var charH = gfxCharH; //8;
     swapToGraphicScreen();
-    setColorsOnImage(currentFontGfx, currentDrawColor, currentPalette[0]);
-    currentFontGfx.onload = function(){
-      for (var i = 0; i < str.length; i++) {
-          var charW = parseInt(currentGfxFontSize[str.charCodeAt(i)], 16);
-          ctx.drawImage(currentFontGfx, 1 + str.charCodeAt(i) * srcCharW, 0, charW, charH, x, y, charW, charH);
-          x += charW; // add witdh of char which has just been drawn (variable font width)
-      }
+    for (var i = 0; i < str.length; i++) {
+        var charW = parseInt(currentGfxFontSize[str.charCodeAt(i)], 16);
+        ctx.drawImage(fonts[2+currentFontDeltaIndx][currentDrawColorIdx-1], 1 + str.charCodeAt(i) * srcCharW, 0, charW, charH, x, y, charW, charH);
+        x += charW; // add witdh of char which has just been drawn (variable font width)
     }
 }
 
@@ -604,7 +616,7 @@ function getPixelColor(x, y) {
 }
 
 function setPixelOn(x, y, plotSize) {
-    setPixel(x, y, currentDrawColor, plotSize);
+    setPixel(x, y, currentPalette[currentDrawColorIdx], plotSize);
 }
 
 function setPixelOff(x, y, plotSize) {
@@ -692,16 +704,11 @@ function plot(x, y, mode) {
         setPixelOff(realX, realY, plotSize);
     }
 }
-/*
-  for (i = 0; i < v_values.length; i++) {
-        v_values[i] = 0;
-    }
-*/
 
 function pixelTest(x, y) {
     var color = getPixelColor(x, y);
     // Tester toutes les couleurs de la palette
-	// en partant de 0, s'arrête en indiquant l'index de la couleur trouvée (si trouvée)
+    // en partant de 0, s'arrête en indiquant l'index de la couleur trouvée (si trouvée)
     for (var i = 0; i < currentPalette.length; i++) {
         var elemColor = currentPalette[i];
         if (color[0] == elemColor[0]
@@ -711,22 +718,15 @@ function pixelTest(x, y) {
         }
     }
     return 0;
-	/*
-	    if (color[0] == FOREGROUND_COLOR[0]
-        && color[1] == FOREGROUND_COLOR[1]
-        && color[2] == FOREGROUND_COLOR[2]) {
-        return 1;
-    } else {
-        return 0;
-    }
-	*/
 }
 
 function pixelChg(x, y) {
     var color = getPixelColor(x, y);
-    if (color[0] == FOREGROUND_COLOR[0]
+/*    if (color[0] == FOREGROUND_COLOR[0]
         && color[1] == FOREGROUND_COLOR[1]
         && color[2] == FOREGROUND_COLOR[2]) {
+*/
+    if (pixelTest(x, y)) {
         pixelOff(x, y);
     } else {
         pixelOn(x, y);

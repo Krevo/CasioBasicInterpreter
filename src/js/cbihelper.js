@@ -165,7 +165,7 @@ function chooseColorScheme(colorSchemeName) {
     currentPalette = MONO_BLUEGREEN_COLOR;
     currentDrawColorIdx = 1;
     fonts = MONO_BLUEGREEN_COLOR_fonts;
-  } else if (colorSchemeName == "polychrome") {
+  } else if (colorSchemeName == "multicolor") {
     currentPalette = POLY_COLOR;
     currentDrawColorIdx = getColorIndexFromColorName("Blue");
     fonts = POLY_COLOR_fonts;

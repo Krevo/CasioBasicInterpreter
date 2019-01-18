@@ -82,13 +82,13 @@ button {
          <button class="buttonVert" onmousedown="calcKeyDown(31)" onmouseup="calcKeyUp()" >Exe</button>
         </div>
          <form action="">
-           <input type="radio" name="colorScheme" onchange="chooseColorScheme('black&white');" >Black/White
-           <input type="radio" name="colorScheme" onchange="chooseColorScheme('blue&green');" >Blue/Green
-           <input type="radio" name="colorScheme" onchange="chooseColorScheme('polychrome');" checked="checked">Multicolor
+           <input type="radio" id="black_white" name="colorScheme" onchange="chooseColorScheme('black&white');" >Black/White
+           <input type="radio" id="blue_green" name="colorScheme" onchange="chooseColorScheme('blue&green');" >Blue/Green
+           <input type="radio" id="multicolor" name="colorScheme" onchange="chooseColorScheme('multicolor');" checked="checked">Multicolor
          </form>
          <form action="">
-           <input type="radio" name="res" onchange="selectResolution('low');" >LowRes
-           <input type="radio" name="res" onchange="selectResolution('hi');" checked="checked">HiRes
+           <input type="radio" id="lowRes" name="res" onchange="selectResolution('low');" >LowRes
+           <input type="radio" id="hiRes" name="res" onchange="selectResolution('hi');" checked="checked">HiRes
          </form>
          <button class="" onclick="swap();">G ↔ T</button>
          <button class="buttonVert" style="display: none;" onclick="clignoteCurseurGraphOn();">Clignote</button>
@@ -230,6 +230,7 @@ Int(P/(T*T)*100)/100
         <textarea style="display: none" id="srcCode7">
 #Program name: CALUNIV
 #Password: <no password>
+#lowres
 '
 'CALENDRIER UNIVERSEL
 '
@@ -478,6 +479,7 @@ A=3=>Locate 2,2,"... prog 3"
 A=4=>Locate 2,2,"... to exit !"
        </textarea>
         <textarea style="display: none" id="srcCode13">
+#lowres
 Text 10,15,"A"
 Text 10,25,"B"
 Text 10,35,"And"

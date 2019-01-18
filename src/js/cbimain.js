@@ -699,6 +699,37 @@ function cut(name, arrayOfLines, startIndexIncluded, stopIndexExcluded) {
     return prog;
 }
 
+// Look for special directives
+// #lowres -> force usage of low resolution for this program
+// #hires -> force usage of hi resolution for this program
+// #black&white -> force usage of the monochrome black & white palette
+// #blue&green -> force usage of the monochrome blue & green palette
+// #polychrome -> force usage of the multicolor palette
+
+function manageDirectives(line) {
+        if (line == '#lowres') {
+            debug("low res pragma FOUND !");
+            setRes('low');
+            document.getElementById('lowRes').checked = true;
+        } else if (line == '#hires') {
+            debug("hi res pragma FOUND !");
+            setRes('hi');
+            document.getElementById('hiRes').checked = true;
+        } else if (line == '#black&white') {
+            debug("black&white pragma FOUND !");
+            chooseColorScheme('black&white');
+            document.getElementById('black_white').checked = true;
+        } else if (line == '#blue&green') {
+            debug("blue&green pragma FOUND !");
+            chooseColorScheme('blue&green');
+            document.getElementById('blue_green').checked = true;
+        } else if (line == '#multicolor') {
+            debug("multicolor pragma FOUND !");
+            chooseColorScheme('multicolor');
+            document.getElementById('multicolor').checked = true;
+        }
+}
+
 var finishCallBack = null;
 
 function jsccRun(str, finishCallBack) {
@@ -723,6 +754,9 @@ function jsccRun(str, finishCallBack) {
     var currentBoundary = 0;
     for (i = 0; i < arrayOfLines.length; i++) {
         var line = arrayOfLines[i];
+
+        manageDirectives(line);
+
         var res = line.match(/@@\s?Prog(?:ram)?\s+"?([a-zA-Z0-9\-]*)"?\s?.?/);
         if (res != null) {
             debug(res); // It matched and res[0] contain the all string, res[1] the sub-matched part ie the programe name or number

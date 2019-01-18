@@ -669,6 +669,35 @@ function bline(x0, y0, x1, y1) {
     }
 }
 
+// draw a point of the circle ... and 7 others by symmetry
+function drawPointOfCircle(xc, yc, x, y) {
+    plotOn(xc+x, yc+y);
+    plotOn(xc-x, yc+y);
+    plotOn(xc+x, yc-y);
+    plotOn(xc-x, yc-y);
+    plotOn(xc+y, yc+x);
+    plotOn(xc-y, yc+x);
+    plotOn(xc+y, yc-x);
+    plotOn(xc-y, yc-x);
+}
+
+// draw a circle using "Bresenham's circle algorithm"
+function circleBres(xc, yc, r) {
+    var x = 0, y = r;
+    var d = 3 - 2 * r;
+    drawPointOfCircle(xc, yc, x, y);
+    while (y >= x) {
+        x++;
+        if (d > 0) {
+            y--;
+            d = d + 4 * (x - y) + 10;
+        } else {
+            d = d + 4 * x + 6;
+        }
+        drawPointOfCircle(xc, yc, x, y);
+    }
+}
+
 function plotChg(x, y) {
     var color = getPixelColor(xtoR(x), ytoR(y));
     if (color[0] != currentPalette[0][0]

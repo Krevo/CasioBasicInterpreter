@@ -88,6 +88,7 @@ var OP_SELECTFILE = 73;
 var OP_SEQ_TO_LIST = 74;
 var OP_SET_DRAW_COLOR = 76;
 var OP_RANINT = 77;
+var OP_CIRCLE = 78;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -538,6 +539,14 @@ function execute(node) {
                         currentDrawColorIdx = getColorIndexFromColorName(node.children[1]);
                     }
                     vertical(execute(node.children[0]));
+                    currentDrawColorIdx = prevDrawColor;
+                    break;
+                case OP_CIRCLE:
+                    var prevDrawColor = currentDrawColorIdx;
+                    if (node.children[3]) {
+                        currentDrawColorIdx = getColorIndexFromColorName(node.children[3]);
+                    }
+                    circleBres(execute(node.children[0]), execute(node.children[1]), execute(node.children[2]));
                     currentDrawColorIdx = prevDrawColor;
                     break;
                 case OP_CLS:

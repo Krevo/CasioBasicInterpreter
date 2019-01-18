@@ -43,6 +43,7 @@
   "F-LINE"
   "HORIZONTAL"
   "VERTICAL"
+  "CIRCLE"
   "RETURN"
   "CLS"
   "CLRTEXT"
@@ -158,6 +159,8 @@ Stmt:
 		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
 		| F-LINE Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_FLINE, %2, %4, %6, %8 ); *]
 		| Color F-LINE Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_FLINE, %3, %5, %7, %9, %1 ); *]
+		| CIRCLE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_CIRCLE, %2, %4, %6 ); *]
+		| Color CIRCLE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_CIRCLE, %3, %5, %7, %1 ); *]
 		| LOCATE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
 		| LOCATE Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
 		| TEXT Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_TEXT, %2, %4, %6); *]

@@ -10,6 +10,7 @@ QUnit.test("No syntax errors - test", function( assert ) {
   assert.equal(parse({main: ['1|Mcl:2->θ:3->r:5rθ:']}, "main").error_cnt, 0, "Rho / Theta");
   assert.equal(parse({main: ['1|Dim List 1:8->Dim List 1:Seq(X, X, 0, 5, 1->List 1:List 1[4]:File2']}, "main").error_cnt, 0, "List Syntax Elmt");
   assert.equal(parse({main: ['1|RanInt#(3,5):']}, "main").error_cnt, 0, "RanInt");
+  assert.equal(parse({main: ['1|For 1->A To 10:Next:']}, "main").error_cnt, 0, "For/Next");
 });
 
 QUnit.test("Syntax errors - test", function( assert ) {
@@ -205,6 +206,29 @@ QUnit.test("jsccRun - test", function( assert ) {
        RanInt#(3,7)>=3
        `,
       answer: 1
+    },
+    {
+      name: 'For/Next',
+      srcCode: `
+       1->B
+       For 1->A To 9 Step 2
+         B*A->B
+       Next
+       B
+       `,
+      answer: 945
+    },
+    {
+      name: 'For/Next with Break',
+      srcCode: `
+       1->B
+       For 1->A To 9 Step 2
+         B*A->B
+         A>5=>Break
+       Next
+       B
+       `,
+      answer: 105
   }];
 
   assert.expect(testsToRun.length * 2);

@@ -200,19 +200,13 @@ IfEnd
 IfEnd
         </textarea>
         <textarea style="display: none" id="srcCode4">
-Range 1,127,0,63,1,0
-0->B
-Lbl 1
-0->A
-Lbl 2
-Int (Ran#*2)->C
-Plot A*5,(B+C)*5
-Plot (A+1)*5,(B+1-C)*5
-Line
-Isz A
-A<26=>Goto 2
-Isz B
-B<14=>Goto 1       
+ViewWindow 0,126,0,62,0,0
+For 0->B To 13
+  For 0->A To 25
+    RanInt#(0,1)->C
+    F-line 5A,5(B+C),5(A+1),5(B+1-C)
+  Next
+Next
        </textarea>
         <textarea style="display: none" id="srcCode5">
 1->A

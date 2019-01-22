@@ -1,5 +1,5 @@
 /~
-  Grammar for the Casio Basic Web nterpreter
+  Grammar for the Casio Basic Web Interpreter
   written in JS/CC
   by Francois Crevola
 ~/
@@ -16,6 +16,11 @@
   "LPWHILE"
   "SAY"
   "WRITE"
+  "FOR"
+  "TO"
+  "STEP"
+  "NEXT"
+  "BREAK"
   "READ"
   "ISZ"
   "DSZ"
@@ -119,6 +124,10 @@ Stmt:
 		| IF Expression ':' THEN Stmt_List ELSE Stmt_List IFEND [* %% = createNode( NODE_OP, OP_IF_ELSE, %2, %5, %7 ); *]
 		| WHILE Expression ':' Stmt_List WHILEEND	[* %% = createNode( NODE_OP, OP_WHILE_DO, %2, %4 ); *]
 		| DO ':' Stmt_List LPWHILE Expression ':'	[* %% = createNode( NODE_OP, OP_DO_WHILE, %3, %5 ); *]
+		| FOR Expression '->' VariableCasio TO Expression STEP Expression ':' [* prgLabels.set("FOR_"+(prgNodes.length), {firstNode: prgNodes.length + 1}); %% = createNode( NODE_OP, OP_NONE, createNode( NODE_OP, OP_ASSIGN, %2, %4 ), createNode( NODE_OP, OP_FOR, prgNodes.length, %6, %8 )); *]
+		| FOR Expression '->' VariableCasio TO Expression ':' [* prgLabels.set("FOR_"+(prgNodes.length), {firstNode: prgNodes.length + 1}); %% = createNode( NODE_OP, OP_NONE, createNode( NODE_OP, OP_ASSIGN, %2, %4 ), createNode( NODE_OP, OP_FOR, prgNodes.length, %6 )); *]
+		| NEXT ':'	[* addAfterNodeToForLoop(prgLabels, prgNodes.length + 1); %% = createNode( NODE_OP, OP_NEXT); *]
+		| BREAK ':'	[* %% = createNode( NODE_OP, OP_BREAK); *]
 		| SAY String ':'		[* %% = createNode( NODE_OP, OP_SAY, %2 ); *]
 		| String ':'		[* %% = createNode( NODE_OP, OP_SAY, %1 ); *]
 		| String '?' '->' VariableCasio ':'		[* %% = createNode( NODE_OP, OP_INPUT, %1, %4 ); *]
@@ -127,8 +136,8 @@ Stmt:
 		| '?' '->' LIST Integer '[' Expression ']' ':'[* %% = createNode( NODE_OP, OP_INPUT_LIST_ELEM, "", %4, %6 ); *]
 		| WRITE Expression ':'		[* %% = createNode( NODE_OP, OP_WRITE, %2 ); *]
 		| Expression ':'		[* %% = createNode( NODE_OP, OP_WRITE, %1 ); *]
-		| LBL Integer ':'		[* prgLabels["_"+%2] = prgNodes.length + 1; %% = createNode( NODE_OP, OP_REG_LBL, %2 ); *]
-		| LBL Letter ':'		[* prgLabels["_"+%2] = prgNodes.length + 1; %% = createNode( NODE_OP, OP_REG_LBL, %2 ); *]
+		| LBL Integer ':'		[* prgLabels.set("LBL_"+%2, prgNodes.length + 1); %% = createNode( NODE_OP, OP_REG_LBL, %2 ); *]
+		| LBL Letter ':'		[* prgLabels.set("LBL_"+%2, prgNodes.length + 1); %% = createNode( NODE_OP, OP_REG_LBL, %2 ); *]
 		| GOTO Integer ':'		[* %% = createNode( NODE_OP, OP_GOTO, %2 ); *]
 		| GOTO Letter ':'		[* %% = createNode( NODE_OP, OP_GOTO, %2 ); *]
 		| PROG Integer ':'		[* %% = createNode( NODE_OP, OP_PROG_CALL, %2 ); *]

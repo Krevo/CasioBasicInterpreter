@@ -19,7 +19,8 @@ var OP_DO_WHILE = 4;
 var OP_WRITE = 5;
 var OP_READ = 6;
 var OP_SAY = 7;
-
+var OP_FOR = 8;
+var OP_NEXT = 9;
 var OP_EQU = 10;
 var OP_NEQ = 11;
 var OP_GRT = 12;
@@ -89,14 +90,17 @@ var OP_SEQ_TO_LIST = 74;
 var OP_SET_DRAW_COLOR = 76;
 var OP_RANINT = 77;
 var OP_CIRCLE = 78;
+var OP_BREAK = 79;
 
 var programs = new Array();
 var currentPrgName = "main";
 var nextLine = 0;
 var callStack = new Array();
+var loopStack = new Array();
 
 var v_names = new Array();
 var v_values = new Array();
+var lastAssignedVname;
 //var lists = new Array();
 var files = new Array();
 var currentFile = 1; // Current file of lists files[currentFile]
@@ -157,6 +161,7 @@ function letvar(vname, value) {
         }
         debug("letvar v_values[" + i + "] => " + value);
         v_values[i] = value;
+        lastAssignedVname = vname;
     } else if (Array.isArray(vname)) {
         var n = vname[0];
         var index = vname[1];
@@ -303,7 +308,7 @@ function execute(node) {
                     // do nothing during exec phase, label is already defined when parsing is done
                     break;
                 case OP_GOTO:
-                    nextLine = programs[currentPrgName]['labels']["_" + node.children[0]];
+                    nextLine = programs[currentPrgName]['labels'].get("LBL_" + node.children[0]);
                     break;
                 case OP_PROG_CALL:
                     debug("Call to subprogram '" + node.children[0] + "'");
@@ -366,6 +371,43 @@ function execute(node) {
                         execute(node.children[1]);
                     } else {
                         execute(node.children[2]);
+                    }
+                    break;
+                case OP_FOR:
+                    var objFor = programs[currentPrgName]['labels'].get("FOR_" + node.children[0]); // recup d'un objet dans lequel on stockera le step, le num de noeud a exec (juste apres for), le max
+                    objFor.max = execute(node.children[1]);
+                    objFor.varVname = lastAssignedVname;
+                    if (node.children[2]) {
+                        objFor.step = execute(node.children[2]);
+                    } else {
+                        objFor.step = 1;
+                    }
+                    // Quand on rencontre ce For il faut stacker , pour pouvoir déstaker quand on rencontre le next et que la condition de sortie est remplie
+                    loopStack.push(objFor);
+                    break;
+                case OP_NEXT:
+                    var currentObjFor = loopStack[loopStack.length - 1];
+                    var oldValue = Number(getvar(currentObjFor.varVname));
+                    // 1. Tester si max atteint 
+                    if (oldValue != currentObjFor.max) {
+                        // 2. incrementer la var et boucler
+                        var newValue = oldValue + currentObjFor.step;
+                        letvar(currentObjFor.varVname, newValue);
+                        nextLine = currentObjFor.firstNode;
+                    } else {
+                        if (loopStack.length >= 1) {
+                            loopStack.pop();
+                        } else {
+                            // TODO : exit with error message and line number
+                        }
+                    }
+                    break;
+                case OP_BREAK:
+                    var currentLoopObj = loopStack.pop();
+                    if (currentLoopObj && currentLoopObj.hasOwnProperty('firstOuterNode')) {
+                        nextLine = currentLoopObj.firstOuterNode;
+                    } else {
+                        debug("Cannot break, because don't know where is the end of the loop");
                     }
                     break;
                 case OP_WHILE_DO:
@@ -754,7 +796,7 @@ function jsccRun(str, finishCallBack) {
     programsSrc = new Array();
 
     this.finishCallBack = finishCallBack;
-    
+
     str = str.replace(/(?:\r\n|\r|\n)/g, "\n");
 
     var arrayOfLines = str.split("\n");
@@ -851,6 +893,21 @@ function giveLineFromSourceCode(lineNum, lines) {
     return "";
 }
 
+function addAfterNodeToForLoop(prgLabels, nodeNum) {
+    // Loop thought prglabels of type FOR_
+    var t = Array.from(prgLabels.keys());
+    t.reverse();
+    for (var i = 0; i < t.length; i++) {
+      var k = t[i];
+      if (!k.startsWith('FOR_')) { break; }
+      var objFor = prgLabels.get(k);
+      if (!objFor.hasOwnProperty('firstOuterNode')) {
+        objFor.firstOuterNode = nodeNum;
+        break;
+      }
+    }
+}
+
 function parse(programsSrc, progName) {
 
     var linesOfSourceCode = programsSrc[progName].map(cbiReplace);
@@ -860,7 +917,7 @@ function parse(programsSrc, progName) {
 
     debug("Parsing " + progName + " ...");
     var nodes = new Array();
-    var labels = new Array();
+    var labels = new Map();
     var where = "";
 
     var error_cnt = 0;

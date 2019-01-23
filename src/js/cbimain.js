@@ -112,7 +112,7 @@ files[currentFile] = [];
 var getKey = 0;
 
 var DEBUG = false;
-var currentExecutionTimeout = 10; // time to wait between each executeNextLine(), in milliseconds
+var currentExecutionTimeout = 15; // time to wait between each executeNextLine(), in milliseconds
 
 var EXIT_SUCCESS = 0;
 var EXIT_STOPPED = 14;

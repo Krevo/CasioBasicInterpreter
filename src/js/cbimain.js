@@ -14,8 +14,7 @@ var OP_NONE = -1;
 var OP_ASSIGN = 0;
 var OP_IF = 1;
 var OP_IF_ELSE = 2;
-var OP_WHILE_DO = 3;
-var OP_DO_WHILE = 4;
+
 var OP_WRITE = 5;
 var OP_READ = 6;
 var OP_SAY = 7;
@@ -91,6 +90,10 @@ var OP_SET_DRAW_COLOR = 76;
 var OP_RANINT = 77;
 var OP_CIRCLE = 78;
 var OP_BREAK = 79;
+var OP_DO = 80;
+var OP_LPWHILE = 81;
+var OP_WHILE = 82;
+var OP_WHILEEND = 83;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -410,15 +413,49 @@ function execute(node) {
                         debug("Cannot break, because don't know where is the end of the loop");
                     }
                     break;
-                case OP_WHILE_DO:
-                    while (execute(node.children[0])) {
-                        execute(node.children[1]);
+                case OP_DO:
+                    var currentLoopObj = programs[currentPrgName]['labels'].get("DO_" + node.children[0]); // recup d'un objet dans lequel on stockera le step, le num de noeud a exec (juste apres do)
+                    // Quand on rencontre ce Do il faut stacker , pour pouvoir déstaker quand on rencontre le LpWhile et que la condition de sortie est remplie
+                    loopStack.push(currentLoopObj);
+                    break;
+                case OP_LPWHILE:
+                    var currentLoopObj = loopStack[loopStack.length - 1];
+                    if (execute(node.children[0])) {
+                        nextLine = currentLoopObj.firstNode;
+                    } else {
+                        if (loopStack.length >= 1) {
+                            loopStack.pop();
+                        } else {
+                            // TODO : exit with error message and line number
+                        }
                     }
                     break;
-                case OP_DO_WHILE:
-                    do {
-                        execute(node.children[0])
-                    } while (execute(node.children[1]));
+                case OP_WHILE:
+                    var currentLoopObj = programs[currentPrgName]['labels'].get("WHL_" + node.children[0]); // recup d'un objet dans lequel on stockera le step, le num de noeud a exec (juste apres do)
+                    // Quand on rencontre ce While il faut stacker , et déstaker quand on la conditon est fausse ou quand on rencontre un break
+                    loopStack.push(currentLoopObj);
+                    if (execute(node.children[1])) {
+                        currentLoopObj.expressionToTest = node.children[1]; // We will evaluate again the 'expressionToTest' on the whileend.
+                    } else {
+                        if (loopStack.length >= 1) {
+                            loopStack.pop();
+                            nextLine = currentLoopObj.firstOuterNode;
+                        } else {
+                            // TODO : exit with error message and line number
+                        }
+                    }
+                    break;
+                case OP_WHILEEND:
+                    var currentLoopObj = loopStack[loopStack.length - 1];
+                    if (execute(currentLoopObj.expressionToTest)) {
+                        nextLine = currentLoopObj.firstNode;
+                    } else {
+                        if (loopStack.length >= 1) {
+                            loopStack.pop();
+                        } else {
+                            // TODO : exit with error message and line number
+                        }
+                    }
                     break;
                 case OP_WRITE:
                     ret = execute(node.children[0]);
@@ -893,13 +930,13 @@ function giveLineFromSourceCode(lineNum, lines) {
     return "";
 }
 
-function addAfterNodeToForLoop(prgLabels, nodeNum) {
-    // Loop thought prglabels of type FOR_
+function addAfterNodeToLoop(prgLabels, nodeNum, labelType) {
+    // Loop thought prglabels of type 'labelType' (FOR_, DO_ or WHL_)
     var t = Array.from(prgLabels.keys());
     t.reverse();
     for (var i = 0; i < t.length; i++) {
       var k = t[i];
-      if (!k.startsWith('FOR_')) { break; }
+      if (!k.startsWith(labelType)) { continue; }
       var objFor = prgLabels.get(k);
       if (!objFor.hasOwnProperty('firstOuterNode')) {
         objFor.firstOuterNode = nodeNum;

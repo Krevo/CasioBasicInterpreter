@@ -94,6 +94,8 @@ var OP_DO = 80;
 var OP_LPWHILE = 81;
 var OP_WHILE = 82;
 var OP_WHILEEND = 83;
+var OP_SHOWAXES = 84;
+var OP_CLEARGRAPH = 85;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -631,8 +633,14 @@ function execute(node) {
                 case OP_CLS:
                     cls();
                     break;
+                case OP_CLEARGRAPH:
+                    cls();
+                    range(_XMIN_, _XMAX_, _XSCL_, _YMIN_, _YMAX_, _YSCL_);
+                    break;
+                case OP_SHOWAXES:
+                    setShowAxes(node.children[0]);
+                    break;
                 case OP_CLEARTEXT:
-                    debug("cleartext call");
                     cleartext();
                     break;
                 case OP_MCL:

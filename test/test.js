@@ -11,6 +11,7 @@ QUnit.test("No syntax errors - test", function( assert ) {
   assert.equal(parse({main: ['1|Dim List 1:8->Dim List 1:Seq(X, X, 0, 5, 1->List 1:List 1[4]:File2']}, "main").error_cnt, 0, "List Syntax Elmt");
   assert.equal(parse({main: ['1|RanInt#(3,5):']}, "main").error_cnt, 0, "RanInt");
   assert.equal(parse({main: ['1|For 1->A To 10:Next:']}, "main").error_cnt, 0, "For/Next");
+  assert.equal(parse({main: ['1|AxesOn:AxesOff:ClrGraph:']}, "main").error_cnt, 0, "AxesOn, AxesOff, ClrGraph");
 });
 
 QUnit.test("Syntax errors - test", function( assert ) {

@@ -511,11 +511,24 @@ function clearDisplay() {
 function cls() {
     swapToGraphicScreen();
     clearDisplay();
+    drawAxes();
 }
 
 function clrtext() {
     swapToTextScreen();
     clearDisplay();
+}
+
+function drawAxes() {
+    if (!showAxes) return;
+    var prevDrawColor = currentDrawColorIdx;
+    var oldPlotSize = plotSize;
+    plotSize = 1;
+    currentDrawColorIdx = getColorIndexFromColorName("Black");
+    horizontal(0);
+    vertical(0);
+    plotSize = oldPlotSize;
+    currentDrawColorIdx = prevDrawColor;
 }
 
 // Redraw all screen
@@ -603,12 +616,27 @@ function drawTextGfx(y, x, str, color) {
 }
 
 var plots = Array();
-var xmin = 1;
-var xmax = casioScreenW;
-var xscl = 0;
-var ymin = 1;
-var ymax = casioScreenH;
-var yscl = 0;
+
+var _XMIN_ = -6.3;
+var _XMAX_ = 6.3;
+var _XSCL_ = 1;
+var _YMIN_ = -3.1;
+var _YMAX_ = 3.1;
+var _YSCL_ = 1;
+
+var xmin = _XMIN_;
+var xmax = _XMAX_;
+var xscl = _XSCL_;
+var ymin = _YMIN_;
+var ymax = _YMAX_;
+var yscl = _YSCL_;
+
+var showAxes = false; // false by default but should be a configurable option
+
+function setShowAxes(show) {
+    showAxes = show;
+    debug("showAxes = "+(showAxes?'true':'false'));
+}
 
 function getPixelColor(x, y) {
     var imgd = ctx2.getImageData(x * gtm.a + gtm.e, y * gtm.d + gtm.f, 1, 1);
@@ -792,6 +820,7 @@ function range(xmin, xmax, xscl, ymin, ymax, yscl) {
     this.ymin = ymin;
     this.ymax = ymax;
     this.yscl = yscl;
+    cls();
 }
 
 function xtoR(x) {

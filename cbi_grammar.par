@@ -6,6 +6,8 @@
 
 !	' |\r|\n|\t'
 
+  "AXESON"
+  "AXESOFF"
   "IF"
   "THEN"
   "ELSE"
@@ -52,6 +54,7 @@
   "RETURN"
   "CLS"
   "CLRTEXT"
+  "CLRGRAPH"
   "CLRLIST"
   "FILE"
   "SEQ\("
@@ -186,6 +189,9 @@ Stmt:
 		| LINE ':' [* %% = createNode( NODE_OP, OP_LINE ); *]
 		| Color LINE ':' [* %% = createNode( NODE_OP, OP_LINE, %1 ); *]
 		| CLRTEXT ':' [* %% = createNode( NODE_OP, OP_CLEARTEXT ); *]
+		| CLRGRAPH ':' [* %% = createNode( NODE_OP, OP_CLEARGRAPH ); *]
+		| AXESON ':' [* %% = createNode( NODE_OP, OP_SHOWAXES, true ); *]
+		| AXESOFF ':' [* %% = createNode( NODE_OP, OP_SHOWAXES, false ); *]
 		| CLRLIST ':' [* %% = createNode( NODE_OP, OP_CLEARLIST ); *]
 		| CLRLIST Integer ':' [* %% = createNode( NODE_OP, OP_CLEARLIST, %2 ); *]
 		| FILE Integer ':' [* %% = createNode( NODE_OP, OP_SELECTFILE, %2 ); *]

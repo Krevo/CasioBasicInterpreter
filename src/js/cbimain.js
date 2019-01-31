@@ -96,6 +96,7 @@ var OP_WHILE = 82;
 var OP_WHILEEND = 83;
 var OP_SHOWAXES = 84;
 var OP_CLEARGRAPH = 85;
+var OP_PI = 86;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -637,6 +638,9 @@ function execute(node) {
                     cls();
                     range(_XMIN_, _XMAX_, _XSCL_, _YMIN_, _YMAX_, _YSCL_);
                     break;
+                case OP_PI:
+                    ret = Math.PI;
+                    break;
                 case OP_SHOWAXES:
                     setShowAxes(node.children[0]);
                     break;
@@ -994,6 +998,7 @@ function parse(programsSrc, progName) {
 function cbiReplace(str) {
     str = str.replace(/(\u00A0)/g, ' '); // Replace "non breakable space" by space
     str = str.replace(/(\u03B8)/g, 't'); // Replace "theta" by t
+    str = str.replace(/(\u03C0)/g, 'Pi'); // Replace Pi symbol by "Pi"
     str = str.replace(/(\u2192)/g, '->'); // Replace "right arrow" by "->"
     str = str.replace(/(\u21D2)/g, '=>'); // Replace "rightwards double arrow" by "=>"
     str = str.replace(/(\u2260)/g, '<>'); // Replace "not equal to" by "<>"

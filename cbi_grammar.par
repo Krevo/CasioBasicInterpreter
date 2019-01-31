@@ -76,6 +76,7 @@
   "POL\("
   "_DISP_"
   "PLOT/LINE-COLOR"
+  "PI"
   ','
   '~'
   '{'
@@ -272,6 +273,7 @@ Value:
 
 FinalVariable:
 		GETKEY [* %% = createNode( NODE_OP, OP_GETKEY ); *]
+		| PI [* %% = createNode( NODE_OP, OP_PI ); *]
 		| RAN '#' [* %% = createNode( NODE_OP, OP_RANDOM ); *]
 		| "RANINT#" '(' Expression ',' Expression ')' [* %% = createNode( NODE_OP, OP_RANINT, %3, %5 ); *]
 		| PXLTEST Expression ',' Expression [* %% = createNode( NODE_OP, OP_PXL_TEST, %2, %4 ); *]

@@ -338,15 +338,15 @@ function execute(node) {
                     break;
                 case OP_COS:
                     n = Math.cos(angleToRadians(execute(node.children[0])));
-                    ret = parseFloat((n % 1).toPrecision(15));
+                    ret = parseFloat(n.toPrecision(15));
                     break;
                 case OP_SIN:
                     n = Math.sin(angleToRadians(execute(node.children[0])));
-                    ret = parseFloat((n % 1).toPrecision(15));
+                    ret = parseFloat(n.toPrecision(15));
                     break;
                 case OP_TAN:
                     n = Math.tan(angleToRadians(execute(node.children[0])));
-                    ret = parseFloat((n % 1).toPrecision(15));
+                    ret = parseFloat(n.toPrecision(15));
                     break;
                 case OP_POL:
                     // rectangular to polar coord

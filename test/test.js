@@ -66,6 +66,14 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 3
     },
     {
+      name: 'Cos 0 test',
+      srcCode: `
+        Deg
+        cos 0
+      `,
+      answer: 1
+    },
+    {
       name: 'Cos 60 test',
       srcCode: `
         Deg

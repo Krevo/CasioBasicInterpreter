@@ -395,9 +395,10 @@ function execute(node) {
                     var currentObjFor = loopStack[loopStack.length - 1];
                     var oldValue = Number(getvar(currentObjFor.varVname));
                     // 1. Tester si max atteint 
-                    if (oldValue != currentObjFor.max) {
+                    var newValue = oldValue + currentObjFor.step;
+                    if ((currentObjFor.step > 0 && newValue <= currentObjFor.max)
+                      || (currentObjFor.step < 0 && newValue >= currentObjFor.max)) {
                         // 2. incrementer la var et boucler
-                        var newValue = oldValue + currentObjFor.step;
                         letvar(currentObjFor.varVname, newValue);
                         nextLine = currentObjFor.firstNode;
                     } else {

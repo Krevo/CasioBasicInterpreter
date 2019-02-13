@@ -32,8 +32,29 @@ var COLOR_NAMES = {
   // A: Clear
 }
 
+// plotDefsXXXX[0] - first array, giving size of the plot
+// plotDefsXXXX[1][0] - give integers where we should plot when doing a : 'pxlIndex % (size plotDefsXXXX[1][0] + size plotDefsXXXX[1][1])'
+var plotDefsLowRes = {
+  "SketchThin" : [1, [[0], []]],
+  "SketchNormal" : [1, [[0], []]],
+  "SketchThick" : [2, [[0], []]],
+  "SketchDot" : [1, [[0], [1]]],
+  "SketchBroken" : [2, [[0], [1,2]]],
+}
+
+var plotDefsHiRes = {
+  "SketchThin" : [1, [[0], []]],
+  "SketchNormal" : [3, [[0], []]],
+  "SketchThick" : [5, [[0], []]],
+  "SketchDot" : [3, [[0], [1,2,3,4,5]]],
+  "SketchBroken" : [3, [[0,1,2,3], [4,5,6,7,8]]],
+}
+
+var plotDefs;
+
 var currentPalette = POLY_COLOR;
 var currentDrawColorIdx = getColorIndexFromColorName("Blue");
+var currentSketchMode = "SketchNormal";
 
 var DEG = 1;
 var RAD = 2;
@@ -120,6 +141,7 @@ function setRes(res) {
     gfxCharW = 6;
     gfxCharH = 8;
     currentGfxFontSize = gfxFontSize;
+    plotDefs = plotDefsLowRes;
   } else if (res == "hi") {
     //currentFont = casioFontHi;
     //currentFontGfx = casioFontGfxHi;
@@ -132,7 +154,8 @@ function setRes(res) {
     gfxCharW = 12;
     gfxCharH = 14;
     currentGfxFontSize = gfxFontSizeHi;
-  }
+    plotDefs = plotDefsHiRes;
+}
 
   zoomW = Math.round(c.width  / casioScreenW);
   zoomH = Math.round(c.height / casioScreenH);
@@ -671,8 +694,9 @@ function strPad(str, pad) {
     return pad.substring(0, pad.length - str.length) + str;
 }
 
-// draw a line using "Bresenham's line algorithm"
+// Draw a line using "Bresenham's line algorithm"
 function bline(x0, y0, x1, y1) {
+    var pxlIndex = 0;
     swapToGraphicScreen();
     x0 = Math.round(x0);
     y0 = Math.round(y0);
@@ -681,9 +705,12 @@ function bline(x0, y0, x1, y1) {
     var dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
     var dy = Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
     var err = (dx > dy ? dx : -dy) / 2;
-
+    var moduloTest = plotDefs[currentSketchMode][1][0].length + plotDefs[currentSketchMode][1][1].length;
     while (true) {
-        setPixelOn(x0, y0, plotSize);
+        pxlIndex++;
+        if (plotDefs[currentSketchMode][1][0].indexOf(pxlIndex % moduloTest) >= 0) { // generique 
+            setPixelOn(x0, y0, plotDefs[currentSketchMode][0]);
+        }
         if (x0 === x1 && y0 === y1) break;
         var e2 = err;
         if (e2 > -dx) {
@@ -699,6 +726,7 @@ function bline(x0, y0, x1, y1) {
 
 // draw a point of the circle ... and 7 others by symmetry
 function drawPointOfCircle(xc, yc, x, y) {
+/*
     plotOn(xc+x, yc+y);
     plotOn(xc-x, yc+y);
     plotOn(xc+x, yc-y);
@@ -707,10 +735,27 @@ function drawPointOfCircle(xc, yc, x, y) {
     plotOn(xc-y, yc+x);
     plotOn(xc+y, yc-x);
     plotOn(xc-y, yc-x);
+
+*/
+    setPixelOn(xtoR(xc+x), ytoR(yc+y), plotDefs[currentSketchMode][0]);
+    setPixelOn(xtoR(xc-x), ytoR(yc+y), plotDefs[currentSketchMode][0]);
+    setPixelOn(xtoR(xc+x), ytoR(yc-y), plotDefs[currentSketchMode][0]);
+    setPixelOn(xtoR(xc-x), ytoR(yc-y), plotDefs[currentSketchMode][0]);
+    setPixelOn(xtoR(xc+y), ytoR(yc+x), plotDefs[currentSketchMode][0]);
+    setPixelOn(xtoR(xc-y), ytoR(yc+x), plotDefs[currentSketchMode][0]);
+    setPixelOn(xtoR(xc+y), ytoR(yc-x), plotDefs[currentSketchMode][0]);
+    setPixelOn(xtoR(xc-y), ytoR(yc-x), plotDefs[currentSketchMode][0]);
+
 }
 
 // draw a circle using "Bresenham's circle algorithm"
 function circleBres(xc, yc, r) {
+    swapToGraphicScreen();
+    var pxlIndex = 0;
+    var moduloTest = plotDefs[currentSketchMode][1][0].length + plotDefs[currentSketchMode][1][1].length;
+    debug("moduleTest = "+moduloTest);
+    debug(plotDefs[currentSketchMode]);
+    debug(plotDefs[currentSketchMode][1][0]);
     var x = 0, y = r;
     var d = 3 - 2 * r;
     drawPointOfCircle(xc, yc, x, y);
@@ -722,7 +767,12 @@ function circleBres(xc, yc, r) {
         } else {
             d = d + 4 * x + 6;
         }
-        drawPointOfCircle(xc, yc, x, y);
+        debug(pxlIndex % moduloTest);
+        if (plotDefs[currentSketchMode][1][0].indexOf(pxlIndex % moduloTest) >= 0) { // generique 
+            debug("draw point");
+            drawPointOfCircle(xc, yc, x, y);
+        }
+        pxlIndex++;
     }
 }
 
@@ -832,9 +882,10 @@ function ytoR(y) {
 }
 
 function fline(x1, y1, x2, y2) {
-    plotOn(x1, y1);
-    plotOn(x2, y2);
-    line();
+    //plotOn(x1, y1);
+    //plotOn(x2, y2);
+    //line();
+    bline(xtoR(x1), ytoR(y1), xtoR(x2), ytoR(y2));
 }
 
 function horizontal(y) {

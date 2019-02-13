@@ -541,9 +541,10 @@ List 3[4]_
        </textarea>
         <textarea style="display: none" id="srcCode17">
 -100->A
-Lbl 1
 ViewWindow 1,127,0,1,63,0
+Lbl 1
 Prog "RNDCOLOR"
+Prog "RNDTHICK"
 F-Line 127Ran# ,63Ran# ,127Ran# ,63Ran# 
 Isz A
 Goto 1
@@ -572,6 +573,77 @@ IfEnd
 IfEnd
 IfEnd
 IfEnd
+
+@@ Prog "RNDTHICK" ( ) 
+
+1+Int (5Ran# ) -> F
+If F = 1
+Then S-L-Dot
+Else If F = 2
+Then S-L-Broken
+Else If F = 3
+Then S-L-Thick
+Else If F = 4
+Then S-L-Normal
+Else If F = 5
+Then S-L-Thin
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+IfEnd
+       </textarea>
+        <textarea style="display: none" id="srcCode18">
+#Program name: IMG'FOOT
+#hires
+#multicolor
+'Inspired from "Fifaa 19" by Manolo
+Rad
+Plot/Line-Color Black
+S-L-Normal
+ViewWindow 1, 379, 0, 187, 1, 0
+For 1 -> U To 187 Step 5
+	Green SketchThick Horizontal U
+Next
+F-Line 6, 72, 1, 67
+F-Line 6, 116, 1, 121
+F-Line 374, 72, 379, 67
+F-Line 374, 116, 379, 121
+F-Line 1, 67, 1, 121
+F-Line 379, 67, 379, 121
+Circle 190, 94, 50
+Circle 190, 94, 2
+Vertical 190
+F-Line 1, 62, 26, 62
+F-Line 1, 126, 26, 126
+F-Line 26, 62, 26, 126
+F-Line 379, 62, 354, 62
+F-Line 379, 126, 354, 126
+F-Line 354, 62, 354, 126
+F-Line 1, 34, 51, 34
+F-Line 1, 154, 51, 154
+F-Line 51, 34, 51, 154
+F-Line 379, 34, 329, 34
+F-Line 379, 154, 329, 154
+F-Line 329, 34, 329, 154
+π -> Z
+PlotOn 51,54
+Do
+	51 + 40*sin (Z) -> A
+	94 + 40*cos (Z) -> B
+	PlotOn A, B
+        Line
+	Z - π/10 -> Z
+LpWhile Z > -.1
+π -> Z
+PlotOn 329,54
+Do
+	329 + 40*sin (Z) -> A
+	94 + 40*cos (Z) -> B
+	PlotOn A, B
+        Line
+	Z + π/10 -> Z
+LpWhile Z < 2π + .1
        </textarea>
         <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
@@ -607,6 +679,7 @@ IfEnd
         <button onclick="loadProg(12);">Text Menu</button>
         <button onclick="loadProg(8);">City</button>
         <br>
+        <button onclick="loadProg(18);">Football pitch</button>
         <button onclick="loadProg(13);">Bool. table</button>
         <button onclick="loadProg(14);">List 1</button>
         <button onclick="loadProg(15);">List 2</button>

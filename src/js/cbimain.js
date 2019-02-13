@@ -97,6 +97,7 @@ var OP_WHILEEND = 83;
 var OP_SHOWAXES = 84;
 var OP_CLEARGRAPH = 85;
 var OP_PI = 86;
+var OP_SKETCHMODE = 87;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -602,35 +603,63 @@ function execute(node) {
                     break;
                 case OP_FLINE:
                     var prevDrawColor = currentDrawColorIdx;
+                    var prevSketchMode = currentSketchMode;
                     if (node.children[4]) {
                         currentDrawColorIdx = getColorIndexFromColorName(node.children[4]);
                     }
+                    if (node.children[5]) {
+                        debug("sketchMode > '"+node.children[5]+"'");
+                        currentSketchMode = node.children[5];
+                    }
                     fline(execute(node.children[0]), execute(node.children[1]), execute(node.children[2]), execute(node.children[3]));
                     currentDrawColorIdx = prevDrawColor;
+                    currentSketchMode = prevSketchMode;
                     break;
                 case OP_HORIZONTAL:
                     var prevDrawColor = currentDrawColorIdx;
+                    var prevSketchMode = currentSketchMode;
                     if (node.children[1]) {
                         currentDrawColorIdx = getColorIndexFromColorName(node.children[1]);
+                    }
+                    if (node.children[2]) {
+                        debug("sketchMode > '"+node.children[2]+"'");
+                        currentSketchMode = node.children[2];
                     }
                     horizontal(execute(node.children[0]));
                     currentDrawColorIdx = prevDrawColor;
+                    currentSketchMode = prevSketchMode;
                     break;
                 case OP_VERTICAL:
                     var prevDrawColor = currentDrawColorIdx;
+                    var prevSketchMode = currentSketchMode;
                     if (node.children[1]) {
                         currentDrawColorIdx = getColorIndexFromColorName(node.children[1]);
                     }
+                    if (node.children[2]) {
+                        debug("sketchMode > '"+node.children[2]+"'");
+                        currentSketchMode = node.children[2];
+                    }
                     vertical(execute(node.children[0]));
                     currentDrawColorIdx = prevDrawColor;
+                    currentSketchMode = prevSketchMode;
                     break;
                 case OP_CIRCLE:
                     var prevDrawColor = currentDrawColorIdx;
+                    var prevSketchMode = currentSketchMode;
                     if (node.children[3]) {
                         currentDrawColorIdx = getColorIndexFromColorName(node.children[3]);
                     }
+                    if (node.children[4]) {
+                        debug("sketchMode > '"+node.children[4]+"'");
+                        currentSketchMode = node.children[4];
+                    }
                     circleBres(execute(node.children[0]), execute(node.children[1]), execute(node.children[2]));
                     currentDrawColorIdx = prevDrawColor;
+                    currentSketchMode = prevSketchMode;
+                    break;
+                case OP_SKETCHMODE:
+                    debug("sketchMode > '"+node.children[0]+"'");
+                    currentSketchMode = node.children[0];
                     break;
                 case OP_CLS:
                     cls();

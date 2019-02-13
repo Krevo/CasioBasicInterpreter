@@ -4,20 +4,26 @@
 </head>
   <body>
     <pre>
-<i>[color]</i> Plot
-<i>[color]</i> PlotOn
+<i>[color<sup>1</sup>]</i> Plot
+<i>[color<sup>1</sup>]</i> PlotOn
 PlotOff
 PlotChg
-<i>[color]</i> PxlOn
+<i>[color<sup>1</sup>]</i> PxlOn
 PxlOff
 PxlChg
 PxlTest
-<i>[color]</i> Line
-<i>[color]</i> F-Line
-<i>[color]</i> Horizontal
-<i>[color]</i> Vertical
-<i>[color]</i> Circle
-Plot/Line-Color <i>color</i>
+<i>[color<sup>1</sup>]</i> Line
+<i>[color<sup>1</sup>]</i> <i>[sketchMode<sup>2</sup>]</i> F-Line
+<i>[color<sup>1</sup>]</i> <i>[sketchMode<sup>2</sup>]</i> Horizontal
+<i>[color<sup>1</sup>]</i> <i>[sketchMode<sup>2</sup>]</i> Vertical
+<i>[color<sup>1</sup>]</i> <i>[sketchMode<sup>2</sup>]</i> Circle
+Plot/Line-Color <i>color<sup>1</sup></i>
+S-L-Normal
+S-L-Dot
+S-L-Broken
+S-L-Thick
+S-L-Normal
+S-L-Thin
 Cls
 ClrText
 ClrGraph
@@ -74,7 +80,6 @@ While/WhileEnd
 For/Next
 Break
 
-List :
 {1,2,3,4}->List n
 x -> Dim List n
 Dim List n
@@ -84,6 +89,9 @@ x->List[n][expr]
 List[n][expr]
 ClrList
 ClrList n
+
+<sup>1</sup> color can be <i>Black</i>, <i>Blue</i>, <i>Red</i>, <i>Magenta</i>, <i>Green</i>, <i>Cyan</i> or <i>Yellow</i>
+<sup>2</sup> sketchMode can be <i>SketchNormal</i>, <i>SketchThick</i>, <i>SketchBroken</i>, <i>SketchDot</i>, <i>SketchThin</i>
     </pre>
   </body>
 </html>

@@ -76,6 +76,11 @@
   "POL\("
   "_DISP_"
   "PLOT/LINE-COLOR"
+  "S-L-NORMAL"
+  "S-L-DOT"
+  "S-L-BROKEN"
+  "S-L-THICK"
+  "S-L-THIN"
   "PI"
   ','
   '~'
@@ -108,6 +113,7 @@
   '[0-9]+'			Integer
   '[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'	Float
   'Black|Blue|Red|Magenta|Green|Cyan|Yellow'	Color
+  'SketchNormal|SketchThick|SketchBroken|SketchDot|SketchThin'	SketchMode
   ;
 
 ##
@@ -168,14 +174,22 @@ Stmt:
 		| "POL\(" Expression ',' Expression '\)' ':' [* %% = createNode( NODE_OP, OP_POL, %2, %4 ); *]
 		| HORIZONTAL Expression ':' [* %% = createNode( NODE_OP, OP_HORIZONTAL, %2 ); *]
 		| Color HORIZONTAL Expression ':' [* %% = createNode( NODE_OP, OP_HORIZONTAL, %3, %1 ); *]
+		| SketchMode HORIZONTAL Expression ':' [* %% = createNode( NODE_OP, OP_HORIZONTAL, %3, undefined, %1 ); *]
+		| Color SketchMode HORIZONTAL Expression ':' [* %% = createNode( NODE_OP, OP_HORIZONTAL, %4, %1, %2 ); *]
 		| VERTICAL Expression ':' [* %% = createNode( NODE_OP, OP_VERTICAL, %2 ); *]
 		| Color VERTICAL Expression ':' [* %% = createNode( NODE_OP, OP_VERTICAL, %3, %1 ); *]
+		| SketchMode VERTICAL Expression ':' [* %% = createNode( NODE_OP, OP_VERTICAL, %3, undefined, %1 ); *]
+		| Color SketchMode VERTICAL Expression ':' [* %% = createNode( NODE_OP, OP_VERTICAL, %4, %1, %2 ); *]
 		| RANGE Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
 		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
 		| F-LINE Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_FLINE, %2, %4, %6, %8 ); *]
 		| Color F-LINE Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_FLINE, %3, %5, %7, %9, %1 ); *]
+		| SketchMode F-LINE Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_FLINE, %3, %5, %7, %9, undefined, %1 ); *]
+		| Color SketchMode F-LINE Expression ',' Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_FLINE, %4, %6, %8, %10, %1, %2 ); *]
 		| CIRCLE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_CIRCLE, %2, %4, %6 ); *]
 		| Color CIRCLE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_CIRCLE, %3, %5, %7, %1 ); *]
+		| SketchMode CIRCLE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_CIRCLE, %3, %5, %7, undefined, %1 ); *]
+		| Color SketchMode CIRCLE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_CIRCLE, %4, %6, %8, %1, %2 ); *]
 		| LOCATE Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
 		| LOCATE Expression ',' Expression ',' String ':' [* %% = createNode( NODE_OP, OP_LOCATE, %2, %4, %6); *]
 		| TEXT Expression ',' Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_TEXT, %2, %4, %6); *]
@@ -193,6 +207,11 @@ Stmt:
 		| CLRGRAPH ':' [* %% = createNode( NODE_OP, OP_CLEARGRAPH ); *]
 		| AXESON ':' [* %% = createNode( NODE_OP, OP_SHOWAXES, true ); *]
 		| AXESOFF ':' [* %% = createNode( NODE_OP, OP_SHOWAXES, false ); *]
+		| S-L-NORMAL ':' [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchNormal" ); *]
+		| S-L-DOT ':' [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchDot" ); *]
+		| S-L-BROKEN ':' [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchBroken" ); *]
+		| S-L-THICK ':' [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchThick" ); *]
+		| S-L-THIN ':' [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchThin" ); *]
 		| CLRLIST ':' [* %% = createNode( NODE_OP, OP_CLEARLIST ); *]
 		| CLRLIST Integer ':' [* %% = createNode( NODE_OP, OP_CLEARLIST, %2 ); *]
 		| FILE Integer ':' [* %% = createNode( NODE_OP, OP_SELECTFILE, %2 ); *]

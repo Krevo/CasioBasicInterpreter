@@ -389,8 +389,16 @@ function execute(node) {
                     } else {
                         objFor.step = 1;
                     }
-                    // Quand on rencontre ce For il faut stacker , pour pouvoir déstaker quand on rencontre le next et que la condition de sortie est remplie
-                    loopStack.push(objFor);
+                    var value = Number(getvar(objFor.varVname));
+                    // 2 cas où on saute carrement la boucle for, car on n'atteindra jamais la valeur destination
+                    if ((value < objFor.max && objFor.step < 0)
+                        || (value > objFor.max && objFor.step > 0)) {
+                        debug("Ignore the for loop (because "+objFor.max+" is not reachable, when starting from "+value+" and a step of "+objFor.step+")");
+                        nextLine = objFor.firstOuterNode;
+                    } else {
+                        // Quand on rencontre ce For il faut stacker , pour pouvoir déstaker quand on rencontre le next et que la condition de sortie est remplie
+                        loopStack.push(objFor);
+                    }
                     break;
                 case OP_NEXT:
                     var currentObjFor = loopStack[loopStack.length - 1];

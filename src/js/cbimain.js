@@ -98,6 +98,7 @@ var OP_SHOWAXES = 84;
 var OP_CLEARGRAPH = 85;
 var OP_PI = 86;
 var OP_SKETCHMODE = 87;
+var OP_STOP = 88;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -326,8 +327,14 @@ function execute(node) {
                     currentPrgName = node.children[0];
                     nextLine = 0;
                     break;
+                case OP_STOP:
+                    finish(EXIT_SUCCESS, "End Of program ('Stop').", programs);
+                    break;
                 case OP_RETURN:
-                    unstack();
+                    if (!unstack()) { // If nothing was on stack ... we have no parent to return, so this is equivalent of Stop
+                        finish(EXIT_SUCCESS, "End Of program ('Return' in main program).", programs);
+                        return;
+                    }
                     break;
                 case OP_DEG:
                     angleMode = DEG;

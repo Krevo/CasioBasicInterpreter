@@ -1042,7 +1042,10 @@ function parse(programsSrc, progName) {
 
 function cbiReplace(str) {
     str = str.replace(/(\u00A0)/g, ' '); // Replace "non breakable space" by space
-    str = str.replace(/(\u03B8)/g, 't'); // Replace "theta" by t
+    str = str.replace(/(\u00F7)/g, '/'); // Replace "division sign" by "/"
+    str = str.replace(/(\u00D7)/g, '*'); // Replace "multiplication sign" by "*"
+    str = str.replace(/(\uE015)/g, 'r'); // Replace "rho" (U+E015 used in BIDE) by "r"
+    str = str.replace(/(\u03B8)/g, 't'); // Replace "theta" by "t"
     str = str.replace(/(\u03C0)/g, 'Pi'); // Replace Pi symbol by "Pi"
     str = str.replace(/(\u2192)/g, '->'); // Replace "right arrow" by "->"
     str = str.replace(/(\u21D2)/g, '=>'); // Replace "rightwards double arrow" by "=>"

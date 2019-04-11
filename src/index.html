@@ -645,6 +645,177 @@ Do
 	Z + π/10 -> Z
 LpWhile Z < 2π + .1
        </textarea>
+        <textarea style="display: none" id="srcCode19">
+#Program name: WORLDMAP
+#hires
+#multicolor
+'Inspired from "Geograph" game by Disperseur
+
+ViewWindow 1, 127, 0, 1, 63, 0
+
+'MAP'
+For 63 -> r To 1 Step -1
+	Blue SketchThick Horizontal r
+Next
+
+Plot/Line-Color Green
+F-Line 51, 54, 54, 54
+F-Line 37, 53, 42, 53
+F-Line 45, 53, 54, 53
+F-Line 56, 53, 57, 53
+F-Line 36, 52, 40, 52
+F-Line 43, 52, 55, 52
+F-Line 64, 52, 66, 52
+F-Line 88, 52, 89, 52
+F-Line 37, 51, 39, 51
+F-Line 42, 51, 55, 51
+F-Line 29, 50, 30, 50
+F-Line 45, 50, 55, 50
+F-Line 86, 50, 92, 50
+F-Line 25, 49, 29, 49
+F-Line 32, 49, 34, 49
+F-Line 36, 49, 39, 49
+F-Line 46, 49, 54, 49
+F-Line 81, 49, 82, 49
+F-Line 85, 49, 97, 49
+F-Line 102, 49, 104, 49
+F-Line 14, 48, 19, 48
+F-Line 23, 48, 25, 48
+F-Line 28, 48, 31, 48
+F-Line 39, 48, 41, 48
+F-Line 47, 48, 54, 48
+F-Line 68, 48, 70, 48
+F-Line 83, 48, 107, 48
+F-Line 109, 48, 113, 48
+F-Line 13, 47, 37, 47
+F-Line 40, 47, 42, 47
+F-Line 46, 47, 51, 47
+F-Line 66, 47, 72, 47
+F-Line 74, 47, 81, 47
+F-Line 83, 47, 116, 47
+F-Line 12, 46, 36, 46
+F-Line 38, 46, 41, 46
+F-Line 46, 46, 48, 46
+F-Line 55, 46, 56, 46
+F-Line 65, 46, 113, 46
+F-Line 12, 45, 33, 45
+F-Line 38, 45, 39, 45
+F-Line 47, 45, 48, 45
+F-Line 63, 45, 66, 45
+F-Line 68, 45, 108, 45
+F-Line 110, 45, 113, 45
+F-Line 12, 44, 14, 44
+F-Line 19, 44, 32, 44
+F-Line 38, 44, 40, 44
+F-Line 63, 44, 66, 44
+F-Line 68, 44, 104, 44
+F-Line 13, 43, 14, 43
+F-Line 21, 43, 34, 43
+F-Line 38, 43, 42, 43
+F-Line 59, 43, 60, 43
+F-Line 64, 43, 65, 43
+F-Line 68, 43, 103, 43
+F-Line 109, 43, 111, 43
+F-Line 21, 42, 35, 42
+F-Line 37, 42, 42, 42
+F-Line 58, 42, 61, 42
+F-Line 63, 42, 104, 42
+F-Line 22, 41, 42, 41
+F-Line 62, 41, 104, 41
+F-Line 22, 40, 40, 40
+F-Line 61, 40, 72, 40
+F-Line 74, 40, 104, 40
+F-Line 22, 39, 39, 39
+F-Line 61, 39, 69, 39
+F-Line 74, 39, 75, 39
+F-Line 77, 39, 80, 39
+F-Line 82, 39, 104, 39
+F-Line 106, 39, 107, 39
+F-Line 22, 38, 38, 38
+F-Line 58, 38, 61, 38
+F-Line 68, 38, 76, 38
+F-Line 78, 38, 102, 38
+F-Line 22, 37, 36, 37
+F-Line 58, 37, 60, 37
+F-Line 68, 37, 76, 37
+F-Line 79, 37, 100, 37
+F-Line 105, 37, 106, 37
+F-Line 23, 36, 36, 36
+F-Line 59, 36, 64, 36
+F-Line 73, 36, 100, 36
+F-Line 23, 35, 34, 35
+F-Line 58, 35, 100, 35
+F-Line 24, 34, 29, 34
+F-Line 57, 34, 71, 34
+F-Line 73, 34, 100, 34
+F-Line 25, 33, 29, 33
+F-Line 56, 33, 72, 33
+F-Line 74, 33, 80, 33
+F-Line 84, 33, 99, 33
+F-Line 27, 32, 29, 32
+F-Line 56, 32, 73, 32
+F-Line 75, 32, 80, 32
+F-Line 85, 32, 89, 32
+F-Line 92, 32, 97, 32
+F-Line 29, 31, 32, 31
+F-Line 56, 31, 73, 31
+F-Line 75, 31, 78, 31
+F-Line 85, 31, 87, 31
+F-Line 94, 31, 96, 31
+F-Line 56, 30, 74, 30
+F-Line 86, 30, 87, 30
+F-Line 94, 30, 97, 30
+F-Line 33, 29, 41, 29
+F-Line 57, 29, 77, 29
+F-Line 102, 29, 103, 29
+F-Line 36, 28, 43, 28
+F-Line 58, 28, 60, 28
+F-Line 63, 28, 77, 28
+F-Line 35, 27, 44, 27
+F-Line 64, 27, 75, 27
+F-Line 94, 27, 95, 27
+F-Line 97, 27, 102, 27
+F-Line 35, 26, 46, 26
+F-Line 64, 26, 74, 26
+F-Line 95, 26, 96, 26
+F-Line 98, 26, 99, 26
+F-Line 107, 26, 108, 26
+F-Line 35, 25, 49, 25
+F-Line 65, 25, 73, 25
+F-Line 107, 25, 111, 25
+F-Line 35, 24, 49, 24
+F-Line 66, 24, 74, 24
+F-Line 101, 24, 102, 24
+F-Line 110, 24, 111, 24
+F-Line 36, 23, 48, 23
+F-Line 66, 23, 74, 23
+F-Line 103, 23, 106, 23
+F-Line 38, 22, 48, 22
+F-Line 65, 22, 73, 22
+F-Line 76, 22, 77, 22
+F-Line 102, 22, 109, 22
+F-Line 38, 21, 47, 21
+F-Line 66, 21, 72, 21
+F-Line 100, 21, 110, 21
+F-Line 38, 20, 46, 20
+F-Line 66, 20, 72, 20
+F-Line 98, 20, 111, 20
+F-Line 38, 19, 45, 19
+F-Line 67, 19, 71, 19
+F-Line 99, 19, 111, 19
+F-Line 38, 18, 44, 18
+F-Line 67, 18, 70, 18
+F-Line 99, 18, 111, 18
+F-Line 38, 17, 43, 17
+F-Line 106, 17, 109, 17
+F-Line 38, 16, 42, 16
+F-Line 107, 16, 108, 16
+F-Line 38, 15, 41, 15
+F-Line 38, 14, 40, 14
+F-Line 114, 14, 115, 14
+F-Line 38, 13, 40, 13
+F-Line 38, 12, 39, 12
+       </textarea>
         <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
@@ -679,6 +850,7 @@ LpWhile Z < 2π + .1
         <button onclick="loadProg(12);">Text Menu</button>
         <button onclick="loadProg(8);">City</button>
         <br>
+        <button onclick="loadProg(19);">World map</button>
         <button onclick="loadProg(18);">Football pitch</button>
         <button onclick="loadProg(13);">Bool. table</button>
         <button onclick="loadProg(14);">List 1</button>

@@ -46,8 +46,11 @@ button {
         <i><script type="text/javascript">document.write(cbiGetVersion(true));</script></i><br>
         by <b>Krevo_ </b><br><br>
 
-        <canvas id="canvas1" width="508" height="252"></canvas>
-        <canvas id="canvas2" width="508" height="252"></canvas>
+        <div>
+          <canvas id="canvas1" width="508" height="252" style="position: absolute"></canvas>
+          <canvas id="canvas2" width="508" height="252" style="position: absolute;"></canvas>
+          <canvas id="canvas3" width="508" height="252" style="z-index:-1; position: relative; background-color: white"></canvas>
+        </div>
        <br>
         <div style="display: block; padding-bottom: 4px;" >
          <!-- onclick="calcKeyDown(79); setTimeout(calcKeyUp, 200)" -->

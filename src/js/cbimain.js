@@ -99,6 +99,10 @@ var OP_CLEARGRAPH = 85;
 var OP_PI = 86;
 var OP_SKETCHMODE = 87;
 var OP_STOP = 88;
+var OP_BGNONE = 89;
+var OP_BGPICT = 90;
+var OP_STOPICT = 91;
+var OP_RCLPICT = 92;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -817,6 +821,36 @@ function execute(node) {
                     break;
                 case OP_SET_DRAW_COLOR:
                     currentDrawColorIdx = getColorIndexFromColorName(node.children[0]);
+                    break;
+                case OP_BGNONE:
+                    debug("BG-None");
+                    ctx3.clearRect(1, 1, casioScreenW, casioScreenH);
+                    break;
+                case OP_BGPICT:
+                    debug("BG-Pict " + node.children[0]);
+                    var key = currentRes+'#'+currentColorSchemeName+'#'+node.children[0];
+                    if (picts[key]) {
+                        ctx3.putImageData(picts[key], 0, 0);
+                    }
+                    break;
+                case OP_STOPICT:
+                    debug("StoPict " + node.children[0]);
+                    var imgData = merge(ctx2.getImageData(0, 0, c2.width, c2.height), ctx3.getImageData(0, 0, c3.width, c3.height));
+                    var key = currentRes+'#'+currentColorSchemeName+'#'+node.children[0];
+                    picts[key] = imgData;
+                    debug(picts);
+                    break;
+                case OP_RCLPICT:
+                    debug("RclPict "+node.children[0]);
+                    var key = currentRes+'#'+currentColorSchemeName+'#'+node.children[0];
+                    if (picts[key]) {
+                        if (currentColorSchemeName == "multicolor") {
+                            ctx3.putImageData(data, 0, 0);
+                        } else {
+                            var data = merge(picts[key], ctx2.getImageData(0, 0, c2.width, c2.height));
+                            ctx2.putImageData(data, 0, 0);
+                        }
+                    }
                     break;
             }
             break;

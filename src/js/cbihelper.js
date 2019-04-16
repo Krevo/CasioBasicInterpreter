@@ -67,6 +67,7 @@ var casioFontGfxSrc = "data:image/gif;base64,R0lGODlhAAYIAKECAAQEBP///v///////yH
 var casioFontGfxHiSrc = "data:image/gif;base64,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";
 
 var txtCharW, txtCharH;
+var picts = [];
 
 /*
 Pour chaque palette, creer les 4 fonts pour chaque couleurs
@@ -112,18 +113,23 @@ var currentLineBuffer = null;
 var casioScreenW, casioScreenH, plotSize; 
 var c1, c2, ctx1, ctx2, c, ctx;
 var zoomW, zoomH, dx, dy;
+var currentRes, currentColorSchemeName;
 
 function selectResolution(res) {
   setRes(res);
 }
 
 function setRes(res) {
+  currentRes = res;
 
   c1 = document.getElementById("canvas1");
   c2 = document.getElementById("canvas2");
+  c3 = document.getElementById("canvas3");
 
+  
   ctx1 = c1.getContext("2d");
   ctx2 = c2.getContext("2d");
+  ctx3 = c3.getContext("2d");
 
   c = c1;
   ctx = ctx1;
@@ -163,12 +169,15 @@ function setRes(res) {
   c1.height = zoomH * casioScreenH;
   c2.width = zoomW * casioScreenW;
   c2.height = zoomH * casioScreenH;
+  c3.width = zoomW * casioScreenW;
+  c3.height = zoomH * casioScreenH;
 
   dx = -1;
   dy = -1;
 
   prepareDisplay(ctx1);
   prepareDisplay(ctx2);
+  prepareDisplay(ctx3);
 
   // Efface ecran texte
   clrtext();
@@ -178,6 +187,7 @@ function setRes(res) {
 }
 
 function chooseColorScheme(colorSchemeName) {
+  currentColorSchemeName = colorSchemeName;
   var oldPalette = currentPalette;
   if (colorSchemeName == "black&white") {
     currentPalette = MONO_NB_COLOR;
@@ -199,14 +209,14 @@ function chooseColorScheme(colorSchemeName) {
     swapColor(ctx2, oldPalette[i], destColor);
   }
 
+  c3.style.backgroundColor = "rgb("+currentPalette[0][0]+","+currentPalette[0][1]+","+currentPalette[0][2]+")";
+
 }
 
 function swapColor(context, fromColor, toColor) {
     var imageData = context.getImageData(0, 0, c.width, c.height);
     var data = imageData.data;
-
     for(var i = 0; i < data.length; i += 4) {
-
         if (data[i] == fromColor[0]
             && data[i+1] == fromColor[1]
             && data[i+2] == fromColor[2]) {
@@ -217,6 +227,25 @@ function swapColor(context, fromColor, toColor) {
     }
     // overwrite original image
     context.putImageData(imageData, 0, 0);
+}
+
+
+function merge(imgDataForeground, imgDataBackground) {
+    var returnImageData = ctx.createImageData(imgDataForeground.width, imgDataForeground.height);
+    for(var i = 0; i < imgDataForeground.data.length; i += 4) {
+        if (imgDataForeground.data[i+3] == 255) { // 1er plan opaque
+            returnImageData.data[i] = imgDataForeground.data[i];
+            returnImageData.data[i+1] = imgDataForeground.data[i+1];
+            returnImageData.data[i+2] = imgDataForeground.data[i+2];
+            returnImageData.data[i+3] = imgDataForeground.data[i+3];
+        } else {
+            returnImageData.data[i] = imgDataBackground.data[i];
+            returnImageData.data[i+1] = imgDataBackground.data[i+1];
+            returnImageData.data[i+2] = imgDataBackground.data[i+2];
+            returnImageData.data[i+3] = imgDataBackground.data[i+3];
+        }
+    }
+    return returnImageData;
 }
 
 function getNewImage(imgSrc, fgColor, bgColor) {
@@ -525,16 +554,20 @@ function swapToTextScreen() {
 }
 
 // Clear the current display
-function clearDisplay() {
-    ctx.fillStyle = getFillStyleFromColor(currentPalette[0])
-    ctx.fillRect(1, 1, casioScreenW, casioScreenH);
+function clearDisplay(isGraphicScreen) {
+    if (isGraphicScreen) {
+        ctx.clearRect(1, 1, casioScreenW, casioScreenH);
+    } else {
+        ctx.fillStyle = getFillStyleFromColor(currentPalette[0]);
+        ctx.fillRect(1, 1, casioScreenW, casioScreenH);
+    }
 }
 
 //Interpreting functions
 
 function cls() {
     swapToGraphicScreen();
-    clearDisplay();
+    clearDisplay(true);
     drawAxes();
 }
 

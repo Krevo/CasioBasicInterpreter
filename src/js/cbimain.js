@@ -845,7 +845,7 @@ function execute(node) {
                     var key = currentRes+'#'+currentColorSchemeName+'#'+node.children[0];
                     if (picts[key]) {
                         if (currentColorSchemeName == "multicolor") {
-                            ctx3.putImageData(data, 0, 0);
+                            ctx3.putImageData(picts[key], 0, 0);
                         } else {
                             var data = merge(picts[key], ctx2.getImageData(0, 0, c2.width, c2.height));
                             ctx2.putImageData(data, 0, 0);

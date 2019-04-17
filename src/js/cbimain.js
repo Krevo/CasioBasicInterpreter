@@ -824,7 +824,7 @@ function execute(node) {
                     break;
                 case OP_BGNONE:
                     debug("BG-None");
-                    ctx3.clearRect(1, 1, casioScreenW, casioScreenH);
+                    clearBackground();
                     break;
                 case OP_BGPICT:
                     debug("BG-Pict " + node.children[0]);
@@ -949,6 +949,7 @@ function jsccRun(str, finishCallBack) {
 
     reset();
     cls();
+    clearBackground();
 
     var nbErrors = 0;
     var where = "";

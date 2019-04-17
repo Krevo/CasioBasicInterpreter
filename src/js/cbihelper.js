@@ -111,7 +111,7 @@ var idTimerMain = 0;
 var currentLineBuffer = null;
 
 var casioScreenW, casioScreenH, plotSize; 
-var c1, c2, ctx1, ctx2, c, ctx;
+var c1, c2, c3, ctx1, ctx2, ctx3, c, ctx;
 var zoomW, zoomH, dx, dy;
 var currentRes, currentColorSchemeName;
 
@@ -439,6 +439,10 @@ function unpauseProgramExec() {
     /* unpause program execution */
     paused = false;
     idTimerMain = setTimeout('executeNextLine()', currentExecutionTimeout);
+}
+
+function clearBackground() {
+    ctx3.clearRect(1, 1, casioScreenW, casioScreenH);
 }
 
 function reset() {

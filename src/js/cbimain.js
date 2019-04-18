@@ -103,6 +103,7 @@ var OP_BGNONE = 89;
 var OP_BGPICT = 90;
 var OP_STOPICT = 91;
 var OP_RCLPICT = 92;
+var OP_ANS = 93;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -219,7 +220,7 @@ function createNode(type, value, childs) {
 }
 
 function execute(node) {
-    var ret = 0;
+    var ret = undefined;
 
     if (!node) {
         return 0;
@@ -690,6 +691,9 @@ function execute(node) {
                 case OP_PI:
                     ret = Math.PI;
                     break;
+                case OP_ANS:
+                    ret = getLastAnswer();
+                    break;
                 case OP_SHOWAXES:
                     setShowAxes(node.children[0]);
                     break;
@@ -948,8 +952,7 @@ function jsccRun(str, finishCallBack) {
     programsSrc[progName] = cut(progName, arrayOfLines, currentBoundary, arrayOfLines.length);
 
     reset();
-    cls();
-    clearBackground();
+    preset();
 
     var nbErrors = 0;
     var where = "";
@@ -1104,7 +1107,7 @@ function unstack() {
     return false;
 }
 
-var Ans = null;
+var Ans = 0;
 
 function getLastAnswer() {
     return this.Ans;
@@ -1118,7 +1121,8 @@ function executeNextLine() {
         }
     }
     debug("[" + idTimerMain + "] prog " + currentPrgName + " - executeNextLine " + nextLine + " / " + programs[currentPrgName]['nodes'].length);
-    this.Ans = execute(programs[currentPrgName]['nodes'][nextLine++]);
+    var ret = execute(programs[currentPrgName]['nodes'][nextLine++]);
+    if (ret !== undefined) this.Ans = ret;
     if (!paused) {
         idTimerMain = setTimeout('executeNextLine()', currentExecutionTimeout);
     }

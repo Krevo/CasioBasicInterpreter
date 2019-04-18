@@ -15,8 +15,11 @@
 - ~~add rho / theta vars~~ 2018-11-28
 - ~~add For/To/Step/Next~~ 2019-01-22
 - ~~add AxesOn/AxesOff/ClrGraph~~ 2019-01-25
+- ~~BG-Pict, BG-None, StoPict, RclPict~~ 2019-04-17
+- ~~Ans~~ 2019-04-18
 - add List (2018-12-14 ...)
+- List Ans
 - add Matrix
-- Ans / List Ans
+- add Str
 - add move cursor (Plot x,y◢ ) , validate and get coords
 - other trigo functions

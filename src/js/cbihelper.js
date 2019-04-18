@@ -445,6 +445,15 @@ function clearBackground() {
     ctx3.clearRect(1, 1, casioScreenW, casioScreenH);
 }
 
+function preset() {
+    Ans = 0;
+    currentDrawColorIdx = getColorIndexFromColorName("Blue");
+    currentSketchMode = "SketchNormal";
+    angleMode = DEG;
+    cls();
+    clearBackground();
+}
+
 function reset() {
     editMode = false;
     paused = false;
@@ -458,9 +467,6 @@ function reset() {
     callStack = new Array();
     nextLine = NaN; // index in the programLines array
     textScreenLines = new Array();
-    currentDrawColorIdx = getColorIndexFromColorName("Blue");
-    currentSketchMode = "SketchNormal";
-    angleMode = DEG;
     clearInterval(idTimerMain);
     idTimerMain = 0;
     clearInterval(idTimerCursor);

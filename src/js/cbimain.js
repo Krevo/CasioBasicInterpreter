@@ -1084,6 +1084,7 @@ function cbiReplace(str) {
     str = str.replace(/(\u00D7)/g, '*'); // Replace "multiplication sign" by "*"
     str = str.replace(/(\uE015)/g, 'r'); // Replace "rho" (U+E015 used in BIDE) by "r"
     str = str.replace(/(\uE063)/g, '/'); // Replace "/" (U+E063 used in BIDE) by "/"
+    str = str.replace(/(\uFE63)/g, '-'); // Replace "small hyphen minus" by "-"
     str = str.replace(/(\u03B8)/g, 't'); // Replace "theta" by "t"
     str = str.replace(/(\u03C0)/g, 'Pi'); // Replace Pi symbol by "Pi"
     str = str.replace(/(\u2192)/g, '->'); // Replace "right arrow" by "->"

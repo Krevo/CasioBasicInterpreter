@@ -926,6 +926,19 @@ $(function() {
 	);
 });
 
+// Replace non-visible caracters by visible ones.
+$("#srcCode").bind('paste drop', function(e) {
+    var elem = $(this);
+
+    setTimeout(function() {
+        // gets the copied text after a specified time (100 milliseconds)
+        var text = elem.val();
+        text = text.replace(/(\uE015)/g, 'r'); // Replace "rho" (U+E015 used in BIDE) by "r"
+        text = text.replace(/(\uE063)/g, '/'); // Replace "slash" (U+E063 used in BIDE) by "/"
+        elem.val(text);
+    }, 100);
+});
+
       //executeCode();
     </script>
     <div style="text-align: right">

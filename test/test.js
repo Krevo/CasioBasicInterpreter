@@ -203,6 +203,18 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 7
     },
     {
+      name: 'List: Increase by one & Name of list in a var',
+      srcCode: `
+       5->Z
+       ClrList Z
+       For 1 -> I To 10
+         I﹣Z -> List Z[I]
+       Next
+       List Z[10]
+       `,
+       answer: 5
+    },
+    {
       name: 'RanInt: < max',
       srcCode: `
        RanInt#(3,7)<=7

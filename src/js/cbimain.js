@@ -179,11 +179,17 @@ function letvar(vname, value) {
         var n = vname[0];
         var index = vname[1];
         debug("Set list "+n+"["+index+"] with value "+value);
-        if (typeof files[currentFile][n] != "undefined" && (typeof files[currentFile][n][index] != "undefined" || index <= files[currentFile][n].length)) {
+        // Create list n
+        if (typeof files[currentFile][n] === "undefined") {
+            files[currentFile][n] = [];
+            files[currentFile][n][0] = ""; // element at index 0 is a string which is the list name
+        }
+        if (typeof files[currentFile][n][index] !== "undefined" || index <= files[currentFile][n].length) {
             files[currentFile][n][index] = value;
         } else {
             ret = 0; // Should be tested on a calc, but ideally return an error
         }
+        debug(files[currentFile][n]);
     }
 }
 
@@ -711,8 +717,8 @@ function execute(node) {
                     }
                     break;
                 case OP_ASSIGN_TO_LIST:
-                    var n = Number(node.children[1]);
-                    debug(n);
+                    var n = execute(node.children[1]);
+                    debug("Assign to list "+n);
                     files[currentFile][n] = execute(node.children[0]);
                     debug(files);
                     break;
@@ -764,13 +770,15 @@ function execute(node) {
                     break;
                 case OP_SET_LIST_ELEM:
                     var value = execute(node.children[0]);
-                    var n = Number(node.children[1]);
+                    var n = execute(node.children[1]);
+                    debug("set list elem "+n);
                     var index = execute(node.children[2]);
                     letvar([n, index], value);
                     debug(files);
                     break;
                 case OP_GET_LIST_ELEM:
-                    var n = Number(node.children[0]);
+                    var n = execute(node.children[0]);
+                    debug("get list elem "+n);
                     var index = execute(node.children[1]);
                     if (typeof files[currentFile][n] !== "undefined" && typeof files[currentFile][n][index] !== "undefined") {
                         ret = files[currentFile][n][index];
@@ -781,7 +789,7 @@ function execute(node) {
                     break;
                 case OP_CLEARLIST:
                     if (node.children.length == 1) {
-                        var n = Number(node.children[0]);
+                        var n = execute(node.children[0]);
                         debug("Clear list "+n);
                         files[currentFile].splice(n); // ClrList n : clear list n
                     } else {

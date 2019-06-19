@@ -85,7 +85,7 @@ var OP_GET_LIST_ELEM = 70;
 var OP_CLEARLIST = 71;
 var OP_INPUT_LIST_ELEM = 72;
 var OP_SELECTFILE = 73;
-var OP_SEQ_TO_LIST = 74;
+var OP_CREATE_SEQ = 75;
 var OP_SET_DRAW_COLOR = 76;
 var OP_RANINT = 77;
 var OP_CIRCLE = 78;
@@ -104,6 +104,8 @@ var OP_BGPICT = 90;
 var OP_STOPICT = 91;
 var OP_RCLPICT = 92;
 var OP_ANS = 93;
+var OP_LIST_ANS = 94;
+var OP_READ_LIST = 95;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -374,8 +376,7 @@ function execute(node) {
                     y = execute(node.children[1]);
                     r = Math.sqrt(x * x + y * y);
                     a = radiansToAngle(Math.atan(y / x));
-                    letvar("A_9", r); // I = r
-                    letvar("A_10", a); // J = a
+                    ret = [r, a]; // answer goes in List Ans
                     break;
                 case OP_REC:
                     // polar to rectangular coord
@@ -383,8 +384,7 @@ function execute(node) {
                     a = execute(node.children[1]);
                     x = r * Math.cos(angleToRadians(a));
                     y = r * Math.sin(angleToRadians(a));
-                    letvar("A_9", x);  // I = x
-                    letvar("A_10", y); // J = y
+                    ret = [x, y]; // answer goes in List Ans
                     break;
                 case OP_IF:
                     if (execute(node.children[0])) {
@@ -700,6 +700,9 @@ function execute(node) {
                 case OP_ANS:
                     ret = getLastAnswer();
                     break;
+                case OP_LIST_ANS:
+                    ret = getLastListAnswer();
+                    break;
                 case OP_SHOWAXES:
                     setShowAxes(node.children[0]);
                     break;
@@ -722,6 +725,11 @@ function execute(node) {
                     files[currentFile][n] = execute(node.children[0]);
                     debug(files);
                     break;
+                case OP_READ_LIST:
+                    var n = execute(node.children[0]);
+                    debug("Read list "+n);
+                    ret = files[currentFile][n];
+                    break;
                 case OP_PUSH_TO_ARRAY:
                     var t;
                     var node0 = execute(node.children[0]); // Expr List donc un nombre seul ou un array
@@ -739,8 +747,9 @@ function execute(node) {
                     ret = t;
                     break;
                 case OP_SET_DIM_LIST:
-                    var n = Number(node.children[1]);
+                    var n = execute(node.children[1]); // Number(node.children[1]);
                     var size = execute(node.children[0]);
+                    debug(n);
                     debug(files);
                     files[currentFile][n] = [];
                     files[currentFile][n][0] = ""; // element at index 0 is a string which is the list name
@@ -777,7 +786,21 @@ function execute(node) {
                     debug(files);
                     break;
                 case OP_GET_LIST_ELEM:
-                    var n = execute(node.children[0]);
+                    var n = 0;
+                    var index = 0;
+                    if (node.children.length == 1) {
+                        index = execute(node.children[0]);
+                        debug("get listAns["+index+"]");
+                        var lst = getLastListAnswer();
+                        if (lst && typeof lst[index] !== "undefined") {
+                            return lst[index];
+                        } else {
+                            return 0;
+                        }
+                    } else {
+                        n = execute(node.children[0]);
+                    }
+
                     debug("get list elem "+n);
                     var index = execute(node.children[1]);
                     if (typeof files[currentFile][n] !== "undefined" && typeof files[currentFile][n][index] !== "undefined") {
@@ -806,11 +829,10 @@ function execute(node) {
                     }
                     debug(files);
                     break;
-                case OP_SEQ_TO_LIST:
+                case OP_CREATE_SEQ:
                     var start = execute(node.children[2]);
                     var stop = execute(node.children[3]);
                     var step = execute(node.children[4]);
-                    var n = Number(node.children[5]);
                     if (node.children[1].type == NODE_VAR) {
                         varTabIndex = letterToIndexSupp(node.children[1].value) + 1;
                     } else {
@@ -828,8 +850,7 @@ function execute(node) {
                         var val = execute(node.children[0]);
                         t.push(val);
                     }
-                    files[currentFile][n] = t;
-                    debug(files);
+                    ret = t;
                     break;
                 case OP_SET_DRAW_COLOR:
                     currentDrawColorIdx = getColorIndexFromColorName(node.children[0]);
@@ -1117,9 +1138,14 @@ function unstack() {
 }
 
 var Ans = 0;
+var ListAns = [];
 
 function getLastAnswer() {
     return this.Ans;
+}
+
+function getLastListAnswer() {
+    return this.ListAns;
 }
 
 function executeNextLine() {
@@ -1131,7 +1157,13 @@ function executeNextLine() {
     }
     debug("[" + idTimerMain + "] prog " + currentPrgName + " - executeNextLine " + nextLine + " / " + programs[currentPrgName]['nodes'].length);
     var ret = execute(programs[currentPrgName]['nodes'][nextLine++]);
-    if (ret !== undefined) this.Ans = ret;
+    if (ret !== undefined) {
+        if (Array.isArray(ret)) {
+            ListAns = ret;
+        } else {
+            this.Ans = ret;
+        }
+    }
     if (!paused) {
         idTimerMain = setTimeout('executeNextLine()', currentExecutionTimeout);
     }

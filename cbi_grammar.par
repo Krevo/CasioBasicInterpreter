@@ -226,19 +226,26 @@ Stmt:
 		| FILE Integer ':' [* %% = createNode( NODE_OP, OP_SELECTFILE, %2 ); *]
 		| CLS ':' [* %% = createNode( NODE_OP, OP_CLS ); *]
 		| MCL ':' [* %% = createNode( NODE_OP, OP_MCL ); *]
-		| '{' Expr_List '}' '->' LIST Integer	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_LIST, %2, createNode( NODE_CONST, %6 ) ); *]
-		| '{' Expr_List '->' LIST Integer	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_LIST, %2, createNode( NODE_CONST, %5 ) ); *]
-		| '{' Expr_List '}' '->' LIST Letter	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_LIST, %2, createNode( NODE_VAR, %6 ) ); *]
-		| '{' Expr_List '->' LIST Letter	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_LIST, %2, createNode( NODE_VAR, %5 ) ); *]
-		| "SEQ\(" Expression ',' VariableCasio ',' Expression ',' Expression ',' Expression ')' '->' LIST Integer	[* %% = createNode( NODE_OP, OP_SEQ_TO_LIST, %2, %4, %6, %8, %10, %14); *]
-		| "SEQ\(" Expression ',' VariableCasio ',' Expression ',' Expression ',' Expression '->' LIST Integer	[* %% = createNode( NODE_OP, OP_SEQ_TO_LIST, %2, %4, %6, %8, %10, %13); *]
-		| Expression '->' DIM LIST Integer	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, %5 ); *]
+		| AList '->' LIST Integer	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_LIST, %1, createNode( NODE_CONST, %4 ) ); *]
+		| AList '->' LIST Letter	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_LIST, %1, createNode( NODE_VAR, %4 ) ); *]
+		| AList	[* %% = %1; *]
+		| Expression '->' DIM LIST Integer	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, createNode( NODE_CONST, %5 ) ); *]
+		| Expression '->' DIM LIST Letter	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, createNode( NODE_VAR, %5 ) ); *]
 		| "PLOT/LINE-COLOR" Color 	[* %% = createNode( NODE_OP, OP_SET_DRAW_COLOR, %2 ); *]
 		| "BG-NONE" 	[* %% = createNode( NODE_OP, OP_BGNONE ); *]
 		| "BG-PICT" Integer	[* %% = createNode( NODE_OP, OP_BGPICT, %2 ); *]
 		| "STOPICT" Integer	[* %% = createNode( NODE_OP, OP_STOPICT, %2 ); *]
 		| "RCLPICT" Integer	[* %% = createNode( NODE_OP, OP_RCLPICT, %2 ); *]
 		| ':' [* %% = createNode( NODE_OP, OP_NONE ); *]
+		;
+
+AList:
+		'{' Expr_List '}'	[* %% = %2; *]
+		| '{' Expr_List 	[* %% = %2; *]
+		| "SEQ\(" Expression ',' VariableCasio ',' Expression ',' Expression ',' Expression ')' 	[* %% = createNode( NODE_OP, OP_CREATE_SEQ, %2, %4, %6, %8, %10); *]
+		| "SEQ\(" Expression ',' VariableCasio ',' Expression ',' Expression ',' Expression 	[* %% = createNode( NODE_OP, OP_CREATE_SEQ, %2, %4, %6, %8, %10); *]
+		| LIST Letter 	[* %% = createNode( NODE_OP, OP_READ_LIST, createNode( NODE_VAR, %2 ) ); *]
+		| LIST Integer 	[* %% = createNode( NODE_OP, OP_READ_LIST, createNode( NODE_CONST, %2 ) ); *]
 		;
 
 Expr_List:
@@ -320,7 +327,9 @@ FinalVariable:
 		;
 
 ListElem:
-		LIST Integer '[' Expression ']' [* %% = createNode( NODE_OP, OP_GET_LIST_ELEM, createNode( NODE_CONST, %2 ), %4 ); *]
+		| LIST ANS '[' Expression   [* %% = createNode( NODE_OP, OP_GET_LIST_ELEM, %4 ); *]
+		| LIST ANS '[' Expression ']' [* %% = createNode( NODE_OP, OP_GET_LIST_ELEM, %4 ); *]
+		| LIST Integer '[' Expression ']' [* %% = createNode( NODE_OP, OP_GET_LIST_ELEM, createNode( NODE_CONST, %2 ), %4 ); *]
 		| LIST Letter '[' Expression ']' [* %% = createNode( NODE_OP, OP_GET_LIST_ELEM, createNode( NODE_VAR, %2 ), %4 ); *]
 		| LIST Integer '[' Expression   [* %% = createNode( NODE_OP, OP_GET_LIST_ELEM, createNode( NODE_CONST, %2 ), %4 ); *]
 		| LIST Letter '[' Expression   [* %% = createNode( NODE_OP, OP_GET_LIST_ELEM, createNode( NODE_VAR, %2 ), %4 ); *]

@@ -447,6 +447,7 @@ function clearBackground() {
 
 function preset() {
     Ans = 0;
+    ListAns = [];
     currentDrawColorIdx = getColorIndexFromColorName("Blue");
     currentSketchMode = "SketchNormal";
     angleMode = DEG;

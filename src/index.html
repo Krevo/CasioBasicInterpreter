@@ -403,8 +403,8 @@ Deg
 -180->A
 Lbl 1
 Rec(45,A)
-I+T->X
-J+List 1[S]->Y
+List Ans[0]+T->X
+List Ans[1]+List 1[S]->Y
 Plot X,Y
 Plot T,List 1[S]
 Line
@@ -427,7 +427,7 @@ Plot 64+r,32
 Lbl 1
 θ+A->θ
 Rec(r,θ)
-Plot I+64,J+32
+Plot List Ans[0]+64,List Ans[1]+32
 Line
 θ<360=>Goto 1
        </textarea>
@@ -507,12 +507,18 @@ LpWhile A<2
 {0,1,2,3,4,5}->List 1
 6->Dim List 2
 Seq(X*X, X, 0, 5, 1->List 3
+List 1->List 4
 Locate 1,1,"List 1[6] = "
 Locate 1,2,"List 2[6] = "
 Locate 1,3,"List 3[6] = "
+Locate 1,4,"List 4[6] = "
+Locate 1,5,"List Ans[6] = "
 Locate 13,1,List 1[6]
 Locate 13,2,List 2[6]
 Locate 13,3,List 3[6]
+Locate 13,4,List 4[6]
+List 3
+Locate 13,5,List Ans[6]
        </textarea>
         <textarea style="display: none" id="srcCode15">
 {1,2,3,4}->List 1

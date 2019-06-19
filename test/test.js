@@ -215,6 +215,24 @@ QUnit.test("jsccRun - test", function( assert ) {
        answer: 5
     },
     {
+      name: 'List: read List Ans',
+      srcCode: `
+       {1,2,3,4,5}->List 1
+       List 1
+       List Ans[3]
+       `,
+       answer: 3
+    },
+    {
+      name: 'List: copy list',
+      srcCode: `
+       {1,2,3,4,5}->List 1
+       List 1->List 2
+       List 2[4]
+       `,
+       answer: 4
+    },
+    {
       name: 'RanInt: < max',
       srcCode: `
        RanInt#(3,7)<=7

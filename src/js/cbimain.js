@@ -106,6 +106,11 @@ var OP_RCLPICT = 92;
 var OP_ANS = 93;
 var OP_LIST_ANS = 94;
 var OP_READ_LIST = 95;
+var OP_MIN_LIST = 96;
+var OP_MAX_LIST = 97;
+var OP_SORTA_LIST = 98;
+var OP_SORTD_LIST = 99;
+var OP_SUM_LIST = 100;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -730,6 +735,35 @@ function execute(node) {
                     debug("Read list "+n);
                     ret = files[currentFile][n];
                     break;
+                case OP_MIN_LIST:
+                    var numbers = execute(node.children[0]).slice(1); // array without element at index 0 (which is list name)
+                    ret = Math.min.apply(null, numbers);
+                    //debug(ret);
+                    break;
+                case OP_MAX_LIST:
+                    var numbers = execute(node.children[0]).slice(1); // array without element at index 0 (which is list name)
+                    ret = Math.max.apply(null, numbers);
+                    //debug(ret);
+                    break;
+                case OP_SUM_LIST:
+                    var list = execute(node.children[0]);
+                    var numbers = [0];
+                    if (list) { numbers = list.slice(1); } // array without element at index 0 (which is list name)
+                    ret = numbers.reduce((a, b)=> a + b,0);
+                    //debug(ret);
+                    break;
+                case OP_SORTA_LIST:
+                    var n = execute(node.children[0]);
+                    var elts = files[currentFile][n].slice(1);
+                    elts.sort();
+                    files[currentFile][n] = [files[currentFile][n][0]].concat(elts);
+                    break;
+                case OP_SORTD_LIST:
+                    var n = execute(node.children[0]);
+                    var elts = files[currentFile][n].slice(1);
+                    elts.sort((a, b) => b - a);
+                    files[currentFile][n] = [files[currentFile][n][0]].concat(elts);
+                    break;
                 case OP_PUSH_TO_ARRAY:
                     var t;
                     var node0 = execute(node.children[0]); // Expr List donc un nombre seul ou un array
@@ -759,7 +793,7 @@ function execute(node) {
                     debug(files);
                     break;
                 case OP_GET_DIM_LIST:
-                    var n = Number(node.children[0]);
+                    var n = execute(node.children[0]);
                     debug("get DIM LIST "+n);
                     debug(files);
                     if (typeof files[currentFile][n] !== "undefined") {

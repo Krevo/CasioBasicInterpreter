@@ -88,6 +88,11 @@
   "RCLPICT"
   "PI"
   "ANS"
+  "SORTA"
+  "SORTD"
+  "MIN"
+  "MAX"
+  "SUM"
   ','
   '~'
   '{'
@@ -229,6 +234,14 @@ Stmt:
 		| AList '->' LIST Integer	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_LIST, %1, createNode( NODE_CONST, %4 ) ); *]
 		| AList '->' LIST Letter	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_LIST, %1, createNode( NODE_VAR, %4 ) ); *]
 		| AList	[* %% = %1; *]
+		| SORTA '(' LIST Integer	[* %% = createNode( NODE_OP, OP_SORTA_LIST, createNode( NODE_CONST, %4 ) ); *]
+		| SORTA '(' LIST Letter	[* %% = createNode( NODE_OP, OP_SORTA_LIST, createNode( NODE_VAR, %4 ) ); *]
+		| SORTA '(' LIST Integer ')'	[* %% = createNode( NODE_OP, OP_SORTA_LIST, createNode( NODE_CONST, %4 ) ); *]
+		| SORTA '(' LIST Letter ')'[* %% = createNode( NODE_OP, OP_SORTA_LIST, createNode( NODE_VAR, %4 ) ); *]
+		| SORTD '(' LIST Integer	[* %% = createNode( NODE_OP, OP_SORTD_LIST, createNode( NODE_CONST, %4 ) ); *]
+		| SORTD '(' LIST Letter	[* %% = createNode( NODE_OP, OP_SORTD_LIST, createNode( NODE_VAR, %4 ) ); *]
+		| SORTD '(' LIST Integer ')'	[* %% = createNode( NODE_OP, OP_SORTD_LIST, createNode( NODE_CONST, %4 ) ); *]
+		| SORTD '(' LIST Letter ')'	[* %% = createNode( NODE_OP, OP_SORTD_LIST, createNode( NODE_VAR, %4 ) ); *]
 		| Expression '->' DIM LIST Integer	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, createNode( NODE_CONST, %5 ) ); *]
 		| Expression '->' DIM LIST Letter	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, createNode( NODE_VAR, %5 ) ); *]
 		| "PLOT/LINE-COLOR" Color 	[* %% = createNode( NODE_OP, OP_SET_DRAW_COLOR, %2 ); *]
@@ -321,7 +334,13 @@ FinalVariable:
 		| PXLTEST Expression ',' Expression [* %% = createNode( NODE_OP, OP_PXL_TEST, %2, %4 ); *]
 		| PXLTEST '(' Expression ',' Expression ')' [* %% = createNode( NODE_OP, OP_PXL_TEST, %3, %5 ); *]
 		| PXLTEST '(' Expression ',' Expression [* %% = createNode( NODE_OP, OP_PXL_TEST, %3, %5 ); *]
-		| DIM LIST Integer [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, %3 ); *]
+		| MIN '(' AList	[* %% = createNode( NODE_OP, OP_MIN_LIST, %3); *]
+		| MIN '(' AList	')' [* %% = createNode( NODE_OP, OP_MIN_LIST, %3); *]
+		| MAX '(' AList	[* %% = createNode( NODE_OP, OP_MAX_LIST, %3); *]
+		| MAX '(' AList ')'	[* %% = createNode( NODE_OP, OP_MAX_LIST, %3); *]
+		| SUM AList [* %% = createNode( NODE_OP, OP_SUM_LIST, %2); *]
+		| DIM LIST Integer [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, createNode( NODE_CONST, %3 ) ); *]
+		| DIM LIST Letter [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, createNode( NODE_VAR, %3 ) ); *]
 		| VariableCasio
 		| ListElem
 		;

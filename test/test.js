@@ -12,6 +12,7 @@ QUnit.test("No syntax errors - test", function( assert ) {
   assert.equal(parse({main: ['1|RanInt#(3,5):']}, "main").error_cnt, 0, "RanInt");
   assert.equal(parse({main: ['1|For 1->A To 10:Next:']}, "main").error_cnt, 0, "For/Next");
   assert.equal(parse({main: ['1|AxesOn:AxesOff:ClrGraph:']}, "main").error_cnt, 0, "AxesOn, AxesOff, ClrGraph");
+  assert.equal(parse({main: ['1|SortA(List 1:SortA(List 1):']}, "main").error_cnt, 0, "SortA(, SortA()");  
 });
 
 QUnit.test("Syntax errors - test", function( assert ) {
@@ -231,6 +232,67 @@ QUnit.test("jsccRun - test", function( assert ) {
        List 2[4]
        `,
        answer: 4
+    },
+    {
+      name: 'List: Min(list)',
+      srcCode: `
+       ClrList
+       {1,2,3,4,5}->List 1
+       Min(List 1)
+       `,
+       answer: 1
+    },
+    {
+      name: 'List: Max(list)',
+      srcCode: `
+       ClrList
+       {1,2,3,4,5}->List 1
+       Max(List 1)
+       `,
+       answer: 5
+    },
+    {
+      name: 'List: SortA(list) elt 1',
+      srcCode: `
+       {1,-3,56,4}->List 1
+       SortA(List 1)
+       List 1[1]
+       `,
+       answer: -3
+    },
+    {
+      name: 'List: SortA(list) elt 4',
+      srcCode: `
+       {1,-3,56,4}->List 1
+       SortA(List 1)
+       List 1[4]
+       `,
+       answer: 56
+    },
+    {
+      name: 'List: SortD(list) elt 1',
+      srcCode: `
+       {12,-5,48,4}->List 1
+       SortD(List 1)
+       List 1[1]
+       `,
+       answer: 48
+    },
+    {
+      name: 'List: SortD(list) elt 4',
+      srcCode: `
+       {12,-5,48,4}->List 1
+       SortD(List 1)
+       List 1[4]
+       `,
+       answer: -5
+    },
+    {
+      name: 'List: Sum list',
+      srcCode: `
+       Sum {15,10,8,8,7}
+       `,
+       answer: 48
     },
     {
       name: 'RanInt: < max',

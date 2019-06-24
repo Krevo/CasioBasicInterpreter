@@ -93,6 +93,9 @@
   "MIN"
   "MAX"
   "SUM"
+  "PROD"
+  "MEAN"
+  "MEDIAN"
   ','
   '~'
   '{'
@@ -339,6 +342,11 @@ FinalVariable:
 		| MAX '(' AList	[* %% = createNode( NODE_OP, OP_MAX_LIST, %3); *]
 		| MAX '(' AList ')'	[* %% = createNode( NODE_OP, OP_MAX_LIST, %3); *]
 		| SUM AList [* %% = createNode( NODE_OP, OP_SUM_LIST, %2); *]
+		| PROD AList [* %% = createNode( NODE_OP, OP_PROD_LIST, %2); *]
+		| MEAN '(' AList [* %% = createNode( NODE_OP, OP_MEAN_LIST, %3); *]
+		| MEAN '(' AList ')' [* %% = createNode( NODE_OP, OP_MEAN_LIST, %3); *]
+		| MEDIAN '(' AList [* %% = createNode( NODE_OP, OP_MEDIAN_LIST, %3); *]
+		| MEDIAN '(' AList ')' [* %% = createNode( NODE_OP, OP_MEDIAN_LIST, %3); *]
 		| DIM LIST Integer [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, createNode( NODE_CONST, %3 ) ); *]
 		| DIM LIST Letter [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, createNode( NODE_VAR, %3 ) ); *]
 		| VariableCasio

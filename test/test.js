@@ -295,6 +295,34 @@ QUnit.test("jsccRun - test", function( assert ) {
        answer: 48
     },
     {
+      name: 'List: Prod list',
+      srcCode: `
+       Prod {3,5,7,11,13}
+       `,
+       answer: 15015
+    },
+    {
+      name: 'List: Mean list',
+      srcCode: `
+       Mean({15,10,8,8,7})
+       `,
+       answer: 9.6
+    },
+    {
+      name: 'List: Median odd list',
+      srcCode: `
+       Median({10,8,7,15,8})
+       `,
+       answer: 8
+    },
+    {
+      name: 'List: Median even list',
+      srcCode: `
+       Median({4,2,1,3})
+       `,
+       answer: 2.5
+    },
+    {
       name: 'RanInt: < max',
       srcCode: `
        RanInt#(3,7)<=7

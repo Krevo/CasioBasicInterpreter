@@ -111,6 +111,9 @@ var OP_MAX_LIST = 97;
 var OP_SORTA_LIST = 98;
 var OP_SORTD_LIST = 99;
 var OP_SUM_LIST = 100;
+var OP_PROD_LIST = 101;
+var OP_MEAN_LIST = 102;
+var OP_MEDIAN_LIST = 103;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -738,24 +741,45 @@ function execute(node) {
                 case OP_MIN_LIST:
                     var numbers = execute(node.children[0]).slice(1); // array without element at index 0 (which is list name)
                     ret = Math.min.apply(null, numbers);
-                    //debug(ret);
                     break;
                 case OP_MAX_LIST:
                     var numbers = execute(node.children[0]).slice(1); // array without element at index 0 (which is list name)
                     ret = Math.max.apply(null, numbers);
-                    //debug(ret);
                     break;
                 case OP_SUM_LIST:
                     var list = execute(node.children[0]);
                     var numbers = [0];
                     if (list) { numbers = list.slice(1); } // array without element at index 0 (which is list name)
-                    ret = numbers.reduce((a, b)=> a + b,0);
-                    //debug(ret);
+                    ret = numbers.reduce((a, b)=> a + b, 0);
+                    break;
+                case OP_PROD_LIST:
+                    var list = execute(node.children[0]);
+                    var numbers = [0];
+                    if (list) { numbers = list.slice(1); } // array without element at index 0 (which is list name)
+                    ret = numbers.reduce((a, b)=> a * b, 1);
+                    break;
+                case OP_MEAN_LIST:
+                    var list = execute(node.children[0]);
+                    var numbers = [0];
+                    if (list) { numbers = list.slice(1); } // array without element at index 0 (which is list name)
+                    ret = numbers.reduce((a, b)=> a + b, 0) / numbers.length;
+                    break;
+                case OP_MEDIAN_LIST:
+                    var list = execute(node.children[0]);
+                    if (list) {
+                        var numbers = list.slice(1); // array without element at index 0 (which is list name)
+                        numbers.sort((a, b) => a - b);
+                        if (numbers.length % 2 == 1) {
+                            ret = numbers[Math.floor(numbers.length / 2)];
+                        } else {
+                            ret = (numbers[numbers.length / 2 - 1] + numbers[numbers.length / 2]) / 2;
+                        }
+                    }
                     break;
                 case OP_SORTA_LIST:
                     var n = execute(node.children[0]);
                     var elts = files[currentFile][n].slice(1);
-                    elts.sort();
+                    elts.sort((a, b) => a - b);
                     files[currentFile][n] = [files[currentFile][n][0]].concat(elts);
                     break;
                 case OP_SORTD_LIST:

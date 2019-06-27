@@ -323,6 +323,62 @@ QUnit.test("jsccRun - test", function( assert ) {
        answer: 2.5
     },
     {
+      name: 'List: Median even list',
+      srcCode: `
+       Median({4,2,1,3})
+       `,
+       answer: 2.5
+    },
+    {
+      name: 'List: Fill',
+      srcCode: `
+       10->Dim List 1
+       Fill(1.234, List 1)
+       List 1[10]
+       `,
+       answer: 1.234
+    },
+    {
+      name: 'List: Augment',
+      srcCode: `
+       Augment({1,2,3,4},{5,6,7})
+       List Ans[7]
+       `,
+       answer: 7
+    },
+    {
+      name: 'List: Cuml',
+      srcCode: `
+       Cuml {15,10,8,8,7}
+       List Ans[5]
+       `,
+       answer: 48
+    },
+    {
+      name: 'List: Percent',
+      srcCode: `
+       Percent {5,13,12,2,8}
+       List Ans[2]
+       `,
+       answer: 32.5
+    },
+    {
+      name: 'List: RanInt < max',
+      srcCode: `
+       RanInt#(3,7,5)
+       List Ans[5]<=7
+       `,
+      answer: 1
+    },
+    {
+      name: 'List RanInt: > min',
+      srcCode: `
+       RanInt#(3,7,5)
+       List Ans[5]>=3
+       `,
+      answer: 1
+    },
+    {
       name: 'RanInt: < max',
       srcCode: `
        RanInt#(3,7)<=7

@@ -96,6 +96,10 @@
   "PROD"
   "MEAN"
   "MEDIAN"
+  "FILL"
+  "AUGMENT"
+  "CUML"
+  "PERCENT"
   ','
   '~'
   '{'
@@ -245,6 +249,8 @@ Stmt:
 		| SORTD '(' LIST Letter	[* %% = createNode( NODE_OP, OP_SORTD_LIST, createNode( NODE_VAR, %4 ) ); *]
 		| SORTD '(' LIST Integer ')'	[* %% = createNode( NODE_OP, OP_SORTD_LIST, createNode( NODE_CONST, %4 ) ); *]
 		| SORTD '(' LIST Letter ')'	[* %% = createNode( NODE_OP, OP_SORTD_LIST, createNode( NODE_VAR, %4 ) ); *]
+		| FILL '(' Expression ',' LIST Integer ')'	[* %% = createNode( NODE_OP, OP_FILL_LIST, %3, createNode( NODE_CONST, %6 ) ); *]
+		| FILL '(' Expression ',' LIST Letter ')'	[* %% = createNode( NODE_OP, OP_FILL_LIST, %3, createNode( NODE_VAR, %6 ) ); *]
 		| Expression '->' DIM LIST Integer	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, createNode( NODE_CONST, %5 ) ); *]
 		| Expression '->' DIM LIST Letter	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, createNode( NODE_VAR, %5 ) ); *]
 		| "PLOT/LINE-COLOR" Color 	[* %% = createNode( NODE_OP, OP_SET_DRAW_COLOR, %2 ); *]
@@ -260,6 +266,10 @@ AList:
 		| '{' Expr_List 	[* %% = %2; *]
 		| "SEQ\(" Expression ',' VariableCasio ',' Expression ',' Expression ',' Expression ')' 	[* %% = createNode( NODE_OP, OP_CREATE_SEQ, %2, %4, %6, %8, %10); *]
 		| "SEQ\(" Expression ',' VariableCasio ',' Expression ',' Expression ',' Expression 	[* %% = createNode( NODE_OP, OP_CREATE_SEQ, %2, %4, %6, %8, %10); *]
+		| AUGMENT '(' AList ',' AList ')'	[* %% = createNode( NODE_OP, OP_AUGMENT_LIST, %3, %5 ); *]
+		| "RANINT#" '(' Expression ',' Expression ',' Expression ')' [* %% = createNode( NODE_OP, OP_RANINT_LIST, %3, %5, %7 ); *]
+		| CUML AList [* %% = createNode( NODE_OP, OP_CUML_LIST, %2 ); *]
+		| PERCENT AList [* %% = createNode( NODE_OP, OP_PERCENT_LIST, %2 ); *]
 		| LIST Letter 	[* %% = createNode( NODE_OP, OP_READ_LIST, createNode( NODE_VAR, %2 ) ); *]
 		| LIST Integer 	[* %% = createNode( NODE_OP, OP_READ_LIST, createNode( NODE_CONST, %2 ) ); *]
 		;

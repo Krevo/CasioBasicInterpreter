@@ -114,6 +114,11 @@ var OP_SUM_LIST = 100;
 var OP_PROD_LIST = 101;
 var OP_MEAN_LIST = 102;
 var OP_MEDIAN_LIST = 103;
+var OP_FILL_LIST = 104;
+var OP_AUGMENT_LIST = 105;
+var OP_RANINT_LIST = 106;
+var OP_CUML_LIST = 107;
+var OP_PERCENT_LIST = 108;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -776,6 +781,24 @@ function execute(node) {
                         }
                     }
                     break;
+                case OP_FILL_LIST:
+                    var value = execute(node.children[0]);
+                    var n = execute(node.children[1]);
+                    var len = files[currentFile][n].length;
+                    for (i = 1; i <= len-1; i++) {
+                        files[currentFile][n][i] = value;
+                    }
+                    debug(files[currentFile]);
+                    break;
+                case OP_AUGMENT_LIST:
+                    var list1 = execute(node.children[0]);
+                    var list2 = execute(node.children[1]);
+                    var numbers = [0];
+                    if (list1 && list2) {
+                        ret = [""].concat(list1.slice(1).concat(list2.slice(1))); // arrays without element at index 0 (which is list name)
+                    }
+                    debug(ret);
+                    break;
                 case OP_SORTA_LIST:
                     var n = execute(node.children[0]);
                     var elts = files[currentFile][n].slice(1);
@@ -787,6 +810,40 @@ function execute(node) {
                     var elts = files[currentFile][n].slice(1);
                     elts.sort((a, b) => b - a);
                     files[currentFile][n] = [files[currentFile][n][0]].concat(elts);
+                    break;
+                case OP_CUML_LIST:
+                    var list = execute(node.children[0]);
+                    if (list) {
+                        var numbers = list.slice(1); // array without element at index 0 (which is list name)
+                        ret = [""];
+                        var sum = 0;
+                        for (i = 0; i < numbers.length; i++) {
+                            sum += numbers[i];
+                            ret.push(sum);
+                        }
+                    }
+                    break;
+                case OP_PERCENT_LIST:
+                    var list = execute(node.children[0]);
+                    if (list) {
+                        var numbers = list.slice(1); // array without element at index 0 (which is list name)
+                        var sum = numbers.reduce((a, b)=> a + b, 0);
+                        if (sum != 0) {
+                            ret = [""];
+                            for (i = 0; i < numbers.length; i++) {
+                                ret.push(100 * numbers[i] / sum);
+                            }
+                        }
+                    }
+                    break;
+                case OP_RANINT_LIST:
+                    var min = execute(node.children[0]);
+                    var max = execute(node.children[1]);
+                    var len = execute(node.children[2]);
+                    ret = [""];
+                    for (i = 0; i < len; i++) {
+                       ret.push(Math.floor(Math.random() * Math.floor(max - min + 1)) + min);
+                    }
                     break;
                 case OP_PUSH_TO_ARRAY:
                     var t;

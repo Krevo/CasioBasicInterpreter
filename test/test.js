@@ -1,4 +1,4 @@
-QUnit.config.testTimeout = 5000;
+QUnit.config.testTimeout = 10000;
 
 QUnit.test("No syntax errors - test", function( assert ) {
   assert.equal(parse({main: ['1|"    Hello World !"']}, "main").error_cnt, 0, "Hello world");
@@ -371,10 +371,26 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 1
     },
     {
-      name: 'List RanInt: > min',
+      name: 'List RanInt > min',
       srcCode: `
        RanInt#(3,7,5)
        List Ans[5]>=3
+       `,
+      answer: 1
+    },
+    {
+      name: 'List: RanList# < max',
+      srcCode: `
+       RanList#(5)
+       List Ans[5]<1
+       `,
+      answer: 1
+    },
+    {
+      name: 'List RanList# > min',
+      srcCode: `
+       RanList#(5)
+       List Ans[5]>0
        `,
       answer: 1
     },

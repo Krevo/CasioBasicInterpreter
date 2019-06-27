@@ -100,6 +100,7 @@
   "AUGMENT"
   "CUML"
   "PERCENT"
+  "RANLIST#\("
   ','
   '~'
   '{'
@@ -268,6 +269,7 @@ AList:
 		| "SEQ\(" Expression ',' VariableCasio ',' Expression ',' Expression ',' Expression 	[* %% = createNode( NODE_OP, OP_CREATE_SEQ, %2, %4, %6, %8, %10); *]
 		| AUGMENT '(' AList ',' AList ')'	[* %% = createNode( NODE_OP, OP_AUGMENT_LIST, %3, %5 ); *]
 		| "RANINT#" '(' Expression ',' Expression ',' Expression ')' [* %% = createNode( NODE_OP, OP_RANINT_LIST, %3, %5, %7 ); *]
+		| "RANLIST#\(" Expression ')' [* %% = createNode( NODE_OP, OP_RAN_LIST, %2 ); *]
 		| CUML AList [* %% = createNode( NODE_OP, OP_CUML_LIST, %2 ); *]
 		| PERCENT AList [* %% = createNode( NODE_OP, OP_PERCENT_LIST, %2 ); *]
 		| LIST Letter 	[* %% = createNode( NODE_OP, OP_READ_LIST, createNode( NODE_VAR, %2 ) ); *]

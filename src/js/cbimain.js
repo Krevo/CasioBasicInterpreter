@@ -119,6 +119,7 @@ var OP_AUGMENT_LIST = 105;
 var OP_RANINT_LIST = 106;
 var OP_CUML_LIST = 107;
 var OP_PERCENT_LIST = 108;
+var OP_RAN_LIST = 109;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -844,6 +845,14 @@ function execute(node) {
                     for (i = 0; i < len; i++) {
                        ret.push(Math.floor(Math.random() * Math.floor(max - min + 1)) + min);
                     }
+                    break;
+                case OP_RAN_LIST:
+                    var len = Math.floor(execute(node.children[0]));
+                    ret = [""];
+                    for (i = 0; i < len; i++) {
+                        ret.push(Math.random());
+                    }
+                    debug(ret);
                     break;
                 case OP_PUSH_TO_ARRAY:
                     var t;

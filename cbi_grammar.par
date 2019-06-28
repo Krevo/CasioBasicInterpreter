@@ -101,6 +101,7 @@
   "CUML"
   "PERCENT"
   "RANLIST#\("
+  "\?LIST"
   ','
   '~'
   '{'
@@ -272,6 +273,7 @@ AList:
 		| "RANLIST#\(" Expression ')' [* %% = createNode( NODE_OP, OP_RAN_LIST, %2 ); *]
 		| CUML AList [* %% = createNode( NODE_OP, OP_CUML_LIST, %2 ); *]
 		| PERCENT AList [* %% = createNode( NODE_OP, OP_PERCENT_LIST, %2 ); *]
+		| "\?LIST" AList [* %% = createNode( NODE_OP, OP_VARIATION_LIST, %2 ); *]
 		| LIST Letter 	[* %% = createNode( NODE_OP, OP_READ_LIST, createNode( NODE_VAR, %2 ) ); *]
 		| LIST Integer 	[* %% = createNode( NODE_OP, OP_READ_LIST, createNode( NODE_CONST, %2 ) ); *]
 		;

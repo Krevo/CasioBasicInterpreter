@@ -363,6 +363,14 @@ QUnit.test("jsccRun - test", function( assert ) {
        answer: 32.5
     },
     {
+      name: 'List: ?List',
+      srcCode: `
+       ?List {5,13,12,2,8}
+       List Ans[3]
+       `,
+       answer: -10
+    },
+    {
       name: 'List: RanInt < max',
       srcCode: `
        RanInt#(3,7,5)

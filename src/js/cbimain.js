@@ -120,6 +120,7 @@ var OP_RANINT_LIST = 106;
 var OP_CUML_LIST = 107;
 var OP_PERCENT_LIST = 108;
 var OP_RAN_LIST = 109;
+var OP_VARIATION_LIST = 110;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -834,6 +835,16 @@ function execute(node) {
                             for (i = 0; i < numbers.length; i++) {
                                 ret.push(100 * numbers[i] / sum);
                             }
+                        }
+                    }
+                    break;
+                case OP_VARIATION_LIST:
+                    var list = execute(node.children[0]);
+                    if (list) {
+                        var numbers = list.slice(1); // array without element at index 0 (which is list name)
+                        ret = [""];
+                        for (i = 1; i < numbers.length; i++) {
+                            ret.push(numbers[i]-numbers[i-1]);
                         }
                     }
                     break;

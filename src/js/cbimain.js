@@ -910,7 +910,7 @@ function execute(node) {
                 case OP_INPUT_LIST_ELEM:
                     paused = true; // pause program execution
                     print(node.children[0] + "?");
-                    var n = Number(node.children[1]);
+                    var n = execute(node.children[1]);
                     var index = execute(node.children[2]);
                     stockVarName = [n, index];
                     debug("stock Var is =>" + stockVarName);

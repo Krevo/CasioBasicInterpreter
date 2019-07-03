@@ -32,6 +32,9 @@ var COLOR_NAMES = {
   // A: Clear
 }
 
+var currentMenu;
+var menuActive = false; // At start non menu is currently active
+
 // plotDefsXXXX[0] - first array, giving size of the plot
 // plotDefsXXXX[1][0] - give integers where we should plot when doing a : 'pxlIndex % (size plotDefsXXXX[1][0] + size plotDefsXXXX[1][1])'
 var plotDefsLowRes = {
@@ -387,16 +390,19 @@ function handleOnKeyDown(e) {
             doPrevent = true;
         }
     }
-/*
-    if (e.key == "Backspace"
-         || e.key == "Enter"
-         || e.key == "ArrowUp"
-         || e.key == "ArrowDown"
-         || e.key == "ArrowLeft"
-         || e.key == "ArrowRight") {
-        doPrevent = true;
+
+    if (menuActive) {
+        if (e.key == 'ArrowDown') {
+            menuScrollDown(); redrawMenu();
+        }
+        if (e.key == 'ArrowUp') {
+            menuScrollUp(); redrawMenu();
+        }
+        if (e.key == "Enter") {
+            MenuOff();
+        }
     }
-*/
+
     if (editMode) {
         if (e.key == '-' || e.key == '.' || (e.key >= '0' && e.key <= '9')) {
             var currentLineIndex = textScreenLines.length - 1;
@@ -441,6 +447,89 @@ function unpauseProgramExec() {
     idTimerMain = setTimeout('executeNextLine()', currentExecutionTimeout);
 }
 
+function MenuOn(titre, options, labels, currentSelection) {
+    menuActive = true;
+    paused = true;
+
+    currentMenu = {
+        "titre": titre,
+        "options": options,
+        "labels": labels,
+        "currentSelection": currentSelection,
+        "currentFirstLine": 1,
+    }
+
+    // 1 sauve l'image
+    swapToTextScreen();
+    var imgData = ctx1.getImageData(0, 0, c1.width, c1.height);
+    currentMenu.imgData = imgData;
+    redrawMenu(currentMenu);
+}
+
+function MenuOff() {
+    ctx.putImageData(currentMenu.imgData, 0 , 0);
+    menuActive = false;
+    nextLine = programs[currentPrgName]['labels'].get("LBL_" + currentMenu.labels[currentMenu.currentSelection-1]);
+    unpauseProgramExec();
+}
+
+function menuScrollUp() {
+    if (currentMenu.currentSelection > 1) {
+        currentMenu.currentSelection--;
+    }
+    // Scroll up if necessary ...
+    if (currentMenu.currentSelection < currentMenu.currentFirstLine) {
+        currentMenu.currentFirstLine--;
+    }
+}
+
+function menuScrollDown() {
+    if (currentMenu.currentSelection < currentMenu.options.length) {
+        currentMenu.currentSelection++;
+    }
+    // Scroll down if necessary ...
+    if (currentMenu.currentSelection > currentMenu.currentFirstLine + (getMaxNbOfMenuLine()-1)) {
+        currentMenu.currentFirstLine++;
+    }
+}
+
+function getMaxNbOfMenuLine() {
+    return (currentRes == "hi") ? 6 : 5;
+}
+
+function redrawMenu() {
+    var titleFirstLine = 1.6;
+    var optionsFirstLine = 2.8;
+    var maxNbOfLine = getMaxNbOfMenuLine();
+    var widthInNbOfChar = (currentRes == "hi") ? 20 : 18;
+    var nbLine = Math.min(maxNbOfLine, currentMenu.options.length);
+
+    // Draw a frame
+    ctx.clearRect(txtCharW*2 - 2, txtCharH*0.6 - 2, txtCharW*widthInNbOfChar+4, txtCharH*(nbLine+1)+9); // x,y, largeur, hauteur
+    ctx.beginPath();
+    ctx.rect(txtCharW*2 - 2 , txtCharH*0.6 -2, txtCharW*widthInNbOfChar+4, txtCharH*(nbLine+1)+9); // x,y, largeur, hauteur
+    ctx.stroke();
+
+    // Title
+    var titre = currentMenu.titre.substring(0,widthInNbOfChar);
+    var padLeft = Math.floor((widthInNbOfChar-titre.length)/2);
+    drawTextLine(titleFirstLine, titre.substring(0,widthInNbOfChar), 2 + padLeft);
+
+    // Options
+    for (i = 0; i < nbLine; i++) {
+       drawTextLine(optionsFirstLine + i, ("  "+currentMenu.options[i + currentMenu.currentFirstLine - 1]),2);
+    }
+
+    // Draw a ">" on current selected option
+    drawTextLine(optionsFirstLine + (currentMenu.currentSelection - currentMenu.currentFirstLine), ">", 2);
+
+    // Draw an arrow down or up
+    if (currentMenu.currentFirstLine > 1) { drawTextLine(optionsFirstLine + 0, "^", 2 + widthInNbOfChar-1); }
+    if (currentMenu.currentFirstLine + (getMaxNbOfMenuLine()-1) < currentMenu.options.length) { drawTextLine(optionsFirstLine + nbLine - 1, "v", 2 + widthInNbOfChar-1); }
+
+}
+
+
 function clearBackground() {
     ctx3.clearRect(1, 1, casioScreenW, casioScreenH);
 }
@@ -458,6 +547,7 @@ function preset() {
 function reset() {
     editMode = false;
     paused = false;
+    menuActive = false;
     getkey = 0;
     stockVarName = ""; // Destination of input
     cursorMode = "_";
@@ -642,14 +732,15 @@ function cleartext() {
     redrawAllTextScreen();
 }
 
-function drawTextLine(lineNb, str) {
+function drawTextLine(lineNb, str, deltaCol) {
+    if (deltaCol == undefined) { deltaCol = 0 }
     var charW = txtCharW; //6;
     var charH = txtCharH; //8;
     var y = (lineNb - 1) * charH + 1;
     var x = 0;
     str = str.substring(0, 21); // 21 first char
     for (var i = 0; i < str.length; i++) {
-        x = i * charW + 1;
+        x = (i + deltaCol) * charW + 1;
         ctx.drawImage(fonts[currentFontDeltaIndx][0], 1 + str.charCodeAt(i) * charW, 0, charW, charH, x, y, charW, charH);
     }
 }

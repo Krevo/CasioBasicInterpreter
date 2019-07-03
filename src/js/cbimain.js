@@ -121,6 +121,7 @@ var OP_CUML_LIST = 107;
 var OP_PERCENT_LIST = 108;
 var OP_RAN_LIST = 109;
 var OP_VARIATION_LIST = 110;
+var OP_MENU = 111;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -1019,6 +1020,17 @@ function execute(node) {
                             ctx2.putImageData(data, 0, 0);
                         }
                     }
+                    break;
+                case OP_MENU:
+                    debug("Menu");
+                    var titreMenu = node.children[0];
+                    var options = [];
+                    var labels = [];
+                    for (i=1; i < node.children.length; i=i+2) {
+                        options.push(node.children[i]);
+                        labels.push(execute(node.children[i+1]));
+                    }
+                    MenuOn(titreMenu, options, labels, 1);
                     break;
             }
             break;

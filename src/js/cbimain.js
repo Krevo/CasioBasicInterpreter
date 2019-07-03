@@ -1000,7 +1000,7 @@ function execute(node) {
                     break;
                 case OP_BGPICT:
                     debug("BG-Pict " + node.children[0]);
-                    var key = currentRes+'#'+currentColorSchemeName+'#'+node.children[0];
+                    var key = currentRes+'#'+currentColorSchemeName+'#'+execute(node.children[0]);
                     if (picts[key]) {
                         ctx3.putImageData(picts[key], 0, 0);
                     }
@@ -1008,13 +1008,13 @@ function execute(node) {
                 case OP_STOPICT:
                     debug("StoPict " + node.children[0]);
                     var imgData = merge(ctx2.getImageData(0, 0, c2.width, c2.height), ctx3.getImageData(0, 0, c3.width, c3.height));
-                    var key = currentRes+'#'+currentColorSchemeName+'#'+node.children[0];
+                    var key = currentRes+'#'+currentColorSchemeName+'#'+execute(node.children[0]);
                     picts[key] = imgData;
                     debug(picts);
                     break;
                 case OP_RCLPICT:
                     debug("RclPict "+node.children[0]);
-                    var key = currentRes+'#'+currentColorSchemeName+'#'+node.children[0];
+                    var key = currentRes+'#'+currentColorSchemeName+'#'+execute(node.children[0]);
                     if (picts[key]) {
                         if (currentColorSchemeName == "multicolor") {
                             ctx3.putImageData(picts[key], 0, 0);

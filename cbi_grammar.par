@@ -275,9 +275,12 @@ Stmt:
 		| Expression '->' DIM LIST Letter	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, createNode( NODE_VAR, %5 ) ); *]
 		| "PLOT/LINE-COLOR" Color 	[* %% = createNode( NODE_OP, OP_SET_DRAW_COLOR, %2 ); *]
 		| "BG-NONE" 	[* %% = createNode( NODE_OP, OP_BGNONE ); *]
-		| "BG-PICT" Integer	[* %% = createNode( NODE_OP, OP_BGPICT, %2 ); *]
-		| "STOPICT" Integer	[* %% = createNode( NODE_OP, OP_STOPICT, %2 ); *]
-		| "RCLPICT" Integer	[* %% = createNode( NODE_OP, OP_RCLPICT, %2 ); *]
+		| "BG-PICT" Integer	[* %% = createNode( NODE_OP, OP_BGPICT, createNode( NODE_CONST, %2 ) ); *]
+		| "BG-PICT" Letter	[* %% = createNode( NODE_OP, OP_BGPICT, createNode( NODE_VAR, %2 ) ); *]
+		| STOPICT Integer	[* %% = createNode( NODE_OP, OP_STOPICT, createNode( NODE_CONST, %2 ) ); *]
+		| STOPICT Letter	[* %% = createNode( NODE_OP, OP_STOPICT, createNode( NODE_VAR, %2 ) ); *]
+		| RCLPICT Integer	[* %% = createNode( NODE_OP, OP_RCLPICT, createNode( NODE_CONST, %2 ) ); *]
+		| RCLPICT Letter	[* %% = createNode( NODE_OP, OP_RCLPICT, createNode( NODE_VAR, %2 ) ); *]
 		| ':' [* %% = createNode( NODE_OP, OP_NONE ); *]
 		;
 

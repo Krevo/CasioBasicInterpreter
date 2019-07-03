@@ -290,7 +290,7 @@ AList:
 
 Expr_List:
 		Expr_List ',' Expression	[* %% = createNode( NODE_OP, OP_PUSH_TO_ARRAY, %1, %3 ); *]
-		| Expression
+		| Expression				[* %% = createNode( NODE_OP, OP_PUSH_TO_ARRAY, null, %1 ); *]
 		;
 
 Expression:

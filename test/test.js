@@ -182,6 +182,14 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 5
     },
     {
+      name: 'List: init lists (1 elem)',
+      srcCode: `
+       {68}->List 1
+       List 1[1]
+       `,
+      answer: 68
+    },
+    {
       name: 'List: dim list',
       srcCode: `
         7→Dim List 1

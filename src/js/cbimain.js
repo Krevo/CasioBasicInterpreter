@@ -868,18 +868,21 @@ function execute(node) {
                     break;
                 case OP_PUSH_TO_ARRAY:
                     var t;
-                    var node0 = execute(node.children[0]); // Expr List donc un nombre seul ou un array
-                    debug(Array.isArray(node0));
-                    if (!Array.isArray(node0)) {
+                    var node0 = null;
+                    if (node.children[0] != null) {
+                        node0 = execute(node.children[0]); // Expr List donc un nombre seul ou un array
+                    }
+                    if (node0 == null) {
                         t = [];
-                        debug(t);
+                        t[0] = ""; // element at index 0 is a string which is the list name
+                    } else if (!Array.isArray(node0)) {
+                        t = [];
                         t[0] = ""; // element at index 0 is a string which is the list name
                         t[1] = node0;
                     } else {
                         t = node0;
                     }
                     t.push(execute(node.children[1]));
-                    debug(t);
                     ret = t;
                     break;
                 case OP_SET_DIM_LIST:

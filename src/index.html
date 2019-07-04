@@ -855,11 +855,91 @@ Goto 9
 Lbl 9
 Locate 15,5,"End."
         </textarea>
+        <textarea style="display: none" id="srcCode21">
+# Tentacules
+# adapted from Alexot (https://www.planet-casio.com/Fr/compte/voir_profil.php?membre=alexot)
+# see https://www.planet-casio.com/Fr/programmes/programme3871-1-Tentacules-alexot-.html
+
+#Program name: TENTAC
+#hires
+#multicolor
+#Password: <no password>
+
+ViewWindow -63, 63, 0, -31, 31, 0
+S-L-Thin
+BG-None
+Rad
+For 1 -> H To 15
+	cos (H / 5) / 2 + 0.2 -> G
+	Cls
+	{-4 -> List 1
+	{-4 -> List 2
+	{8 -> List 3
+	{0 -> List 4
+	Prog "TENTAC1"
+	StoPict H
+Next
+
+Prog "TENTANIM"
+
+@@ Prog "TENTAC1" ( ) 
+
+#Program name: TENTAC1
+#Password: <no password>
+For 0 -> r To 10
+	1 -> θ
+	List 1[θ] + List 3[θ] * cos List 4[θ] -> A
+	List 2[θ] + List 3[θ] * sin List 4[θ] -> B
+	List 1[θ] + List 3[θ] * cos (List 4[θ] + π / 2) -> C
+	List 2[θ] + List 3[θ] * sin (List 4[θ] + π / 2) -> D
+	C + List 3[θ] * cos List 4[θ] -> E
+	D + List 3[θ] * sin List 4[θ] -> F
+	F-Line List 1[θ], List 2[θ], A, B
+	F-Line List 1[θ], List 2[θ], C, D
+	F-Line A, B, E, F
+	F-Line C, D, E, F
+
+	F-Line List 2[θ], -List 1[θ], B, -A
+	F-Line List 2[θ], -List 1[θ], D, -C
+	F-Line B, -A, F, -E
+	F-Line D, -C, F, -E
+
+	F-Line -List 2[θ], List 1[θ], -B, A
+	F-Line -List 2[θ], List 1[θ], -D, C
+	F-Line -B, A, -F, E
+	F-Line -D, C, -F, E
+
+	F-Line -List 1[θ], -List 2[θ], -A, -B
+	F-Line -List 1[θ], -List 2[θ], -C, -D
+	F-Line -A, -B, -E, -F
+	F-Line -C, -D, -E, -F
+
+	C -> List 1[θ]
+	D -> List 2[θ]
+	List 3[θ] * 0.8 -> List 3[θ
+	List 4[θ] + G -> List 4[θ
+Next
+
+@@ Prog "TENTANIM" ( ) 
+
+#Program name: TENTANIM
+#Password: <no password>
+1 -> θ
+1 -> A
+Cls
+Do
+	θ + A -> θ
+	θ = 1 Or θ = 15 => A * -1 -> A
+	BG-Pict θ
+	For 0 -> B To 20
+	Next
+LpWhile 1
+        </textarea>
         <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
         <!-- Hidden features for experts/developpers -->
-        <span id="devButtons" style="display: none">
+        <span id="devButtons" >
           <button onclick="displayStatusMsg('DEBUG is '+(debugToggle()?'On':'Off'))">Debug On/Off</button>
           <button onclick="displayStatusMsg('Timeout is '+adjustTimeout(-1)+' ms')">Speed +</button>
           <button onclick="displayStatusMsg('Timeout is '+adjustTimeout(1)+' ms')">Speed -</button>
@@ -889,6 +969,7 @@ Locate 15,5,"End."
         <button onclick="loadProg(12);">Text Menu</button>
         <button onclick="loadProg(8);">City</button>
         <br>
+        <button onclick="loadProg(21);">Tentacules</button>
         <button onclick="loadProg(19);">World map</button>
         <button onclick="loadProg(18);">Football pitch</button>
         <button onclick="loadProg(13);">Bool. table</button>

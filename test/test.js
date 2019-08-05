@@ -462,6 +462,14 @@ QUnit.test("jsccRun - test", function( assert ) {
        B
        `,
       answer: 105
+    },
+    {
+      name: 'MOD',
+      srcCode: `
+       6->A
+       MOD(A-2,3)
+       `,
+      answer: 1
   }];
 
   assert.expect(testsToRun.length * 2);

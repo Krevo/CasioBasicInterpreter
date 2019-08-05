@@ -122,6 +122,7 @@ var OP_PERCENT_LIST = 108;
 var OP_RAN_LIST = 109;
 var OP_VARIATION_LIST = 110;
 var OP_MENU = 111;
+var OP_MOD = 112;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -628,6 +629,11 @@ function execute(node) {
                     } else {
                         ret = Math.ceil(num);
                     }
+                    break;
+                case OP_MOD:
+                    var num1 = execute(node.children[0]);
+                    var num2 = execute(node.children[1]);
+                    ret = num1 % num2;
                     break;
                 case OP_INTG:
                     ret = Math.floor(execute(node.children[0]));

@@ -352,6 +352,7 @@ NegExp:
 		| SIN Value [* %% = createNode( NODE_OP, OP_SIN, %2 ); *]
 		| TAN Value [* %% = createNode( NODE_OP, OP_TAN, %2 ); *]
 		| INT Value [* %% = createNode( NODE_OP, OP_INT, %2 ); *]
+		| MOD '(' Expression ',' Expression [* %% = createNode( NODE_OP, OP_MOD, %3, %5 ); *]
 		| MOD '(' Expression ',' Expression ')' [* %% = createNode( NODE_OP, OP_MOD, %3, %5 ); *]
 		| FRAC Value [* %% = createNode( NODE_OP, OP_FRAC, %2 ); *]
 		| INTG Value [* %% = createNode( NODE_OP, OP_INTG, %2 ); *]

@@ -933,6 +933,16 @@ Do
 	Next
 LpWhile 1
         </textarea>
+        <textarea style="display: none" id="srcCode22">
+' Teste MOD, Dim List Ans et Augment( 
+Augment({1,2,3,4,5},{6,7,8,9,10,11,12
+For 1->C To 7
+  ClrText
+  For 1 -> A To Dim List Ans
+    Locate 3*(MOD((A-1),C)+1) -2 , Int((A-1)/C)+1, List Ans[A]
+  Next
+Next
+        </textarea>
         <div id="status" style="color: red"></div>
         <button onclick="executeCode();">Execute !</button>
         <button onclick="stopCodeExecution()">STOP !</button>
@@ -966,14 +976,15 @@ LpWhile 1
         <button onclick="loadProg(11);">GetKey</button>
         <button onclick="loadProg(12);">Text Menu</button>
         <button onclick="loadProg(8);">City</button>
-        <br>
         <button onclick="loadProg(21);">Tentacules</button>
+        <br>
         <button onclick="loadProg(19);">World map</button>
         <button onclick="loadProg(18);">Football pitch</button>
         <button onclick="loadProg(13);">Bool. table</button>
         <button onclick="loadProg(14);">List 1</button>
         <button onclick="loadProg(15);">List 2</button>
         <button onclick="loadProg(16);">List 3</button>
+        <button onclick="loadProg(22);">Lst2Tab</button>
         <button onclick="loadProg(20);">Menu</button>
         <br><br>
       </div>

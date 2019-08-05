@@ -363,10 +363,18 @@ QUnit.test("jsccRun - test", function( assert ) {
        answer: 1.234
     },
     {
-      name: 'List: Augment',
+      name: 'List: Augment()',
       srcCode: `
        Augment({1,2,3,4},{5,6,7})
        List Ans[7]
+       `,
+       answer: 7
+    },
+    {
+      name: 'List: Augment(',
+      srcCode: `
+       Augment({1,2,3,4},{5,6,7}->List 1
+       List 1[7]
        `,
        answer: 7
     },

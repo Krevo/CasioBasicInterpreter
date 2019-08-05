@@ -385,6 +385,7 @@ FinalVariable:
 		| MEAN '(' AList ')' [* %% = createNode( NODE_OP, OP_MEAN_LIST, %3); *]
 		| MEDIAN '(' AList [* %% = createNode( NODE_OP, OP_MEDIAN_LIST, %3); *]
 		| MEDIAN '(' AList ')' [* %% = createNode( NODE_OP, OP_MEDIAN_LIST, %3); *]
+		| DIM LIST ANS [* %% = createNode( NODE_OP, OP_GET_DIM_LIST ); *]
 		| DIM LIST Integer [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, createNode( NODE_CONST, %3 ) ); *]
 		| DIM LIST Letter [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, createNode( NODE_VAR, %3 ) ); *]
 		| VariableCasio

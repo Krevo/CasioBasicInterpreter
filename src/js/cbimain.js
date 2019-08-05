@@ -907,10 +907,20 @@ function execute(node) {
                     var n = execute(node.children[0]);
                     debug("get DIM LIST "+n);
                     debug(files);
-                    if (typeof files[currentFile][n] !== "undefined") {
-                        ret = files[currentFile][n].length - 1;
+                   if (node.children.length == 0) {
+                        debug("get Dim list Ans");
+                        var lst = getLastListAnswer();
+                        if (lst) {
+                            ret = lst.length - 1;
+                        } else {
+                            ret= 0; // Should be tested on a calc, but ideally return an error
+                        }
                     } else {
-                        ret = 0; // Should be tested on a calc, but ideally return an error
+                        if (typeof files[currentFile][n] !== "undefined") {
+                            ret = files[currentFile][n].length - 1;
+                        } else {
+                            ret = 0; // Should be tested on a calc, but ideally return an error
+                        }
                     }
                     break;
                 case OP_INPUT_LIST_ELEM:

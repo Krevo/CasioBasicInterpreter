@@ -216,6 +216,14 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 7
     },
     {
+      name: 'List: Dim list Ans',
+      srcCode: `
+        {1,2,3,4,5,6,7,8,9,10,11,12}
+        Dim List Ans
+       `,
+      answer: 12
+    },
+    {
       name: 'List: File test',
       srcCode: `
        File1

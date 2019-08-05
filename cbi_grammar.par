@@ -180,12 +180,11 @@ Stmt_List:
 
 Stmt:
 		Expression '=>' Stmt    [* %% = createNode( NODE_OP, OP_IF, %1, %3 ); *]
-		| IF Expression ':' THEN ':' Stmt_List IFEND	[* %% = createNode( NODE_OP, OP_IF, %2, %6 ); *]
-		| IF Expression ':' THEN ':' Stmt_List ELSE Stmt_List IFEND [* %% = createNode( NODE_OP, OP_IF_ELSE, %2, %6, %8 ); *]
-		| IF Expression ':' THEN ':' Stmt_List ELSE ':' Stmt_List IFEND [* %% = createNode( NODE_OP, OP_IF_ELSE, %2, %6, %9 ); *]
-		| IF Expression ':' THEN Stmt_List IFEND	[* %% = createNode( NODE_OP, OP_IF, %2, %5 ); *]
-		| IF Expression ':' THEN Stmt_List ELSE Stmt_List IFEND [* %% = createNode( NODE_OP, OP_IF_ELSE, %2, %5, %7 ); *]
-		| IF Expression ':' THEN Stmt_List ELSE ':' Stmt_List IFEND [* %% = createNode( NODE_OP, OP_IF_ELSE, %2, %5, %8 ); *]
+		| IF Expression ':' THEN [* prgLabels.set("IF_"+(prgNodes.length), {type: "IF"}); %% = createNode( NODE_OP, OP_IF, prgNodes.length, %2 ); *]
+		| IF Expression ':' THEN Stmt [* prgLabels.set("IF_"+(prgNodes.length), {type: "IF"}); %% = createNode( NODE_OP, OP_IF, prgNodes.length, %2, %5 ); *]
+		| ELSE ':'	[* addElseNodeToLoop(prgLabels, prgNodes.length + 1 , 'IF_'); %% = createNode( NODE_OP, OP_ELSE ); *]
+		| ELSE Stmt 	[* addElseNodeToLoop(prgLabels, prgNodes.length, 'IF_'); %% = createNode( NODE_OP, OP_ELSE, %2 ); *]
+		| IFEND 	[* addAfterNodeToLoop(prgLabels, prgNodes.length + 1, 'IF_'); %% = createNode( NODE_OP, OP_IFEND ); *]
 		| WHILE Expression	[* prgLabels.set("WHL_"+(prgNodes.length), {firstNode: prgNodes.length + 1}); %% = createNode( NODE_OP, OP_WHILE, prgNodes.length, %2 ); *]
 		| WHILEEND			[* addAfterNodeToLoop(prgLabels, prgNodes.length + 1, 'WHL_'); %% = createNode( NODE_OP, OP_WHILEEND ); *]
 		| DO 				[* prgLabels.set("DO_"+(prgNodes.length), {firstNode: prgNodes.length + 1}); %% = createNode( NODE_OP, OP_DO, prgNodes.length ); *]

@@ -805,6 +805,43 @@ QUnit.test("jsccRun - test", function( assert ) {
         1 -> Xdot
         Xmax`,
       answer: 378
+    },
+    {
+      name: 'If/Then with break',
+      srcCode: `
+        1->A
+        If 1: Then
+         5->A
+         Break
+         10->A
+        IfEnd
+        A
+      `,
+      answer: 5
+    },
+    {
+      name: 'If/Then with subprog',
+      srcCode: `
+        4->Dim List 1
+        1->A
+        1->I
+        Prog "SUB"
+        If 1 :Then
+        	2 -> A
+        	Prog "SUB"
+        	3 -> A
+        	Prog "SUB"
+        	4 -> A
+        	Prog "SUB"
+        IfEnd
+        List 1[A]=1 And List 1[A]=2 And List 1[A]=3 And List 1[A]=4
+
+        @@ Prog "SUB" ( ) 
+
+        A->List 1[I]
+        I+1->I
+      `,
+      answer: 1
     }
   ];
   assert.expect(testsToRun.length * 2);

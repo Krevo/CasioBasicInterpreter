@@ -12,12 +12,11 @@ var NODE_CONST = 2;
 var NODE_GRPHVAR = 3;
 
 var OP_NONE = -1;
-
 var OP_STMT_COUPLE = 1;
 var OP_ASSIGN = 2;
 var OP_IF = 3;
-var OP_IF_ELSE = 4;
-var OP_WRITE = 5;
+var OP_ELSE = 4;
+var OP_IFEND = 5;
 var OP_READ = 6;
 var OP_SAY = 7;
 var OP_FOR = 8;
@@ -459,17 +458,45 @@ function execute(node) {
                     y = r * Math.sin(angleToRadians(a));
                     ret = [x, y]; // answer goes in List Ans
                     break;
-                case OP_IF:
+/*
+                case OP_IF_SIMPLE:
                     if (execute(node.children[0])) {
                         execute(node.children[1]);
                     }
                     break;
-                case OP_IF_ELSE:
-                    if (execute(node.children[0])) {
-                        execute(node.children[1]);
+*/
+                case OP_IF:
+                    var objIf = programs[currentPrgName]['labels'].get("IF_" + node.children[0]); // recup d'un objet dans lequel on stockera les num des noued a exec pour aller au then, au else ou apres le if
+					loopStack.push(objIf);
+                    if (execute(node.children[1])) {
+						objIf.thenBranche = true;
+						if (node.children[2]) { // Then followed by a statement (to execute)
+							ret = execute(node.children[2]);
+						}
+                        // and then, do nothing more because the next line to execute is the next line !
                     } else {
-                        execute(node.children[2]);
-                    }
+						objIf.thenBranche = false;
+						// Jump to the 'else' part if there is one
+						debug(objIf);
+						if (objIf.elseNode) {
+                            nextLine = objIf.elseNode;
+						} else {
+							loopStack.pop();
+							nextLine = objIf.firstOuterNode;
+						}
+					}
+                    break;
+                case OP_ELSE: // If a 'else' is read, that means we have executed the 'Then' part of the If/Then/Else/IfEnd
+                    var objIf = loopStack.pop();
+					if (!objIf.thenBranche && node.children[0]) {
+						ret = execute(node.children[0]);
+					}
+					if (objIf.thenBranche) {
+						nextLine = objIf.firstOuterNode;
+					}
+                    break;
+                case OP_IFEND:
+                    loopStack.pop();
                     break;
                 case OP_FOR:
                     var objFor = programs[currentPrgName]['labels'].get("FOR_" + node.children[0]); // recup d'un objet dans lequel on stockera le step, le num de noeud a exec (juste apres for), le max
@@ -510,7 +537,10 @@ function execute(node) {
                     }
                     break;
                 case OP_BREAK:
-                    var currentLoopObj = loopStack.pop();
+                    var currentLoopObj;
+					do {
+						currentLoopObj = loopStack.pop();
+					} while (currentLoopObj && currentLoopObj.type == "IF") // Unstack all "IF"
                     if (currentLoopObj && currentLoopObj.hasOwnProperty('firstOuterNode')) {
                         nextLine = currentLoopObj.firstOuterNode;
                     } else {
@@ -561,10 +591,12 @@ function execute(node) {
                         }
                     }
                     break;
+/*
                 case OP_WRITE:
                     ret = execute(node.children[0]);
                     print("" + ret);
                     break;
+*/
                 case OP_READ:
                     letvar(node.children[0].toString(), prompt("Please enter a value:", "0"));
                     break;
@@ -1551,16 +1583,28 @@ function giveLineFromSourceCode(lineNum, lines) {
     return "";
 }
 
+function addFirstNodeToLoop(prgLabels, nodeNum, labelType) {
+    addPropertyNodeToLoop(prgLabels, nodeNum, labelType, 'firstNode');
+}
+
+function addElseNodeToLoop(prgLabels, nodeNum, labelType) {
+    addPropertyNodeToLoop(prgLabels, nodeNum, labelType, 'elseNode');
+}
+
 function addAfterNodeToLoop(prgLabels, nodeNum, labelType) {
-    // Loop thought prglabels of type 'labelType' (FOR_, DO_ or WHL_)
+    addPropertyNodeToLoop(prgLabels, nodeNum, labelType, 'firstOuterNode');
+}
+
+function addPropertyNodeToLoop(prgLabels, nodeNum, labelType, property) {
+    // Loop thought prglabels of type 'labelType' (FOR_, DO_, WHL_ or IF_)
     var t = Array.from(prgLabels.keys());
     t.reverse();
     for (var i = 0; i < t.length; i++) {
       var k = t[i];
       if (!k.startsWith(labelType)) { continue; }
       var objFor = prgLabels.get(k);
-      if (!objFor.hasOwnProperty('firstOuterNode')) {
-        objFor.firstOuterNode = nodeNum;
+      if (!objFor.hasOwnProperty(property)) {
+        objFor[property] = nodeNum;
         break;
       }
     }

@@ -223,7 +223,7 @@ function getvar(vname) {
     return 0;
 }
 
-// Sur Casio C[1] ~ A[3] donc cette fonction pour la lettre C renvoi 2, 
+// Sur Casio C[1] ~ A[3] donc cette fonction pour la lettre C renvoi 2,
 // à additionner à l'index demandé car : C[X] == A[X+2]
 function letterToIndexSupp(letter) {
     diff = letter.charCodeAt(0) - "A".charCodeAt(0);
@@ -438,7 +438,7 @@ function execute(node) {
                 case OP_NEXT:
                     var currentObjFor = loopStack[loopStack.length - 1];
                     var oldValue = Number(getvar(currentObjFor.varVname));
-                    // 1. Tester si max atteint 
+                    // 1. Tester si max atteint
                     var newValue = oldValue + currentObjFor.step;
                     if ((currentObjFor.step > 0 && newValue <= currentObjFor.max)
                       || (currentObjFor.step < 0 && newValue >= currentObjFor.max)) {
@@ -995,7 +995,7 @@ function execute(node) {
                         varTabIndex = letterToIndexSupp(child0.children[0]) + execute(child0.children[1]);
                     }
                     // + il faudra prevoir l'utilisation d'un element de liste au lieu d'une var
-                    
+
                     letvar("A_" + varTabIndex, start);
                     var t = [];
                     t[0] = "";
@@ -1240,7 +1240,7 @@ function parse(programsSrc, progName) {
     var linesOfSourceCode = programsSrc[progName].map(cbiReplace);
     var lineOffsets = calculateLinesOffset(linesOfSourceCode); // Calculate offsets and remove line number indicator (ie "xx|" at the beginning)
     var str = linesOfSourceCode.join(":");
-    str = str + ":"; // Add a final ":" 
+    str = str + ":"; // Add a final ":"
 
     debug("Parsing " + progName + " ...");
     var nodes = new Array();

@@ -373,6 +373,7 @@ FinalVariable:
 		| ANS [* %% = createNode( NODE_OP, OP_ANS ); *]
 		| RAN '#' [* %% = createNode( NODE_OP, OP_RANDOM ); *]
 		| "RANINT#" '(' Expression ',' Expression ')' [* %% = createNode( NODE_OP, OP_RANINT, %3, %5 ); *]
+		| "RANINT#" '(' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANINT, %3, %5 ); *]
 		| PXLTEST Expression ',' Expression [* %% = createNode( NODE_OP, OP_PXL_TEST, %2, %4 ); *]
 		| PXLTEST '(' Expression ',' Expression ')' [* %% = createNode( NODE_OP, OP_PXL_TEST, %3, %5 ); *]
 		| PXLTEST '(' Expression ',' Expression [* %% = createNode( NODE_OP, OP_PXL_TEST, %3, %5 ); *]
@@ -401,7 +402,7 @@ ListElem:
 		| LIST Integer '[' Expression   [* %% = createNode( NODE_OP, OP_GET_LIST_ELEM, createNode( NODE_CONST, %2 ), %4 ); *]
 		| LIST Letter '[' Expression   [* %% = createNode( NODE_OP, OP_GET_LIST_ELEM, createNode( NODE_VAR, %2 ), %4 ); *]
 		;
-		
+
 VariableCasio:
 		Letter '[' Expression ']' [* %% = createNode( NODE_OP, OP_READVAR, %1, %3 ); *]
 		| Letter [* %% = createNode( NODE_VAR, %1 ); *]

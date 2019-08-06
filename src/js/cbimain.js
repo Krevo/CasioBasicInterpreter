@@ -1069,7 +1069,7 @@ function cut(name, arrayOfLines, startIndexIncluded, stopIndexExcluded) {
     debug("Prog " + name + " from line " + (startIndexIncluded + 1) + " to line " + stopIndexExcluded);
     var prog = new Array();
     for (i = startIndexIncluded; i < stopIndexExcluded; i++) {
-        if (arrayOfLines[i].substr(0, 1) == "'" || arrayOfLines[i].substr(0, 1) == "#" || arrayOfLines[i].substr(0, 2) == "@@" || arrayOfLines[i].trim() == "") {
+        if (arrayOfLines[i].trim().substr(0, 1) == "'" || arrayOfLines[i].trim().substr(0, 1) == "#" || arrayOfLines[i].trim().substr(0, 2) == "@@" || arrayOfLines[i].trim() == "") {
             continue;
         }
         prog.push((i+1) + "|" + arrayOfLines[i]);

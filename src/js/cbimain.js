@@ -123,6 +123,13 @@ var OP_RAN_LIST = 109;
 var OP_VARIATION_LIST = 110;
 var OP_MENU = 111;
 var OP_MOD = 112;
+var OP_PUSH_MAT_ROW = 113;
+var OP_ASSIGN_TO_MAT = 114;
+var OP_READ_MAT = 115;
+var OP_SET_DIM_MAT = 116;
+var OP_GET_DIM_MAT = 117;
+var OP_GET_MAT_ELEM = 118;
+var OP_SET_MAT_ELEM = 119;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -137,6 +144,7 @@ var lastAssignedVname;
 var files = new Array();
 var currentFile = 1; // Current file of lists files[currentFile]
 files[currentFile] = [];
+var matrices = [];
 
 var getKey = 0;
 
@@ -741,6 +749,19 @@ function execute(node) {
                         ret = getkey;
                     }
                     break;
+                case OP_ASSIGN_TO_MAT:
+                    var n = node.children[1].value;
+                    debug("Assign to mat "+n);
+                    matrices[n] = execute(node.children[0]);
+                    debug(matrices);
+                    break;
+                case OP_READ_MAT:
+                    if (node.children.length == 1) {
+                        ret = matrices[node.children[0].value];
+                    } else {
+                        ret = getLastMatAnswer();
+                    }
+                    break;
                 case OP_ASSIGN_TO_LIST:
                     var n = execute(node.children[1]);
                     debug("Assign to list "+n);
@@ -891,6 +912,17 @@ function execute(node) {
                     t.push(execute(node.children[1]));
                     ret = t;
                     break;
+                case OP_PUSH_MAT_ROW:
+                    var t;
+                    debug("OP_PUSH_MAT_ROW");
+                    if (node.children[0] != null) {
+                        t = execute(node.children[0]);
+                    } else {
+                        t = [];
+                    }
+                    t.push(execute(node.children[1]));
+                    ret = t;
+                    break;
                 case OP_SET_DIM_LIST:
                     var n = execute(node.children[1]); // Number(node.children[1]);
                     var size = execute(node.children[0]);
@@ -902,6 +934,19 @@ function execute(node) {
                         files[currentFile][n].push(0);
                     }
                     debug(files);
+                    break;
+                case OP_SET_DIM_MAT:
+                    var lst = execute(node.children[0]); // lst[1] <=> number of lines, lst[2] <=> number of columns
+                    var letter = node.children[1].value;
+                    matrices[letter] = [];
+                    for(var i = 0; i < lst[1]; i++) {
+                        matrices[letter][i] = [];
+                        matrices[letter][i][0] =""; // element at index 0 is a string which is the list name (rows of our matrix are just like the 'list' type)
+                        for(var j = 0; j < lst[2]; j++) {
+                            matrices[letter][i].push(0);
+                        }
+                    }
+                    debug(matrices);
                     break;
                 case OP_GET_DIM_LIST:
                     debug(files);
@@ -923,6 +968,25 @@ function execute(node) {
                         }
                     }
                     break;
+                case OP_GET_DIM_MAT:
+                    if (node.children.length == 0) {
+                        debug("get Dim Mat Ans");
+                        var mat = getLastMatAnswer();
+                        if (mat) {
+                            ret = ["", mat.length, mat[0].length - 1];;
+                        } else {
+                            ret = 0; // Should be tested on a calc, but ideally return an error
+                        }
+                    } else {
+                        var letter = node.children[0].value;
+                        debug("get Dim Mat "+letter);
+                        if (typeof matrices[letter] !== "undefined") {
+                            ret = ["", matrices[letter].length, matrices[letter][0].length - 1];
+                        } else {
+                            ret = 0; // Should be tested on a calc, but ideally return an error
+                        }
+                    }
+                    break;
                 case OP_INPUT_LIST_ELEM:
                     paused = true; // pause program execution
                     print(node.children[0] + "?");
@@ -939,6 +1003,14 @@ function execute(node) {
                     var index = execute(node.children[2]);
                     letvar([n, index], value);
                     debug(files);
+                    break;
+                case OP_SET_MAT_ELEM:
+                    var value = execute(node.children[0]);
+                    var n = node.children[1].value;
+                    debug("set mat elem "+n);
+                    var lineIndex = execute(node.children[2]);
+                    var colIndex = execute(node.children[3]);
+                    matrices[n][lineIndex-1][colIndex] = value;
                     break;
                 case OP_GET_LIST_ELEM:
                     var n = 0;
@@ -964,6 +1036,20 @@ function execute(node) {
                         ret = 0; // Should be tested on a calc, but ideally return an error
                     }
                     debug(files);
+                    break;
+                case OP_GET_MAT_ELEM:
+                    var n = 0;
+                    var lignIndex = execute(node.children[0]);
+                    var colIndex = execute(node.children[1]);
+                    var mat;
+                    if (node.children.length == 2) {
+                        mat = getLastMatAnswer();
+                    } else {
+                        n = node.children[2].value;
+                        mat = matrices[n];
+                    }
+                    // Verifier que la ligne et la colonne existent, sinon retourner une erreur !!
+                    ret = mat[lignIndex - 1][colIndex];
                     break;
                 case OP_CLEARLIST:
                     if (node.children.length == 1) {
@@ -1305,6 +1391,7 @@ function unstack() {
 
 var Ans = 0;
 var ListAns = [];
+var MatAns = [];
 
 function getLastAnswer() {
     return this.Ans;
@@ -1312,6 +1399,10 @@ function getLastAnswer() {
 
 function getLastListAnswer() {
     return this.ListAns;
+}
+
+function getLastMatAnswer() {
+    return this.MatAns;
 }
 
 function executeNextLine() {
@@ -1324,7 +1415,9 @@ function executeNextLine() {
     debug("[" + idTimerMain + "] prog " + currentPrgName + " - executeNextLine " + nextLine + " / " + programs[currentPrgName]['nodes'].length);
     var ret = execute(programs[currentPrgName]['nodes'][nextLine++]);
     if (ret !== undefined) {
-        if (Array.isArray(ret)) {
+        if (Array.isArray(ret) && Array.isArray(ret[Object.keys(ret)[0]])) { // Array of Array <=> matrix
+            MatAns = ret;
+        } else if (Array.isArray(ret)) {
             ListAns = ret;
         } else {
             this.Ans = ret;

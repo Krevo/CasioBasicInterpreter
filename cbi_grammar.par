@@ -34,6 +34,7 @@
   "XOR"
   "AND"
   "LIST"
+  "MAT"
   "DIM"
   "PROG"
   "PLOT"
@@ -189,6 +190,8 @@ Stmt:
 		| Expression '->' LIST Letter '[' Expression ']' ':'[* %% = createNode( NODE_OP, OP_SET_LIST_ELEM, %1, createNode( NODE_VAR, %4 ), %6 ); *]
 		| Expression '->' LIST Integer '[' Expression ':'[* %% = createNode( NODE_OP, OP_SET_LIST_ELEM, %1, createNode( NODE_CONST, %4 ), %6 ); *]
 		| Expression '->' LIST Letter '[' Expression ':'[* %% = createNode( NODE_OP, OP_SET_LIST_ELEM, %1, createNode( NODE_VAR, %4 ), %6 ); *]
+		| Expression '->' MAT Letter '[' Expression ',' Expression ']' ':'[* %% = createNode( NODE_OP, OP_SET_MAT_ELEM, %1, createNode( NODE_CONST, %4 ), %6, %8 ); *]
+		| Expression '->' MAT Letter '[' Expression ',' Expression ':'[* %% = createNode( NODE_OP, OP_SET_MAT_ELEM, %1, createNode( NODE_CONST, %4 ), %6, %8 ); *]
 		| ISZ VariableCasio ':'[* %% = createNode( NODE_OP, OP_INCR, %2 ); *]
 		| DSZ VariableCasio ':'[* %% = createNode( NODE_OP, OP_DECR, %2 ); *]
 		| PLOT Expression ',' Expression ':' [* %% = createNode( NODE_OP, OP_PLOT, %2, %4 ); *]
@@ -262,6 +265,8 @@ Stmt:
 		| AList '->' LIST Integer	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_LIST, %1, createNode( NODE_CONST, %4 ) ); *]
 		| AList '->' LIST Letter	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_LIST, %1, createNode( NODE_VAR, %4 ) ); *]
 		| AList	[* %% = %1; *]
+		| AMat '->' MAT Letter	[* %% = createNode( NODE_OP, OP_ASSIGN_TO_MAT, %1, createNode( NODE_CONST, %4 ) ); *]
+		| AMat [* %% = %1; *]
 		| SORTA '(' LIST Integer	[* %% = createNode( NODE_OP, OP_SORTA_LIST, createNode( NODE_CONST, %4 ) ); *]
 		| SORTA '(' LIST Letter	[* %% = createNode( NODE_OP, OP_SORTA_LIST, createNode( NODE_VAR, %4 ) ); *]
 		| SORTA '(' LIST Integer ')'	[* %% = createNode( NODE_OP, OP_SORTA_LIST, createNode( NODE_CONST, %4 ) ); *]
@@ -274,6 +279,7 @@ Stmt:
 		| FILL '(' Expression ',' LIST Letter ')'	[* %% = createNode( NODE_OP, OP_FILL_LIST, %3, createNode( NODE_VAR, %6 ) ); *]
 		| Expression '->' DIM LIST Integer	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, createNode( NODE_CONST, %5 ) ); *]
 		| Expression '->' DIM LIST Letter	[* %% = createNode( NODE_OP, OP_SET_DIM_LIST, %1, createNode( NODE_VAR, %5 ) ); *]
+		| AList '->' DIM MAT Letter	[* %% = createNode( NODE_OP, OP_SET_DIM_MAT, %1, createNode( NODE_CONST, %5 ) ); *]
 		| "PLOT/LINE-COLOR" Color 	[* %% = createNode( NODE_OP, OP_SET_DRAW_COLOR, %2 ); *]
 		| "BG-NONE" 	[* %% = createNode( NODE_OP, OP_BGNONE ); *]
 		| "BG-PICT" Integer	[* %% = createNode( NODE_OP, OP_BGPICT, createNode( NODE_CONST, %2 ) ); *]
@@ -300,6 +306,22 @@ AList:
 		| LIST Letter 	[* %% = createNode( NODE_OP, OP_READ_LIST, createNode( NODE_VAR, %2 ) ); *]
 		| LIST Integer 	[* %% = createNode( NODE_OP, OP_READ_LIST, createNode( NODE_CONST, %2 ) ); *]
 		| LIST ANS 	[* %% = createNode( NODE_OP, OP_LIST_ANS ); *]
+		| DIM MAT ANS [* %% = createNode( NODE_OP, OP_GET_DIM_MAT ); *]
+		| DIM MAT Letter [* %% = createNode( NODE_OP, OP_GET_DIM_MAT, createNode( NODE_CONST, %3 ) ); *]
+		;
+
+AMat:
+		'[' MatRows ']' [* %% = %2; *]
+		| '[' MatRows     [* %% = %2; *]
+		| MAT Letter 	[* %% = createNode( NODE_OP, OP_READ_MAT, createNode( NODE_CONST, %2 ) ); *]
+		| MAT ANS 	[* %% = createNode( NODE_OP, OP_READ_MAT ); *]
+		;
+
+MatRows:
+		MatRows '[' Expr_List ']' [* %% = createNode( NODE_OP, OP_PUSH_MAT_ROW, %1, %3 ); *]
+		| MatRows '[' Expr_List     [* %% = createNode( NODE_OP, OP_PUSH_MAT_ROW, %1, %3 ); *]
+		| '[' Expr_List ']' [* %% = createNode( NODE_OP, OP_PUSH_MAT_ROW, null, %2 ); *]
+		| '[' Expr_List   [* %% = createNode( NODE_OP, OP_PUSH_MAT_ROW, null, %2 ); *]
 		;
 
 Expr_List:
@@ -393,6 +415,14 @@ FinalVariable:
 		| DIM LIST Letter [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, createNode( NODE_VAR, %3 ) ); *]
 		| VariableCasio
 		| ListElem
+		| MatElem
+		;
+
+MatElem:
+		| MAT ANS '[' Expression ',' Expression ']' [* %% = createNode( NODE_OP, OP_GET_MAT_ELEM, %4, %6 ); *]
+		| MAT ANS '[' Expression ',' Expression     [* %% = createNode( NODE_OP, OP_GET_MAT_ELEM, %4, %6 ); *]
+		| MAT Letter '[' Expression ',' Expression ']' [* %% = createNode( NODE_OP, OP_GET_MAT_ELEM, %4, %6, createNode( NODE_CONST, %2 ) ); *]
+		| MAT Letter '[' Expression ',' Expression     [* %% = createNode( NODE_OP, OP_GET_MAT_ELEM, %4, %6, createNode( NODE_CONST, %2 ) ); *]
 		;
 
 ListElem:

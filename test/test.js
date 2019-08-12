@@ -257,6 +257,16 @@ QUnit.test("jsccRun - test", function( assert ) {
        answer: 3
     },
     {
+      name: 'List: evaluate List Ans, copy List Ans',
+      srcCode: `
+        {1,2,3}
+        List Ans
+        List Ans->List 1
+        List 1[3]
+       `,
+       answer: 3
+    },
+    {
       name: 'List: copy list',
       srcCode: `
        {1,2,3,4,5}->List 1

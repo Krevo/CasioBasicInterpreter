@@ -496,6 +496,50 @@ QUnit.test("jsccRun - test", function( assert ) {
        MOD(A-2,3)
        `,
       answer: 1
+    },
+    {
+      name: 'Init Mat and get nb of columns',
+      srcCode: `
+       [[1,2,3,4][5,6,7,8]]->Mat A
+       Dim Mat A
+       List Ans[2]
+       `,
+      answer: 4
+    },
+    {
+      name: 'Init Mat and get nb of rows',
+      srcCode: `
+       [[1,2,3,4][5,6,7,8]]->Mat A
+       Dim Mat A
+       List Ans[1]
+       `,
+      answer: 2
+    },
+    {
+      name: 'Init Mat and get elem from Mat Ans',
+      srcCode: `
+       [[1,2,3][4,5,6][7,8,9]]
+       Mat Ans[2,3]
+       `,
+      answer: 6
+    },
+    {
+      name: 'Init Mat by dim',
+      srcCode: `
+       {3,5}->Dim Mat A
+       5->Mat A[2,3]
+       Mat A[2,3]
+       `,
+      answer: 5
+    },
+    {
+      name: 'Init Mat and copy to antoher Mat',
+      srcCode: `
+       [[1,2,3][4,5,6][7,8,9]]->Mat A
+       Mat A->Mat B
+       Mat B[3,1]
+       `,
+      answer: 7
   }];
 
   assert.expect(testsToRun.length * 2);

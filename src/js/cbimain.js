@@ -130,6 +130,7 @@ var OP_SET_DIM_MAT = 116;
 var OP_GET_DIM_MAT = 117;
 var OP_GET_MAT_ELEM = 118;
 var OP_SET_MAT_ELEM = 119;
+var OP_SHOWLABEL = 120;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -735,6 +736,9 @@ function execute(node) {
                     break;
                 case OP_SHOWAXES:
                     setShowAxes(node.children[0]);
+                    break;
+                case OP_SHOWLABEL:
+                    setShowLabel(node.children[0]);
                     break;
                 case OP_CLEARTEXT:
                     cleartext();

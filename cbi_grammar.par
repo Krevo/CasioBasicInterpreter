@@ -8,6 +8,8 @@
 
   "AXESON"
   "AXESOFF"
+  "LABELON"
+  "LABELOFF"
   "IF"
   "THEN"
   "ELSE"
@@ -251,6 +253,8 @@ Stmt:
 		| CLRGRAPH ':' [* %% = createNode( NODE_OP, OP_CLEARGRAPH ); *]
 		| AXESON ':' [* %% = createNode( NODE_OP, OP_SHOWAXES, true ); *]
 		| AXESOFF ':' [* %% = createNode( NODE_OP, OP_SHOWAXES, false ); *]
+		| LABELON ':' [* %% = createNode( NODE_OP, OP_SHOWLABEL, true ); *]
+		| LABELOFF ':' [* %% = createNode( NODE_OP, OP_SHOWLABEL, false ); *]
 		| S-L-NORMAL ':' [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchNormal" ); *]
 		| S-L-DOT ':' [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchDot" ); *]
 		| S-L-BROKEN ':' [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchBroken" ); *]

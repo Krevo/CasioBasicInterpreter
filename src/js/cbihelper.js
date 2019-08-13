@@ -792,10 +792,16 @@ var ymax = _YMAX_;
 var yscl = _YSCL_;
 
 var showAxes = false; // false by default but should be a configurable option
+var showLabel = false; // false by default but should be a configurable option
 
 function setShowAxes(show) {
     showAxes = show;
     debug("showAxes = "+(showAxes?'true':'false'));
+}
+
+function setShowLabel(show) {
+    showLabel = show;
+    debug("showLabel = "+(showLabel?'true':'false'));
 }
 
 function getPixelColor(x, y) {

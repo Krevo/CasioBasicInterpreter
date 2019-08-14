@@ -131,6 +131,9 @@ var OP_GET_DIM_MAT = 117;
 var OP_GET_MAT_ELEM = 118;
 var OP_SET_MAT_ELEM = 119;
 var OP_SHOWLABEL = 120;
+var OP_CLEARMAT = 121;
+var OP_INPUT_MAT_ELEM = 122;
+var OP_FILL_MAT = 123;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -203,7 +206,7 @@ function letvar(vname, value) {
         debug("letvar v_values[" + i + "] => " + value);
         v_values[i] = value;
         lastAssignedVname = vname;
-    } else if (Array.isArray(vname)) {
+    } else if (Array.isArray(vname) && vname.length == 2) { // List elem
         var n = vname[0];
         var index = vname[1];
         debug("Set list "+n+"["+index+"] with value "+value);
@@ -218,6 +221,26 @@ function letvar(vname, value) {
             ret = 0; // Should be tested on a calc, but ideally return an error
         }
         debug(files[currentFile][n]);
+    } else if (Array.isArray(vname) && vname.length == 3) { // Matric elem
+        var n = vname[0];
+        var lineIndex = vname[1];
+        var colIndex = vname[2];
+        debug("Set Mat "+n+"["+lineIndex+","+colIndex+"] with value "+value);
+        // Create list n
+        if (typeof matrices[n] === "undefined") {
+            matrices[n] = [];
+            matrices[n][0] = ""; // element at index 0 is a string which is the list name
+        }
+        if (typeof matrices[n][lineIndex-1] === "undefined") {
+            matrices[n][lineIndex-1] = [];
+            matrices[n][lineIndex-1][0] = ""; // element at index 0 is a string which is the list name
+        }
+        if (typeof matrices[n][lineIndex-1][colIndex] !== "undefined" || colIndex <= matrices[n][lineIndex-1].length) {
+            matrices[n][lineIndex-1][colIndex] = value;
+        } else {
+            ret = 0; // Should be tested on a calc, but ideally return an error
+        }
+        debug(matrices[n]);
     }
 }
 
@@ -824,6 +847,21 @@ function execute(node) {
                     }
                     debug(files[currentFile]);
                     break;
+                case OP_FILL_MAT:
+                    var value = execute(node.children[0]);
+                    var letter = node.children[1].value;
+                    // TODO suite de fillMat determiner les bonnes longueurs et remplir
+                    if (typeof matrices[letter] !== "undefined") {
+                        var nbLines = matrices[letter].length;
+                        var nbCols = matrices[letter][0].length-1;
+                        for (j = 0; j < nbLines; j++) {
+                            for (i = 1; i <= nbCols; i++) {
+                                matrices[letter][j][i] = value;
+                            }
+                        }
+                    }
+                    debug(matrices[letter]);
+                    break;
                 case OP_AUGMENT_LIST:
                     var list1 = execute(node.children[0]);
                     var list2 = execute(node.children[1]);
@@ -1000,6 +1038,16 @@ function execute(node) {
                     debug("stock Var is =>" + stockVarName);
                     editModeOn();
                     break;
+                case OP_INPUT_MAT_ELEM:
+                    paused = true; // pause program execution
+                    print(node.children[0] + "?");
+                    var n = node.children[1].value;
+                    var lineIndex = execute(node.children[2]);
+                    var colIndex = execute(node.children[3]);
+                    stockVarName = [n, lineIndex, colIndex];
+                    debug("stock Var is =>" + stockVarName);
+                    editModeOn();
+                    break;
                 case OP_SET_LIST_ELEM:
                     var value = execute(node.children[0]);
                     var n = execute(node.children[1]);
@@ -1054,6 +1102,17 @@ function execute(node) {
                     }
                     // Verifier que la ligne et la colonne existent, sinon retourner une erreur !!
                     ret = mat[lignIndex - 1][colIndex];
+                    break;
+                case OP_CLEARMAT:
+                    if (node.children.length == 1) {
+                        var n = node.children[0].value;
+                        debug("Clear mat "+n);
+                        delete matrices[n]; // ClrMat n : clear mat n
+                    } else {
+                        matrices = []; // ClrMat : clear all matrix
+                        debug("Clear all matrix ");
+                    }
+                    debug(matrices);
                     break;
                 case OP_CLEARLIST:
                     if (node.children.length == 1) {

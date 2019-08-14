@@ -540,6 +540,15 @@ QUnit.test("jsccRun - test", function( assert ) {
        Mat B[3,1]
        `,
       answer: 7
+    },
+    {
+      name: 'Fill Mat',
+      srcCode: `
+       {5,4}->Dim Mat C
+       Fill(5, Mat C)
+       Mat C[3,2]
+       `,
+      answer: 5
   }];
 
   assert.expect(testsToRun.length * 2);

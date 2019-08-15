@@ -492,10 +492,30 @@ QUnit.test("jsccRun - test", function( assert ) {
     {
       name: 'MOD',
       srcCode: `
-       6->A
-       MOD(A-2,3)
+       MOD(5,3)
+       `,
+      answer: 2
+    },
+    {
+      name: 'MOD with negative number tst 1',
+      srcCode: `
+       MOD(-5,3)
        `,
       answer: 1
+    },
+    {
+      name: 'MOD with negative number tst 2',
+      srcCode: `
+       MOD(-5,-3)
+       `,
+      answer: 1
+    },
+    {
+      name: 'MOD with negative number tst 3',
+      srcCode: `
+       MOD(5,-3)
+       `,
+      answer: 2
     },
     {
       name: 'Init Mat and get nb of columns',

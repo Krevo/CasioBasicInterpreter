@@ -663,9 +663,10 @@ function execute(node) {
                     }
                     break;
                 case OP_MOD:
-                    var num1 = execute(node.children[0]);
-                    var num2 = execute(node.children[1]);
-                    ret = num1 % num2;
+                    var a = execute(node.children[0]);
+                    var b = execute(node.children[1]);
+                    ret = (a % b + b) % b ;
+                    ret = ret < 0 ? ret + Math.abs(b) : ret;
                     break;
                 case OP_INTG:
                     ret = Math.floor(execute(node.children[0]));

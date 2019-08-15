@@ -134,6 +134,8 @@ var OP_SHOWLABEL = 120;
 var OP_CLEARMAT = 121;
 var OP_INPUT_MAT_ELEM = 122;
 var OP_FILL_MAT = 123;
+var OP_MAT_TO_LIST = 124;
+var OP_TRN_MAT = 125;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -964,6 +966,35 @@ function execute(node) {
                         t = [];
                     }
                     t.push(execute(node.children[1]));
+                    ret = t;
+                    break;
+                case OP_MAT_TO_LIST:
+                    var n = node.children[0].value;
+                    var colNum = execute(node.children[1]);
+                    debug("Mat "+n+" ->List col "+colNum);
+                    var t = [""];
+                    if (matrices[n] !== undefined) {
+                        var nbRows = matrices[n].length;
+                        for (var i = 0; i < nbRows; i++) {
+                            t.push(matrices[n][i][colNum]);
+                        }
+                    }
+                    ret = t;
+                    break;
+                case OP_TRN_MAT:
+                    var n = node.children[0].value;
+                    debug("Trn Mat "+n);
+                    var t = [];
+                    if (matrices[n] !== undefined) {
+                        var nbRowsDest = matrices[n][0].length - 1; // nbRowDest = nbColsSrc
+                        var nbColsDest = matrices[n].length; // nbColsDest = nbRowsSrc
+                        for (var i = 0; i < nbRowsDest; i++) {
+                            t[i] = [""];
+                            for (var j = 1; j <= nbColsDest; j++) {
+                                t[i].push(matrices[n][j-1][i+1]);
+                            }
+                        }
+                    }
                     ret = t;
                     break;
                 case OP_SET_DIM_LIST:

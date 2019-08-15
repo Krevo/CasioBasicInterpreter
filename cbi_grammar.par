@@ -106,8 +106,10 @@
   "CUML"
   "PERCENT"
   "RANLIST#\("
+  "MAT\->LIST\("
   "\?LIST"
   "MENU"
+  "TRN"
   ','
   '~'
   '{'
@@ -320,6 +322,8 @@ AList:
 		| LIST ANS 	[* %% = createNode( NODE_OP, OP_LIST_ANS ); *]
 		| DIM MAT ANS [* %% = createNode( NODE_OP, OP_GET_DIM_MAT ); *]
 		| DIM MAT Letter [* %% = createNode( NODE_OP, OP_GET_DIM_MAT, createNode( NODE_CONST, %3 ) ); *]
+		| "MAT->LIST\(" Letter ',' Expression ')' [* %% = createNode( NODE_OP, OP_MAT_TO_LIST, createNode( NODE_CONST, %2 ), %4 ); *]
+		| "MAT->LIST\(" Letter ',' Expression [* %% = createNode( NODE_OP, OP_MAT_TO_LIST, createNode( NODE_CONST, %2 ), %4 ); *]
 		;
 
 AMat:
@@ -327,6 +331,7 @@ AMat:
 		| '[' MatRows     [* %% = %2; *]
 		| MAT Letter 	[* %% = createNode( NODE_OP, OP_READ_MAT, createNode( NODE_CONST, %2 ) ); *]
 		| MAT ANS 	[* %% = createNode( NODE_OP, OP_READ_MAT ); *]
+		| TRN MAT Letter 	[* %% = createNode( NODE_OP, OP_TRN_MAT, createNode( NODE_CONST, %3 ) ); *]
 		;
 
 MatRows:

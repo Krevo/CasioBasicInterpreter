@@ -553,7 +553,7 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 5
     },
     {
-      name: 'Init Mat and copy to antoher Mat',
+      name: 'Init Mat and copy to another Mat',
       srcCode: `
        [[1,2,3][4,5,6][7,8,9]]->Mat A
        Mat A->Mat B
@@ -569,8 +569,26 @@ QUnit.test("jsccRun - test", function( assert ) {
        Mat C[3,2]
        `,
       answer: 5
+    },
+    {
+      name: 'Mat->List',
+      srcCode: `
+       ClrMat
+       [[1,2,3][4,5,6][7,8,9]]->Mat A
+       Mat->List(A,2)
+       List Ans[1]=2 And List Ans[2]=5 And List Ans[3]=8
+       `,
+      answer: 1
+    },
+    {
+      name: 'Trn Mat',
+      srcCode: `
+       [[1,2,3][4,5,6]]->Mat A
+       Trn Mat A
+       Mat Ans[1,1]=1 And Mat Ans[1,2]=4 And Mat Ans[2,1]=2 And Mat Ans[2,2]=5 And Mat Ans[3,1]=3 And Mat Ans[3,2]=6
+       `,
+      answer: 1
   }];
-
   assert.expect(testsToRun.length * 2);
   var done = assert.async(testsToRun.length);
 

@@ -583,9 +583,16 @@ QUnit.test("jsccRun - test", function( assert ) {
     {
       name: 'Trn Mat',
       srcCode: `
-       [[1,2,3][4,5,6]]->Mat A
-       Trn Mat A
+       Trn [[1,2,3][4,5,6]]
        Mat Ans[1,1]=1 And Mat Ans[1,2]=4 And Mat Ans[2,1]=2 And Mat Ans[2,2]=5 And Mat Ans[3,1]=3 And Mat Ans[3,2]=6
+       `,
+      answer: 1
+    },
+    {
+      name: 'Augment Mat',
+      srcCode: `
+       Augment([[1,2,3]],[[4,5,6]])
+       Mat Ans[1,1]=1 And Mat Ans[1,2]=2 And Mat Ans[1,3]=3 And Mat Ans[1,4]=4 And Mat Ans[1,5]=5
        `,
       answer: 1
   }];

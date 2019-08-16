@@ -329,9 +329,11 @@ AList:
 AMat:
 		'[' MatRows ']' [* %% = %2; *]
 		| '[' MatRows     [* %% = %2; *]
+		| AUGMENT '(' AMat ',' AMat ')'	[* %% = createNode( NODE_OP, OP_AUGMENT_MAT, %3, %5 ); *]
+		| AUGMENT '(' AMat ',' AMat [* %% = createNode( NODE_OP, OP_AUGMENT_MAT, %3, %5 ); *]
 		| MAT Letter 	[* %% = createNode( NODE_OP, OP_READ_MAT, createNode( NODE_CONST, %2 ) ); *]
 		| MAT ANS 	[* %% = createNode( NODE_OP, OP_READ_MAT ); *]
-		| TRN MAT Letter 	[* %% = createNode( NODE_OP, OP_TRN_MAT, createNode( NODE_CONST, %3 ) ); *]
+		| TRN AMat 	[* %% = createNode( NODE_OP, OP_TRN_MAT, %2 ); *]
 		;
 
 MatRows:

@@ -136,6 +136,7 @@ var OP_INPUT_MAT_ELEM = 122;
 var OP_FILL_MAT = 123;
 var OP_MAT_TO_LIST = 124;
 var OP_TRN_MAT = 125;
+var OP_AUGMENT_MAT = 126;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -865,6 +866,19 @@ function execute(node) {
                     }
                     debug(matrices[letter]);
                     break;
+                case OP_AUGMENT_MAT:
+                    var mat1 = execute(node.children[0]);
+                    var mat2 = execute(node.children[1]);
+                    var matAns = [];
+                    for (var i=0; i < mat1.length; i++) {
+                        matAns[i] = [];
+                        if (mat1 && mat2) {
+                           matAns[i] = [""].concat(mat1[i].slice(1).concat(mat2[i].slice(1))); // arrays without element at index 0 (which is list name)
+                        }
+                    }
+                    debug(matAns);
+                    ret = matAns;
+                    break;
                 case OP_AUGMENT_LIST:
                     var list1 = execute(node.children[0]);
                     var list2 = execute(node.children[1]);
@@ -982,20 +996,22 @@ function execute(node) {
                     ret = t;
                     break;
                 case OP_TRN_MAT:
-                    var n = node.children[0].value;
-                    debug("Trn Mat "+n);
-                    var t = [];
-                    if (matrices[n] !== undefined) {
-                        var nbRowsDest = matrices[n][0].length - 1; // nbRowDest = nbColsSrc
-                        var nbColsDest = matrices[n].length; // nbColsDest = nbRowsSrc
+                    debug("Trn Mat ");
+                    var matSrc = execute(node.children[0]);
+                    debug(matSrc);
+                    var matDst = [];
+                    if (matDst !== undefined) {
+                        var nbRowsDest = matSrc[0].length - 1; // nbRowDest = nbColsSrc
+                        var nbColsDest = matSrc.length; // nbColsDest = nbRowsSrc
                         for (var i = 0; i < nbRowsDest; i++) {
-                            t[i] = [""];
+                            matDst[i] = [""];
                             for (var j = 1; j <= nbColsDest; j++) {
-                                t[i].push(matrices[n][j-1][i+1]);
+                                matDst[i].push(matSrc[j-1][i+1]);
                             }
                         }
                     }
-                    ret = t;
+                    debug(matDst);
+                    ret = matDst;
                     break;
                 case OP_SET_DIM_LIST:
                     var n = execute(node.children[1]); // Number(node.children[1]);

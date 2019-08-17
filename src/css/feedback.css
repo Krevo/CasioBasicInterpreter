@@ -1,0 +1,173 @@
+a.close {
+  z-index: 10;
+  color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-weight: 600;
+  padding: 20px;
+  display: inline-block;
+  -moz-transition: color 0.3s ease;
+  -o-transition: color 0.3s ease;
+  -webkit-transition: color 0.3s ease;
+  transition: color 0.3s ease;
+}
+
+a.close:hover { color: rgba(0, 0, 0, 0.7); }
+
+.feedback-box {
+  z-index: 10;
+  position: fixed;
+  bottom: 15%;
+  right: 25%;
+  display: inline-block;
+  width: 500px;
+  -moz-perspective: 1000;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+  pointer-events: none;
+}
+
+.feedback-box .content {
+  height: 535px;
+ filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  background: white;
+  border: 2px solid #568cd6;
+  -moz-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -moz-transform-origin: 100% 100%;
+  -ms-transform-origin: 100% 100%;
+  -webkit-transform-origin: 100% 100%;
+  transform-origin: 100% 100%;
+  -moz-transform: rotateY(-180deg);
+  -webkit-transform: rotateY(-180deg);
+  transform: rotateY(-180deg);
+  -moz-transition: all 0.4s cubic-bezier(0.685, -0.245, 0.19, 1.315);
+  -o-transition: all 0.4s cubic-bezier(0.685, -0.245, 0.19, 1.315);
+  -webkit-transition: all 0.4s cubic-bezier(0.685, -0.245, 0.19, 1.315);
+  transition: all 0.4s cubic-bezier(0.685, -0.245, 0.19, 1.315);
+}
+
+.feedback-box .confirm {
+  z-index: 2;
+  color: #fff;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: #41C289;
+  -moz-transform: scale(0, 0);
+  -ms-transform: scale(0, 0);
+  -webkit-transform: scale(0, 0);
+  transform: scale(0, 0);
+ filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  -moz-transition: all 0.4s cubic-bezier(0.685, -0.245, 0.19, 1.315);
+  -o-transition: all 0.4s cubic-bezier(0.685, -0.245, 0.19, 1.315);
+  -webkit-transition: all 0.4s cubic-bezier(0.685, -0.245, 0.19, 1.315);
+  transition: all 0.4s cubic-bezier(0.685, -0.245, 0.19, 1.315);
+}
+
+.feedback-box .confirm h1 {
+  text-align: center;
+  font-weight: 600;
+  Text-transform: uppercase;
+  font-size: 70px;
+  margin-top: 115px;
+  letter-spacing: -.08em;
+  line-height: 1.2;
+}
+
+.feedback-box .confirm h1 i { vertical-align: 3px; }
+
+.feedback-box .confirm h1 span {
+  display: block;
+  font-size: 40%;
+  font-weight: 300;
+  text-transform: none;
+  letter-spacing: .02em;
+}
+
+.feedback-box.show { pointer-events: auto; }
+
+.feedback-box.show .content {
+  -moz-transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+ filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  opacity: 1;
+}
+
+.feedback-box.show-confirm .confirm {
+  -moz-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  -webkit-transform: scale(1, 1);
+  transform: scale(1, 1);
+ filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  opacity: 1;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+.feedback-box.error textarea { border-color: red; }
+
+.feedback-box header {
+  z-index: 10;
+  background-color: #F7F7F7;
+  color: #F58F23;
+  font-weight: 400;
+  font-size: 18px;
+  height: 55px;
+  line-height: 55px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.feedback-box section {
+  padding: 30px;
+  overflow: hidden;
+  -moz-transition: all ease;
+  -o-transition: all ease;
+  -webkit-transition: all ease;
+  transition: all ease;
+}
+
+.feedback-box section input {
+  width: 100%;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.feedback-box section textarea {
+  z-index: 0;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+  resize: none;
+  color: #333;
+  border: 1px solid #ddd;
+  height: 150px;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.feedback-box section textarea:focus {
+  outline: none;
+  border: 1px solid #999;
+}
+
+.feedback-box section button {
+  display: block;
+  padding: 15px;
+  text-align: center;
+  width: 100%;
+}

@@ -5,6 +5,8 @@
     <script type="text/javascript" src="js/jquery-linedtextarea.js"></script>
     <script type="text/javascript" src="js/cbi.js"></script>
     <link href="css/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
+    <link href="css/feedback.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css" integrity="sha256-gsmEoJAws/Kd3CjuOQzLie5Q3yshhvmo7YNtBG7aaEY=" crossorigin="anonymous">
 <style>
 form {
   margin-block-end: 0;
@@ -43,15 +45,15 @@ button {
   <body style="background-color: lightsteelblue">
     <div style="text-align: center">
       <div>
-        <i><script type="text/javascript">document.write(cbiGetVersion(true));</script></i><br>
-        by <b>Krevo_ </b><br><br>
+        <i><script type="text/javascript">document.write(cbiGetVersion(true));</script></i>
+        by <a href="https://www.planet-casio.com/Fr/compte/voir_profil.php?membre=krevo_">Krevo_ </a><br><br>
 
         <div>
           <canvas id="canvas1" width="508" height="252" style="position: absolute"></canvas>
           <canvas id="canvas2" width="508" height="252" style="position: absolute;"></canvas>
           <canvas id="canvas3" width="508" height="252" style="z-index:-1; position: relative; background-color: white"></canvas>
         </div>
-       <br>
+
         <div style="display: block; padding-bottom: 4px;" >
          <!-- onclick="calcKeyDown(79); setTimeout(calcKeyUp, 200)" -->
          <button class="buttonVert" onmousedown="calcKeyDown(79)" onmouseup="calcKeyUp()" >F1</button>
@@ -94,8 +96,7 @@ button {
            <input type="radio" id="hiRes" name="res" onchange="selectResolution('hi');" checked="checked">HiRes
          </form>
          <button class="" onclick="swap();">G ↔ T</button>
-         <button class="buttonVert" style="display: none;" onclick="clignoteCurseurGraphOn();">Clignote</button>
-       <br><br>
+       <br>
          <center>
           <table><tr><td>
           <textarea id="srcCode" class="lined" cols="80" rows="15">
@@ -1000,14 +1001,15 @@ WhileEnd
 "Victoire pour"
 "le peuple !"
         </textarea>
-        <div id="status" style="color: red"></div>
-        <button onclick="executeCode();">Execute !</button>
-        <button onclick="stopCodeExecution()">STOP !</button>
+        <div id="statusbar" style="display: none"><span id="status" style="color: red"></span></div>
+        <button onclick="executeCode();"><i class="fa fa-play" aria-hidden="true"></i>  Execute</button>
+        <button onclick="stopCodeExecution()"><i class="fa fa-stop" aria-hidden="true"></i> STOP</button>
         <!-- Hidden features for experts/developpers -->
         <span id="devButtons" >
-          <button onclick="displayStatusMsg('DEBUG is '+(debugToggle()?'On':'Off'))">Debug On/Off</button>
-          <button onclick="displayStatusMsg('Timeout is '+adjustTimeout(-1)+' ms')">Speed +</button>
-          <button onclick="displayStatusMsg('Timeout is '+adjustTimeout(1)+' ms')">Speed -</button>
+          <button onclick="displayStatusMsg('Log DEBUG is '+(debugToggle()?'On':'Off'))"><i class="fa fa-bug" aria-hidden="true"></i> Log debug On/Off</button>
+          <button onclick="displayStatusMsg('Increasing speed. Timeout is now '+adjustTimeout(-1)+' ms')">Speed <i class="fa fa-plus" aria-hidden="true"></i></button>
+          <button onclick="displayStatusMsg('Decreasing speed. Timeout is now '+adjustTimeout(1)+' ms')">Speed <i class="fa fa-minus" aria-hidden="true"></i></button>
+          <button id="feedback"><i class="fa fa-envelope-o"></i> Send bug report</button>
         </span>
         <br>
         <div style="display: none">
@@ -1047,6 +1049,81 @@ WhileEnd
         <br><br>
       </div>
     </div>
+
+<div class="feedback-box">
+  <div class="content"> <a class="close" href="#"><i class="fa fa-times"></i></a>
+    <div class="confirm">
+      <h1><strong>BOOOM!</strong> <span>We'll get right on that for ya</span></h1>
+    </div>
+    <header>Help me to improve the <i>Casio Basic Web Interpreter</i> !</header>
+    <section>
+      <form id="bugReportForm" action="/">
+      <input type="hidden" id="code" name="code">
+      <div>
+        <label for="name">Last status</label>
+        <span style="float: right;" title="Your current program is attached to this message"><i class="fa fa-paperclip" aria-hidden="true"></i> <span id="codesize">xx</span> bytes</span>
+      </div>
+      <input type="text" id="error" name="error"><br><br>
+      <label for="name">Name or Pseudo</label><br>
+      <input type="text" name="name"><br><br>
+      <label for="email">Email (if you want an answer)</label><br>
+      <input type="text" name="email"><br><br>
+      <label for="email">Message (english or french accepted)</label><br>
+      <textarea name="feedback"></textarea>
+      <button id='submit'>Send bug report</button>
+      </form>
+    </section>
+  </div>
+</div>
+
+<script>
+(function($){
+  var words = ["Boom!" , "Whammy!", "Booya!" , "Holler!", "Broskee!" , "All Good!" , "Right on!"];
+  var feedback = $(".feedback-box");
+  
+  //Feedback Toggle
+	$("#feedback").on("click" , function(){
+		feedback.addClass("show");
+	});
+  
+  //Close Trigger
+	$(".close").on("click" , function(){
+    feedback.removeClass("show");
+    setTimeout(function(){ 
+      feedback.removeClass("show-confirm").find("textarea").val('');
+      console.log("reset")
+    }, 1000);
+	});
+
+//Submit
+  $("#submit").on("click" , function(event){
+    event.preventDefault();
+    if (!feedback.find("textarea").val() ) {
+  //     if( !$("textarea").val() ) {
+       feedback.addClass("error");
+       setTimeout(function(){
+         feedback.removeClass("error");
+       }, 500)
+    } else {
+      console.log("Send feedback !");
+      console.log($('#bugReportForm').serialize());
+      $.post( "bugreport.php", $( "#bugReportForm" ).serialize() );
+      feedback.addClass("show-confirm");
+      var randomWord = words[Math.floor(Math.random() * words.length)];
+      $(".feedback-box h1 strong").text(randomWord);
+      
+      setTimeout(function(){
+         feedback.removeClass("show").find("textarea").val('').delay(1000);
+      },2000);
+      
+       setTimeout(function(){
+         feedback.removeClass("show-confirm");
+      },2200);
+    }
+  })
+})(jQuery);
+</script>
+
     <script type="text/javascript">
 
       function loadFromUrl() {
@@ -1080,14 +1157,20 @@ WhileEnd
       }
 
       function displayStatusMsg(statusMsg) {
+        document.getElementById("error").value = statusMsg;
+        $("#statusbar").show();
         document.getElementById("status").innerHTML = statusMsg;
       }
 
       function executeCode() {
         var srcCode = document.getElementById("srcCode").value;
+        $("#code").val(srcCode);
+        $("#codesize").text(srcCode.length);
         document.getElementById("canvas1").focus();
         document.getElementById("srcCode").disabled = true;
+        document.getElementById("error").value = '';
         document.getElementById("status").innerHTML = '';
+        $("#statusbar").hide();
         if (idTimerMain == 0) {
           jsccRun(srcCode, function(errorCode, msg, programs) {
               if (errorCode > 0) {
@@ -1126,10 +1209,6 @@ $("#srcCode").bind('paste drop', function(e) {
 
       //executeCode();
     </script>
-    <div style="text-align: right">
-      <a href="https://twitter.com/Krevo_" class="twitter-follow-button" data-show-count="false">Follow @Krevo_</a>
-      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-    </div>
 
   </body>
 </html>

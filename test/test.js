@@ -595,6 +595,17 @@ QUnit.test("jsccRun - test", function( assert ) {
        Mat Ans[1,1]=1 And Mat Ans[1,2]=2 And Mat Ans[1,3]=3 And Mat Ans[1,4]=4 And Mat Ans[1,5]=5
        `,
       answer: 1
+    },
+    {
+      name: 'List->Mat',
+      srcCode: `
+       {1,2,3->List 1
+       {4,5,6->List 3
+       {7,8,9->List 7
+       List->Mat(1,3,7
+       Mat Ans[1,3]=7 And Mat Ans[2,2]=5 And Mat Ans[3,1]=3
+       `,
+      answer: 1
   }];
   assert.expect(testsToRun.length * 2);
   var done = assert.async(testsToRun.length);

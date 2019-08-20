@@ -137,6 +137,7 @@ var OP_FILL_MAT = 123;
 var OP_MAT_TO_LIST = 124;
 var OP_TRN_MAT = 125;
 var OP_AUGMENT_MAT = 126;
+var OP_LISTS_TO_MAT = 127;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -993,6 +994,22 @@ function execute(node) {
                             t.push(matrices[n][i][colNum]);
                         }
                     }
+                    ret = t;
+                    break;
+                case OP_LISTS_TO_MAT:
+                    debug("List to mat");
+                    var listsIndex = execute(node.children[0]);
+                    debug(listsIndex);
+                    var t = [];
+                    var listLen = files[currentFile][listsIndex[1]].length - 1;
+                    debug(listLen);
+                    for (var i = 0; i < listLen; i++) { // list length
+                        t[i] = [""];
+                        for (var j = 1; j < listsIndex.length; j++) { // nb of lists
+                            t[i].push(files[currentFile][listsIndex[j]][i+1]); // elem (i+1)th of the the list n[j]
+                        }
+                    }
+                    debug(t);
                     ret = t;
                     break;
                 case OP_TRN_MAT:

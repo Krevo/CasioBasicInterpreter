@@ -1185,8 +1185,13 @@ WhileEnd
         finish(EXIT_STOPPED, "Stopped on user request.");
       }
 
+      function logFirstAccess() {
+        $.get("log.php");  
+      };
+
       window.onload = function() {
           loadProg(0);
+          logFirstAccess();
       }
 
 $(function() {

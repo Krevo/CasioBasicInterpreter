@@ -7,12 +7,12 @@ QUnit.test("No syntax errors - test", function( assert ) {
   assert.equal(parse({main: ['1|Int(Ran#*100+1)->R']}, "main").error_cnt, 0, "Int(Ran#) affected to a var");
   assert.equal(parse({main: ['1|5->A:If A>0:Then "A > 0":IfEnd']}, "main").error_cnt, 0, "If...Then..IfEnd");
   assert.equal(parse({main: ['1|1->A:0->B:A And B:A Or B:A Xor B:Not A']}, "main").error_cnt, 0, "And/Or/Xor/Not");
-  assert.equal(parse({main: ['1|Mcl:2->θ:3->r:5rθ:']}, "main").error_cnt, 0, "Rho / Theta");
+  assert.equal(parse({main: ['1|Mcl:2->θ:3->r:5rθ']}, "main").error_cnt, 0, "Rho / Theta");
   assert.equal(parse({main: ['1|Dim List 1:8->Dim List 1:Seq(X, X, 0, 5, 1->List 1:List 1[4]:File2']}, "main").error_cnt, 0, "List Syntax Elmt");
-  assert.equal(parse({main: ['1|RanInt#(3,5):']}, "main").error_cnt, 0, "RanInt");
-  assert.equal(parse({main: ['1|For 1->A To 10:Next:']}, "main").error_cnt, 0, "For/Next");
-  assert.equal(parse({main: ['1|AxesOn:AxesOff:ClrGraph:']}, "main").error_cnt, 0, "AxesOn, AxesOff, ClrGraph");
-  assert.equal(parse({main: ['1|SortA(List 1:SortA(List 1):']}, "main").error_cnt, 0, "SortA(, SortA()");  
+  assert.equal(parse({main: ['1|RanInt#(3,5)']}, "main").error_cnt, 0, "RanInt");
+  assert.equal(parse({main: ['1|For 1->A To 10:Next']}, "main").error_cnt, 0, "For/Next");
+  assert.equal(parse({main: ['1|AxesOn:AxesOff:ClrGraph']}, "main").error_cnt, 0, "AxesOn, AxesOff, ClrGraph");
+  assert.equal(parse({main: ['1|SortA(List 1:SortA(List 1)']}, "main").error_cnt, 0, "SortA(, SortA()");
 });
 
 QUnit.test("Syntax errors - test", function( assert ) {

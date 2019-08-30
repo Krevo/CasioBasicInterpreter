@@ -2,10 +2,7 @@ SHELL=/bin/bash
 BUILD_DATE := $(shell date "+%Y-%m-%d")
 NOW := $(shell date "+%s")
 FIRST_AUG2014 := $(shell date -d '1 Aug 2014' "+%s")
-#now=`date "+%s"`
-#firstAug2014=`date -d '1 Aug 2014' "+%s"`
-REVISION := "r$$(($(NOW) - $(FIRST_AUG2014)))"
-#sed -i 's/\(var CBI_VERSION\)\(.*\)/\1 = "'${REVISION}'";/g' public/js/cbiversion.js
+REVISION := $(shell echo "r$$(($(NOW) - $(FIRST_AUG2014)))")
 
 all: build/ cbiversion public/js/cbi.js
 

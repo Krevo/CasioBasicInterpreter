@@ -11,10 +11,11 @@ var NODE_VAR = 1;
 var NODE_CONST = 2;
 
 var OP_NONE = -1;
-var OP_ASSIGN = 0;
-var OP_IF = 1;
-var OP_IF_ELSE = 2;
 
+var OP_STMT_COUPLE = 1;
+var OP_ASSIGN = 2;
+var OP_IF = 3;
+var OP_IF_ELSE = 4;
 var OP_WRITE = 5;
 var OP_READ = 6;
 var OP_SAY = 7;
@@ -157,7 +158,7 @@ var matrices = [];
 var getKey = 0;
 
 var DEBUG = false;
-var currentExecutionTimeout = 15; // time to wait between each executeNextLine(), in milliseconds
+var currentExecutionTimeout = 15; // time to wait between each executeNextStmt(), in milliseconds
 
 var EXIT_SUCCESS = 0;
 var EXIT_STOPPED = 14;
@@ -304,11 +305,11 @@ function execute(node) {
                     var node1 = execute(node.children[1]);
                     ret = ((node0 && !node1) || (!node0 && node1)) ? 1 : 0;
                     break;
-                case OP_NONE:
-                    if (node.children[0]) {
+                case OP_STMT_COUPLE:
+                    if (node.children[0]) { // Execute first statement
                         execute(node.children[0]);
                     }
-                    if (node.children[1]) {
+                    if (node.children[1]) { // Execute second statement
                         ret = execute(node.children[1]);
                     }
                     break;
@@ -586,6 +587,10 @@ function execute(node) {
                     editModeOn();
                     break;
                 case OP_DISP:
+                    debug("OP_DISP");
+                    if (getLastReturnedValue() !== undefined) {
+                        print(formatForDisplay(getLastReturnedValue()));
+                    }
                     dispModeOn();
                     break;
                 case OP_EQU:
@@ -998,6 +1003,8 @@ function execute(node) {
                     break;
                 case OP_LISTS_TO_MAT:
                     debug("List to mat");
+                    // "Dim error" si les listes n'ont pas les mêmes dimension
+                    // OU "Aucune donnée" si une des listes indiquées est indéfinie
                     var listsIndex = execute(node.children[0]);
                     debug(listsIndex);
                     var t = [];
@@ -1394,7 +1401,7 @@ function jsccRun(str, finishCallBack) {
     //if (programs['main']['error_cnt'] == 0) {
     if (nbErrors == 0) {
         debug("nextLine = " + nextLine);
-        idTimerMain = setTimeout('executeNextLine()', currentExecutionTimeout);
+        idTimerMain = setTimeout('executeNextStmt()', currentExecutionTimeout);
         debug("timeout id = " + idTimerMain);
     } else {
         finish(EXIT_SYNTAX_ERROR, "Syntax error " + where, programs);
@@ -1454,7 +1461,6 @@ function parse(programsSrc, progName) {
     var linesOfSourceCode = programsSrc[progName].map(cbiReplace);
     var lineOffsets = calculateLinesOffset(linesOfSourceCode); // Calculate offsets and remove line number indicator (ie "xx|" at the beginning)
     var str = linesOfSourceCode.join(":");
-    str = str + ":"; // Add a final ":"
 
     debug("Parsing " + progName + " ...");
     var nodes = new Array();
@@ -1520,6 +1526,7 @@ function unstack() {
 var Ans = 0;
 var ListAns = [];
 var MatAns = [];
+var lastReturnedValue = undefined;
 
 function getLastAnswer() {
     return this.Ans;
@@ -1533,26 +1540,69 @@ function getLastMatAnswer() {
     return this.MatAns;
 }
 
-function executeNextLine() {
+function getLastReturnedValue() {
+    return this.lastReturnedValue;
+}
+
+var TYPE_NUMERIC = 1;
+var TYPE_LIST = 2;
+var TYPE_MATRIX = 3;
+
+function giveType(value) {
+    if (Array.isArray(value) && Array.isArray(value[Object.keys(value)[0]])) { // Array of Array <=> matrix
+        return TYPE_MATRIX;
+    } else if (Array.isArray(value)) { // Array <=> List
+        return TYPE_LIST;
+    }
+    return TYPE_NUMERIC;
+}
+
+function formatListValue(value, start, stop) {
+  value.shift();
+  return start+value.join()+stop;
+}
+
+function formatForDisplay(value) {
+        var type = giveType(value);
+        if (type == TYPE_MATRIX) {
+            var rtn = "[";
+            for (var i = 0; i < value.length; i++) {
+                rtn += formatListValue(value[i], "[", "]")
+            }
+            rtn += "]";
+            return rtn;
+        } else if (type == TYPE_LIST) {
+            return formatListValue(value, "{", "}");
+        } else {
+            return ""+value;
+        }
+}
+
+function executeNextStmt() {
     if (isNaN(nextLine) || nextLine >= programs[currentPrgName]['nodes'].length) {
         if (!unstack()) { // If nothing was on stack ... we have no parent to return.
             finish(EXIT_SUCCESS, "End Of program.", programs);
             return;
         }
     }
-    debug("[" + idTimerMain + "] prog " + currentPrgName + " - executeNextLine " + nextLine + " / " + programs[currentPrgName]['nodes'].length);
+    debug("[" + idTimerMain + "] prog " + currentPrgName + " - executeNextStmt " + (nextLine+1) + " / " + programs[currentPrgName]['nodes'].length);
     var ret = execute(programs[currentPrgName]['nodes'][nextLine++]);
+    this.lastReturnedValue = ret;
     if (ret !== undefined) {
-        if (Array.isArray(ret) && Array.isArray(ret[Object.keys(ret)[0]])) { // Array of Array <=> matrix
-            MatAns = ret;
-        } else if (Array.isArray(ret)) {
-            ListAns = ret;
+        var type = giveType(ret);
+        if (type == TYPE_MATRIX) {
+            this.MatAns = ret;
+        } else if (type == TYPE_LIST) {
+            this.ListAns = ret;
         } else {
             this.Ans = ret;
         }
+        if (nextLine == programs[currentPrgName]['nodes'].length) {
+            print(formatForDisplay(ret)); // print value from last stmt evaluation
+        }
     }
     if (!paused) {
-        idTimerMain = setTimeout('executeNextLine()', currentExecutionTimeout);
+        idTimerMain = setTimeout('executeNextStmt()', currentExecutionTimeout);
     }
 }
 

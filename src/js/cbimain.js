@@ -139,6 +139,7 @@ var OP_MAT_TO_LIST = 124;
 var OP_TRN_MAT = 125;
 var OP_AUGMENT_MAT = 126;
 var OP_LISTS_TO_MAT = 127;
+var OP_ABS = 128;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -682,6 +683,9 @@ function execute(node) {
                 case OP_FRAC:
                     n = execute(node.children[0]);
                     ret = parseFloat((n % 1).toPrecision(15));
+                    break;
+                case OP_ABS:
+                    ret = Math.abs(execute(node.children[0]));
                     break;
                 case OP_LINE:
                     var prevDrawColor = currentDrawColorIdx;

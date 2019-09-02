@@ -70,6 +70,7 @@
   "RAD"
   "GRAD"
   "INT"
+  "ABS"
   "MOD"
   "FRAC"
   "INTG"
@@ -403,6 +404,7 @@ NegExp:
 		| MOD '(' Expression ',' Expression ')' [* %% = createNode( NODE_OP, OP_MOD, %3, %5 ); *]
 		| FRAC Value [* %% = createNode( NODE_OP, OP_FRAC, %2 ); *]
 		| INTG Value [* %% = createNode( NODE_OP, OP_INTG, %2 ); *]
+		| ABS Value [* %% = createNode( NODE_OP, OP_ABS, %2 ); *]
 		;
 
 Value:

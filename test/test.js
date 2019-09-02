@@ -38,6 +38,14 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: -5
     },
     {
+      name: 'Abs',
+      srcCode: `
+        -5->A
+        Abs A
+      `,
+      answer: 5
+    },
+    {
       name: 'Dsz special meaning',
       srcCode: `
         10->A

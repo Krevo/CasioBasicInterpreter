@@ -38,12 +38,26 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: -5
     },
     {
-      name: 'Abs',
+      name: 'Abs VAR',
       srcCode: `
         -5->A
         Abs A
       `,
       answer: 5
+    },
+    {
+      name: 'Abs >0',
+      srcCode: `
+        Abs 4
+      `,
+      answer: 4
+    },
+    {
+      name: 'Abs <0',
+      srcCode: `
+        Abs -3
+      `,
+      answer: 3
     },
     {
       name: 'Dsz special meaning',
@@ -68,11 +82,46 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 21
     },
     {
-      name: 'Int() test',
+      name: 'Int >0 test',
       srcCode: `
-        Int(3.14159265359)
+        Int 2.4
       `,
-      answer: 3
+      answer: 2
+    },
+    {
+      name: 'Int <0 test',
+      srcCode: `
+        Int -2.7
+      `,
+      answer: -2
+    },
+    {
+      name: 'Intg >0 test',
+      srcCode: `
+        Intg 2.4
+      `,
+      answer: 2
+    },
+    {
+      name: 'Intg <0 test',
+      srcCode: `
+        Intg -2.7
+      `,
+      answer: -3
+    },
+    {
+      name: 'Frac >0 test',
+      srcCode: `
+        Frac 2.4
+      `,
+      answer: 0.4
+    },
+    {
+      name: 'Frac <0 test',
+      srcCode: `
+        Frac -2.7
+      `,
+      answer: -0.7
     },
     {
       name: 'Cos 0 test',

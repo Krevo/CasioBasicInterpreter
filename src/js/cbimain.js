@@ -680,6 +680,7 @@ function execute(node) {
                     break;
                 case OP_INTG:
                     ret = Math.floor(execute(node.children[0]));
+                    break;
                 case OP_FRAC:
                     n = execute(node.children[0]);
                     ret = parseFloat((n % 1).toPrecision(15));

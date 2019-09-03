@@ -1006,13 +1006,16 @@ function pixel(x, y, mode) {
     }
 }
 
-function range(xmin, xmax, xscl, ymin, ymax, yscl) {
+function range(xmin, xmax, xscl, ymin, ymax, yscl, tmin, tmax, tptch) {
     this.xmin = xmin;
     this.xmax = xmax;
     this.xscl = xscl;
     this.ymin = ymin;
     this.ymax = ymax;
     this.yscl = yscl;
+    this.tmin = tmin; // useless for now
+    this.tmax = tmax; // useless for now
+    this.tptch = tptch; // useless for now
     cls();
 }
 

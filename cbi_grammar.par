@@ -228,6 +228,7 @@ Stmt:
 		| SketchMode VERTICAL Expression [* %% = createNode( NODE_OP, OP_VERTICAL, %3, undefined, %1 ); *]
 		| Color SketchMode VERTICAL Expression [* %% = createNode( NODE_OP, OP_VERTICAL, %4, %1, %2 ); *]
 		| RANGE Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
+		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12, %14, %16, %18 ); *]
 		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
 		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, createNode( NODE_CONST, 0 )); *]
 		| MENU String ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10 ); *]

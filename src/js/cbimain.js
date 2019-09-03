@@ -662,7 +662,7 @@ function execute(node) {
                     ret = pixelTest(execute(node.children[1]), execute(node.children[0]));
                     break;
                 case OP_RANGE:
-                    range(execute(node.children[0]), execute(node.children[1]), execute(node.children[2]), execute(node.children[3]), execute(node.children[4]), execute(node.children[5]));
+                    range(execute(node.children[0]), execute(node.children[1]), execute(node.children[2]), execute(node.children[3]), execute(node.children[4]), execute(node.children[5]), execute(node.children[6]), execute(node.children[7]), execute(node.children[8]));
                     break;
                 case OP_INT:
                     num = execute(node.children[0]);

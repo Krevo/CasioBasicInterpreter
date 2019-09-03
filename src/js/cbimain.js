@@ -1563,8 +1563,7 @@ function giveType(value) {
 }
 
 function formatListValue(value, start, stop) {
-  value.shift();
-  return start+value.join()+stop;
+  return start + value.slice(1).join() + stop;
 }
 
 function formatForDisplay(value) {

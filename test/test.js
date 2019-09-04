@@ -22,7 +22,42 @@ QUnit.test("Syntax errors - test", function( assert ) {
 
 QUnit.test("jsccRun - test", function( assert ) {
   var testsToRun = [{
-      name: 'A-1 test',
+      name: 'Basic operation 5+3',
+      srcCode: `
+        5+3
+      `,
+      answer: 8
+    },
+    {
+      name: 'Basic operation 5*3',
+      srcCode: `
+        5*3
+      `,
+      answer: 15
+    },
+    {
+      name: 'Basic operation 5-3',
+      srcCode: `
+        5-3
+      `,
+      answer: 2
+    },
+    {
+      name: 'Basic operation 7/5',
+      srcCode: `
+        7/5
+      `,
+      answer: 1.4
+    },
+    {
+      name: 'Basic operation 10+3*2',
+      srcCode: `
+        10+3*2
+      `,
+      answer: 16
+    },
+    {
+    name: 'A-1 test',
       srcCode: `
         5->A
         A-1

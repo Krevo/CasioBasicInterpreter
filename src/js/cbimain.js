@@ -164,6 +164,9 @@ var currentExecutionTimeout = 15; // time to wait between each executeNextStmt()
 var EXIT_SUCCESS = 0;
 var EXIT_STOPPED = 14;
 var EXIT_SYNTAX_ERROR = 15;
+var EXIT_ARG_ERROR = 16;
+var EXIT_NO_DATA = 17;
+var EXIT_DIM_ERROR = 18;
 
 function debug(msg) {
     if (DEBUG) {
@@ -1008,10 +1011,23 @@ function execute(node) {
                     break;
                 case OP_LISTS_TO_MAT:
                     debug("List to mat");
-                    // "Dim error" si les listes n'ont pas les mêmes dimension
-                    // OU "Aucune donnée" si une des listes indiquées est indéfinie
+                    // "Dim error" if lists are not of the same dimension
+                    // OR "No data" if a list is not defined
                     var listsIndex = execute(node.children[0]);
                     debug(listsIndex);
+                    var currentLen = 0;
+                    for (var j = 1; j < listsIndex.length; j++) { // nb of lists
+                        if (typeof files[currentFile][listsIndex[j]] === "undefined") {
+                            // throwRuntimeError(EXIT_NO_DATA, node.offsetDbg);
+                            throw {errorCode: EXIT_NO_DATA, offset: node.offsetDbg};
+                        }
+                        if (j>1 && currentLen != files[currentFile][listsIndex[j]].length) {
+                            //throwRuntimeError(EXIT_DIM_ERROR, node.offsetDbg);
+                            throw {errorCode: EXIT_DIM_ERROR, offset: node.offsetDbg};
+                        }
+                        currentLen = files[currentFile][listsIndex[j]].length;
+                    }
+
                     var t = [];
                     var listLen = files[currentFile][listsIndex[1]].length - 1;
                     debug(listLen);
@@ -1386,6 +1402,7 @@ function jsccRun(str, finishCallBack) {
             programs[progName] = new Array();
             programs[progName]['nodes'] = parsedProg.nodes;
             programs[progName]['labels'] = parsedProg.labels;
+            programs[progName]['lineOffsets'] = parsedProg.lineOffsets;
             programs[progName]['error_cnt'] = parsedProg.error_cnt;
             programs[progName]['error_off'] = parsedProg.error_off;
             nbErrors += parsedProg.error_cnt;
@@ -1492,11 +1509,26 @@ function parse(programsSrc, progName) {
     return {
         nodes: nodes,
         labels: labels,
+        lineOffsets: lineOffsets,
         error_cnt: error_cnt,
         error_off: error_off,
         where: where
     }
 }
+
+var errorMsg = [];
+errorMsg[EXIT_ARG_ERROR] = "Arg error";
+errorMsg[EXIT_NO_DATA] = "No data";
+errorMsg[EXIT_DIM_ERROR] = "Dim error";
+
+/*
+function throwRuntimeError(errorCode, offset) {
+   var where = "";
+   var lineNum = giveLineFromOffset(programs[currentPrgName].lineOffsets, offset);
+   if (lineNum != -1) { where = " line " + lineNum + " ( " + giveLineFromSourceCode(lineNum, programsSrc[currentPrgName]) + " )"; }
+   finish(errorCode, errorMsg[errorCode] + " " + where, programs);
+}
+*/
 
 function cbiReplace(str) {
     str = str.replace(/(\u00A0)/g, ' '); // Replace "non breakable space" by space
@@ -1566,6 +1598,14 @@ function formatListValue(value, start, stop) {
   return start + value.slice(1).join() + stop;
 }
 
+function createNodeWithDebugInfo(type, value, info, childs) {
+    var args = Array.from(arguments);
+    args.splice(2, 1); // Remove the third (index = 2) argument : 'info'
+    var n = createNode.apply(null, args) //type, value, childs);
+    n.offsetDbg = info.offset - info.att.length; // Add offset as a debug information, in case execution of the node need to return a runtime error
+    return n;
+}
+
 function formatForDisplay(value) {
         var type = giveType(value);
         if (type == TYPE_MATRIX) {
@@ -1590,23 +1630,30 @@ function executeNextStmt() {
         }
     }
     debug("[" + idTimerMain + "] prog " + currentPrgName + " - executeNextStmt " + (nextLine+1) + " / " + programs[currentPrgName]['nodes'].length);
-    var ret = execute(programs[currentPrgName]['nodes'][nextLine++]);
-    this.lastReturnedValue = ret;
-    if (ret !== undefined) {
-        var type = giveType(ret);
-        if (type == TYPE_MATRIX) {
-            this.MatAns = ret;
-        } else if (type == TYPE_LIST) {
-            this.ListAns = ret;
-        } else {
+    try {
+        var ret = execute(programs[currentPrgName]['nodes'][nextLine++]);
+        this.lastReturnedValue = ret;
+        if (ret !== undefined) {
+            var type = giveType(ret);
+            if (type == TYPE_MATRIX) {
+                this.MatAns = ret;
+            } else if (type == TYPE_LIST) {
+                this.ListAns = ret;
+            } else {
             this.Ans = ret;
+            }
+            if (nextLine == programs[currentPrgName]['nodes'].length) {
+                print(formatForDisplay(ret)); // print value from last stmt evaluation
+            }
         }
-        if (nextLine == programs[currentPrgName]['nodes'].length) {
-            print(formatForDisplay(ret)); // print value from last stmt evaluation
+        if (!paused) {
+            idTimerMain = setTimeout('executeNextStmt()', currentExecutionTimeout);
         }
-    }
-    if (!paused) {
-        idTimerMain = setTimeout('executeNextStmt()', currentExecutionTimeout);
+    } catch (e) {
+        var where = "";
+        var lineNum = giveLineFromOffset(programs[currentPrgName].lineOffsets, e.offset);
+        if (lineNum != -1) { where = " line " + lineNum + " ( " + giveLineFromSourceCode(lineNum, programsSrc[currentPrgName]) + " )"; }
+        finish(e.errorCode, errorMsg[e.errorCode] + " " + where, programs);
     }
 }
 

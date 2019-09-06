@@ -339,7 +339,7 @@ AMat:
 		| MAT Letter 	[* %% = createNode( NODE_OP, OP_READ_MAT, createNode( NODE_CONST, %2 ) ); *]
 		| MAT ANS 	[* %% = createNode( NODE_OP, OP_READ_MAT ); *]
 		| TRN AMat 	[* %% = createNode( NODE_OP, OP_TRN_MAT, %2 ); *]
-		| "LIST->MAT\(" Expr_List ')'	[* %% = createNode( NODE_OP, OP_LISTS_TO_MAT, %2 ); *]
+		| "LIST->MAT\(" Expr_List ')'	[* %% = createNodeWithDebugInfo( NODE_OP, OP_LISTS_TO_MAT, info, %2 ); *]
 		| "LIST->MAT\(" Expr_List	[* %% = createNode( NODE_OP, OP_LISTS_TO_MAT, %2 ); *]
 		;
 

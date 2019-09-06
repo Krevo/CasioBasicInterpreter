@@ -20,6 +20,47 @@ QUnit.test("Syntax errors - test", function( assert ) {
   assert.notEqual(parse({main: ['1|5->A:If A>0 Then "A > 0" IfEnd']}, "main").error_cnt, 0, "If...Then..IfEnd (mono line)");
 });
 
+QUnit.test("Exit error code - test", function( assert ) {
+  var testsToRun = [{
+      name: 'Dim error',
+      srcCode: `
+        ClrList
+        {1,2,3}->List 1
+        {4,5,6}->List 2
+        {7,8}->List 3
+        List->Mat(1,2,3)
+      `,
+      errorCode: 18
+    },
+    {
+      name: 'No data error',
+      srcCode: `
+        ClrList
+        {1,2,3}->List 1
+        {4,5,6}->List 2
+        List->Mat(1,2,3)
+      `,
+      errorCode: 17
+    }
+  ];
+  assert.expect(testsToRun.length * 1);
+  var done = assert.async(testsToRun.length);
+
+  var runTest = function() {
+    if (testsToRun.length > 0) {
+      test = testsToRun.shift();
+      // jsccRun is asynchronous
+      jsccRun(test.srcCode, function(errorCode, msg, programs) {
+        assert.equal(errorCode, test.errorCode, test.name + ", expected error code : "+test.errorCode);
+        done();
+        runTest(); // run next test
+      });
+    }
+  }
+
+  runTest();
+});
+
 QUnit.test("jsccRun - test", function( assert ) {
   var testsToRun = [{
       name: 'Basic operation 5+3 = 8 ?',
@@ -691,7 +732,8 @@ QUnit.test("jsccRun - test", function( assert ) {
        Mat Ans[1,3]=7 And Mat Ans[2,2]=5 And Mat Ans[3,1]=3
        `,
       answer: 1
-  }];
+    }
+  ];
   assert.expect(testsToRun.length * 2);
   var done = assert.async(testsToRun.length);
 

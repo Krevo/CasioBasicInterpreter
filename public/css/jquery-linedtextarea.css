@@ -21,7 +21,6 @@
  */
 
 .linedwrap {
-	border: 1px solid #c0c0c0;
 	padding: 3px;
 }
 
@@ -47,7 +46,6 @@
 	width: 50px;
 	float: left;
 	overflow: hidden;
-	border-right: 1px solid #c0c0c0;
 	margin-right: 10px;
 }
 
@@ -56,7 +54,7 @@
 }
 
 .linedwrap .codelines .lineno {
-	color:#AAAAAA;
+	color:#0c1f64;
 	padding-right: 0.5em;
 	padding-top: 0.0em;
 	text-align: right;

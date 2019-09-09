@@ -22,23 +22,32 @@ QUnit.test("Syntax errors - test", function( assert ) {
 
 QUnit.test("Exit error code - test", function( assert ) {
   var testsToRun = [{
-      name: 'Dim error',
+      name: 'List->MatDim error',
       srcCode: `
         ClrList
         {1,2,3}->List 1
         {4,5,6}->List 2
         {7,8}->List 3
-        List->Mat(1,2,3)
+        List->Mat(1,2,3
       `,
       errorCode: 18
     },
     {
-      name: 'No data error',
+      name: 'List->Mat No data error',
       srcCode: `
         ClrList
         {1,2,3}->List 1
         {4,5,6}->List 2
-        List->Mat(1,2,3)
+        List->Mat(1,2,3
+      `,
+      errorCode: 17
+    },
+    {
+      name: 'Dim List No data error',
+      srcCode: `
+        ClrList
+        {1,2,3}->List 1
+        Dim List 2
       `,
       errorCode: 17
     }

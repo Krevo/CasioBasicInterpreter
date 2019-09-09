@@ -1018,11 +1018,9 @@ function execute(node) {
                     var currentLen = 0;
                     for (var j = 1; j < listsIndex.length; j++) { // nb of lists
                         if (typeof files[currentFile][listsIndex[j]] === "undefined") {
-                            // throwRuntimeError(EXIT_NO_DATA, node.offsetDbg);
                             throw {errorCode: EXIT_NO_DATA, offset: node.offsetDbg};
                         }
                         if (j>1 && currentLen != files[currentFile][listsIndex[j]].length) {
-                            //throwRuntimeError(EXIT_DIM_ERROR, node.offsetDbg);
                             throw {errorCode: EXIT_DIM_ERROR, offset: node.offsetDbg};
                         }
                         currentLen = files[currentFile][listsIndex[j]].length;
@@ -1088,10 +1086,10 @@ function execute(node) {
                     if (node.children.length == 0) {
                         debug("get Dim list Ans");
                         var lst = getLastListAnswer();
-                        if (lst) {
+                        if (lst && lst.length > 1) {
                             ret = lst.length - 1;
                         } else {
-                            ret= 0; // Should be tested on a calc, but ideally return an error
+                            throw {errorCode: EXIT_NO_DATA, offset: node.offsetDbg};
                         }
                     } else {
                         var n = execute(node.children[0]);
@@ -1099,7 +1097,7 @@ function execute(node) {
                         if (typeof files[currentFile][n] !== "undefined") {
                             ret = files[currentFile][n].length - 1;
                         } else {
-                            ret = 0; // Should be tested on a calc, but ideally return an error
+                            throw {errorCode: EXIT_NO_DATA, offset: node.offsetDbg};
                         }
                     }
                     break;

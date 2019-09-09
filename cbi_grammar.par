@@ -340,7 +340,7 @@ AMat:
 		| MAT ANS 	[* %% = createNode( NODE_OP, OP_READ_MAT ); *]
 		| TRN AMat 	[* %% = createNode( NODE_OP, OP_TRN_MAT, %2 ); *]
 		| "LIST->MAT\(" Expr_List ')'	[* %% = createNodeWithDebugInfo( NODE_OP, OP_LISTS_TO_MAT, info, %2 ); *]
-		| "LIST->MAT\(" Expr_List	[* %% = createNode( NODE_OP, OP_LISTS_TO_MAT, %2 ); *]
+		| "LIST->MAT\(" Expr_List	[* %% = createNodeWithDebugInfo( NODE_OP, OP_LISTS_TO_MAT, info, %2 ); *]
 		;
 
 MatRows:
@@ -437,9 +437,9 @@ FinalVariable:
 		| MEAN '(' AList ')' [* %% = createNode( NODE_OP, OP_MEAN_LIST, %3); *]
 		| MEDIAN '(' AList [* %% = createNode( NODE_OP, OP_MEDIAN_LIST, %3); *]
 		| MEDIAN '(' AList ')' [* %% = createNode( NODE_OP, OP_MEDIAN_LIST, %3); *]
-		| DIM LIST ANS [* %% = createNode( NODE_OP, OP_GET_DIM_LIST ); *]
-		| DIM LIST Integer [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, createNode( NODE_CONST, %3 ) ); *]
-		| DIM LIST Letter [* %% = createNode( NODE_OP, OP_GET_DIM_LIST, createNode( NODE_VAR, %3 ) ); *]
+		| DIM LIST ANS [* %% = createNodeWithDebugInfo( NODE_OP, OP_GET_DIM_LIST, info ); *]
+		| DIM LIST Integer [* %% = createNodeWithDebugInfo( NODE_OP, OP_GET_DIM_LIST, info, createNode( NODE_CONST, %3 ) ); *]
+		| DIM LIST Letter [* %% = createNodeWithDebugInfo( NODE_OP, OP_GET_DIM_LIST, info, createNode( NODE_VAR, %3 ) ); *]
 		| VariableCasio
 		| ListElem
 		| MatElem

@@ -1391,6 +1391,7 @@ function jsccRun(str, finishCallBack) {
 
     var nbErrors = 0;
     var where = "";
+    var lineNum = undefined;
 
     // Bon, maintenant faut parser tout les elts de programSrc
     for (var progName in programsSrc) {
@@ -1405,6 +1406,7 @@ function jsccRun(str, finishCallBack) {
             programs[progName]['error_off'] = parsedProg.error_off;
             nbErrors += parsedProg.error_cnt;
             if (where == "") { where = parsedProg.where; } // first error
+            lineNum = parsedProg.lineNum;
             if (parsedProg.error_cnt > 0) { break; } // Stop parsing onfirst error !
         }
     }
@@ -1424,7 +1426,7 @@ function jsccRun(str, finishCallBack) {
         idTimerMain = setTimeout('executeNextStmt()', currentExecutionTimeout);
         debug("timeout id = " + idTimerMain);
     } else {
-        finish(EXIT_SYNTAX_ERROR, "Syntax error " + where, programs);
+        finish(EXIT_SYNTAX_ERROR, "Syntax error ", programs, where, lineNum);
     }
 
 }
@@ -1510,7 +1512,8 @@ function parse(programsSrc, progName) {
         lineOffsets: lineOffsets,
         error_cnt: error_cnt,
         error_off: error_off,
-        where: where
+        where: where,
+        lineNum : lineNum
     }
 }
 
@@ -1651,15 +1654,15 @@ function executeNextStmt() {
         var where = "";
         var lineNum = giveLineFromOffset(programs[currentPrgName].lineOffsets, e.offset);
         if (lineNum != -1) { where = " line " + lineNum + " ( " + giveLineFromSourceCode(lineNum, programsSrc[currentPrgName]) + " )"; }
-        finish(e.errorCode, errorMsg[e.errorCode] + " " + where, programs);
+        finish(e.errorCode, errorMsg[e.errorCode], programs, where, lineNum);
     }
 }
 
-function finish(errorCode, str, programs) {
+function finish(errorCode, str, programs, where, lineNum) {
     debug(str);
     reset();
     if (finishCallBack) {
       debug("call the finish callBack");
-      finishCallBack(errorCode, str, programs); // call the finish callback
+      finishCallBack(errorCode, str, programs, where, lineNum); // call the finish callback
     }
 }

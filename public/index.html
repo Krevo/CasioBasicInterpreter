@@ -2,9 +2,10 @@
   <meta charset="UTF-8">
   <head>
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="js/jquery-linedtextarea.js"></script>
+    <script src="js/codemirror.js"></script>
+    <script src="mode/javascript/javascript.js"></script>
     <script type="text/javascript" src="js/cbi.js"></script>
-    <link href="css/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/codemirror.css">
     <link href="css/feedback.css" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css" integrity="sha256-gsmEoJAws/Kd3CjuOQzLie5Q3yshhvmo7YNtBG7aaEY=" crossorigin="anonymous">
 <style>
@@ -40,6 +41,27 @@ button {
   box-shadow: 0 0 #666;
   transform: translateY(2px) translateX(2px);
 }
+
+.CodeMirror {
+  background: transparent;
+}
+
+.CodeMirror-linenumber {
+  color: blue;
+}
+
+#srcCode:not(.readOnly) {
+  background-color: white;
+}
+
+#srcCode.readOnly {
+  background-color: #eee;
+}
+
+.error {
+  background-color: lightpink;
+}
+
 </style>
   </head>
   <body style="background-color: lightsteelblue">
@@ -96,13 +118,18 @@ button {
            <input type="radio" id="hiRes" name="res" onchange="selectResolution('hi');" checked="checked">HiRes
          </form>
          <button class="" onclick="swap();">G ↔ T</button>
-       <br>
-         <center>
-          <table><tr><td>
-          <textarea id="srcCode" class="lined" cols="80" rows="15">
-          </textarea>
-          </td></tr></table>
-         </center>
+       <br><br>
+        <button onclick="executeCode();"><i class="fa fa-play" aria-hidden="true"></i>  Execute</button>
+        <button onclick="stopCodeExecution()"><i class="fa fa-stop" aria-hidden="true"></i> STOP</button>
+        <!-- Hidden features for experts/developpers -->
+        <span id="devButtons" >
+          <button onclick="displayStatusMsg('Log DEBUG is '+(debugToggle()?'On':'Off'))"><i class="fa fa-bug" aria-hidden="true"></i> Log debug On/Off</button>
+          <button onclick="displayStatusMsg('Increasing speed. Timeout is now '+adjustTimeout(-1)+' ms')">Speed <i class="fa fa-plus" aria-hidden="true"></i></button>
+          <button onclick="displayStatusMsg('Decreasing speed. Timeout is now '+adjustTimeout(1)+' ms')">Speed <i class="fa fa-minus" aria-hidden="true"></i></button>
+          <button id="feedback"><i class="fa fa-envelope-o"></i> Send bug report</button>
+        </span>
+        <div id="statusbar" style="display: none"><span id="status" style="color: red"></span></div>
+         <div style="text-align:center; margin: 0px;"><div id="srcCode" style="text-align: left; display: inline-block; width: 75%"><!-- CodeMirror editor --></div></div>
         
         <textarea style="display: none" id="srcCode0">
 ""
@@ -1003,23 +1030,12 @@ WhileEnd
 "Victoire pour"
 "le peuple !"
         </textarea>
-        <div id="statusbar" style="display: none"><span id="status" style="color: red"></span></div>
-        <button onclick="executeCode();"><i class="fa fa-play" aria-hidden="true"></i>  Execute</button>
-        <button onclick="stopCodeExecution()"><i class="fa fa-stop" aria-hidden="true"></i> STOP</button>
-        <!-- Hidden features for experts/developpers -->
-        <span id="devButtons" >
-          <button onclick="displayStatusMsg('Log DEBUG is '+(debugToggle()?'On':'Off'))"><i class="fa fa-bug" aria-hidden="true"></i> Log debug On/Off</button>
-          <button onclick="displayStatusMsg('Increasing speed. Timeout is now '+adjustTimeout(-1)+' ms')">Speed <i class="fa fa-plus" aria-hidden="true"></i></button>
-          <button onclick="displayStatusMsg('Decreasing speed. Timeout is now '+adjustTimeout(1)+' ms')">Speed <i class="fa fa-minus" aria-hidden="true"></i></button>
-          <button id="feedback"><i class="fa fa-envelope-o"></i> Send bug report</button>
-        </span>
         <br>
         <div style="display: none">
         Load raw content from URL : <input type="text" size="60" id="urlLoader">        
         <button onclick="loadFromUrl()">Load</button>
         <br>
         </div>
-        <br>
  List of <a href="availablefunctions.html">currently implemented functions</a> (and list of <a href="knownproblems.html">known problems</a>)<br>
  Sample programs :<br>
         <button onclick="loadProg(0);">Hello World !</button>
@@ -1128,6 +1144,9 @@ WhileEnd
 
     <script type="text/javascript">
 
+      var myCodeMirror;
+      var previousLineNumber;
+
       function loadFromUrl() {
         var urlToLoad = document.getElementById("urlLoader").value;
         
@@ -1154,7 +1173,8 @@ WhileEnd
       function loadProg(progNumber) {
         stopCodeExecution();
         var srcCode = document.getElementById("srcCode"+progNumber).value;
-        document.getElementById("srcCode").value = srcCode;
+        // document.getElementById("srcCode").value = srcCode;
+        myCodeMirror.setValue(srcCode);
         executeCode();
       }
 
@@ -1165,20 +1185,29 @@ WhileEnd
       }
 
       function executeCode() {
-        var srcCode = document.getElementById("srcCode").value;
+        if (previousLineNumber) { myCodeMirror.getDoc().removeLineClass(previousLineNumber - 1, "background", "error"); } // Remove previous error (if any)
+        var srcCode = myCodeMirror.getValue();
         $("#code").val(srcCode);
         $("#codesize").text(srcCode.length);
         document.getElementById("canvas1").focus();
-        document.getElementById("srcCode").disabled = true;
+        document.getElementById("srcCode").className = 'readOnly';
+        myCodeMirror.setOption("readOnly", "nocursor");
+        myCodeMirror.setOption("className", "readOnly");
         document.getElementById("error").value = '';
         document.getElementById("status").innerHTML = '';
         $("#statusbar").hide();
         if (idTimerMain == 0) {
-          jsccRun(srcCode, function(errorCode, msg, programs) {
+          jsccRun(srcCode, function(errorCode, msg, programs, detail, lineNumber) {
               if (errorCode > 0) {
-                  displayStatusMsg(msg);
+                  displayStatusMsg(msg + (detail ? detail : ""));
+                  if (lineNumber) {
+                   previousLineNumber = lineNumber;
+                   myCodeMirror.getDoc().addLineClass(lineNumber - 1, "background", "error");
+                  }
               }
-              document.getElementById("srcCode").disabled = false;
+              //document.getElementById("srcCode").disabled = false;
+              document.getElementById("srcCode").className = '';
+              myCodeMirror.setOption("readOnly", false);
           });
         }
       }
@@ -1192,14 +1221,14 @@ WhileEnd
       };
 
       window.onload = function() {
+          myCodeMirror = CodeMirror(document.getElementById("srcCode"), {
+              lineNumbers: true,
+              lineWrapping: true,
+              mode: "javascript",
+          });
           loadProg(0);
           logFirstAccess();
       }
-
-$(function() {
-	$(".lined").linedtextarea(
-	);
-});
 
 // Replace non-visible caracters by visible ones.
 $("#srcCode").bind('paste drop', function(e) {

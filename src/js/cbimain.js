@@ -12,7 +12,7 @@ var NODE_CONST = 2;
 var NODE_GRPHVAR = 3;
 
 var OP_NONE = -1;
-var OP_STMT_COUPLE = 1;
+var OP_IF_SIMPLE = 1;
 var OP_ASSIGN = 2;
 var OP_IF = 3;
 var OP_ELSE = 4;
@@ -144,6 +144,7 @@ var OP_ASSIGN_GRAPHVAR = 129;
 var OP_SHOWGRID = 130;
 var OP_GRAPHXY = 131;
 var OP_SET_GRAPHMODE = 132;
+var OP_STMT_COUPLE = 199;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -458,13 +459,11 @@ function execute(node) {
                     y = r * Math.sin(angleToRadians(a));
                     ret = [x, y]; // answer goes in List Ans
                     break;
-/*
                 case OP_IF_SIMPLE:
                     if (execute(node.children[0])) {
                         execute(node.children[1]);
                     }
                     break;
-*/
                 case OP_IF:
                     var objIf = programs[currentPrgName]['labels'].get("IF_" + node.children[0]); // recup d'un objet dans lequel on stockera les num des noued a exec pour aller au then, au else ou apres le if
 					loopStack.push(objIf);

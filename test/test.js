@@ -807,7 +807,7 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 378
     },
     {
-      name: 'If/Then with break',
+      name: 'If/Then with break (A MODIFIER, parce qu on break pas un If',
       srcCode: `
         1->A
         If 1: Then
@@ -834,7 +834,7 @@ QUnit.test("jsccRun - test", function( assert ) {
         	4 -> A
         	Prog "SUB"
         IfEnd
-        List 1[A]=1 And List 1[A]=2 And List 1[A]=3 And List 1[A]=4
+        List 1[1]=1 And List 1[2]=2 And List 1[3]=3 And List 1[4]=4
 
         @@ Prog "SUB" ( ) 
 

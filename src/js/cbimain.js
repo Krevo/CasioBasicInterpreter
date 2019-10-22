@@ -162,6 +162,7 @@ var DEBUG = false;
 var currentExecutionTimeout = 15; // time to wait between each executeNextStmt(), in milliseconds
 
 var EXIT_SUCCESS = 0;
+var EXIT_JS_ERROR = 13;
 var EXIT_STOPPED = 14;
 var EXIT_SYNTAX_ERROR = 15;
 var EXIT_ARG_ERROR = 16;

@@ -1201,8 +1201,9 @@ WhileEnd
               if (errorCode > 0) {
                   displayStatusMsg(msg + (detail ? detail : ""));
                   if (lineNumber) {
-                   previousLineNumber = lineNumber;
-                   myCodeMirror.getDoc().addLineClass(lineNumber - 1, "background", "error");
+                    previousLineNumber = lineNumber;
+                    myCodeMirror.getDoc().addLineClass(lineNumber - 1, "background", "error");
+                    jumpToLine(lineNumber);
                   }
               }
               //document.getElementById("srcCode").disabled = false;
@@ -1219,6 +1220,12 @@ WhileEnd
       function logFirstAccess() {
         $.get("log.php");  
       };
+
+      function jumpToLine(i) {
+        var t = myCodeMirror.charCoords({line: i, ch: 0}, "local").top;
+        var middleHeight = myCodeMirror.getScrollerElement().offsetHeight / 2;
+        myCodeMirror.scrollTo(null, t - middleHeight - 5);
+      }
 
       window.onload = function() {
           myCodeMirror = CodeMirror(document.getElementById("srcCode"), {

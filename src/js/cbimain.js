@@ -1651,10 +1651,14 @@ function executeNextStmt() {
             idTimerMain = setTimeout('executeNextStmt()', currentExecutionTimeout);
         }
     } catch (e) {
-        var where = "";
-        var lineNum = giveLineFromOffset(programs[currentPrgName].lineOffsets, e.offset);
-        if (lineNum != -1) { where = " line " + lineNum + " ( " + giveLineFromSourceCode(lineNum, programsSrc[currentPrgName]) + " )"; }
-        finish(e.errorCode, errorMsg[e.errorCode], programs, where, lineNum);
+        if (e.offset) {
+            var where = "";
+            var lineNum = giveLineFromOffset(programs[currentPrgName].lineOffsets, e.offset);
+            if (lineNum != -1) { where = " line " + lineNum + " ( " + giveLineFromSourceCode(lineNum, programsSrc[currentPrgName]) + " )"; }
+            finish(e.errorCode, errorMsg[e.errorCode], programs, where, lineNum);
+        } else {
+            finish(EXIT_JS_ERROR, e.message, programs);
+        }
     }
 }
 

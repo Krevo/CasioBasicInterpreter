@@ -94,6 +94,16 @@
   "RCLPICT"
   "PI"
   "ANS"
+  "XMIN"
+  "XMAX"
+  "XSCL"
+  "XDOT"
+  "YMIN"
+  "YMAX"
+  "YSCL"
+  "TTMIN"
+  "TTMAX"
+  "TTPTCH"
   "SORTA"
   "SORTD"
   "MIN"
@@ -197,6 +207,7 @@ Stmt:
 		| PROG Integer		[* %% = createNode( NODE_OP, OP_PROG_CALL, %2 ); *]
 		| PROG Letter		[* %% = createNode( NODE_OP, OP_PROG_CALL, %2 ); *]
 		| PROG String		[* %% = createNode( NODE_OP, OP_PROG_CALL, %2 ); *]
+		| Expression '->' GraphVar [* %% = createNode( NODE_OP, OP_ASSIGN_GRAPHVAR, %1, %3 ); *]
 		| Expression '->' VariableCasio '~' VariableCasio [* %% = createNode( NODE_OP, OP_ASSIGN, %1, %3, %5 ); *]
 		| Expression '->' VariableCasio [* %% = createNode( NODE_OP, OP_ASSIGN, %1, %3 ); *]
 		| Expression '->' LIST Integer '[' Expression ']' [* %% = createNode( NODE_OP, OP_SET_LIST_ELEM, %1, createNode( NODE_CONST, %4 ), %6 ); *]
@@ -229,8 +240,11 @@ Stmt:
 		| Color SketchMode VERTICAL Expression [* %% = createNode( NODE_OP, OP_VERTICAL, %4, %1, %2 ); *]
 		| RANGE Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
 		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12, %14, %16, %18 ); *]
+		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12, %14, %16 ); *]
+		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12, %14 ); *]
 		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
-		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, createNode( NODE_CONST, 0 )); *]
+		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10); *]
+		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8); *]
 		| MENU String ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10 ); *]
 		| MENU String ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14 ); *]
 		| MENU String ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18 ); *]
@@ -441,6 +455,7 @@ FinalVariable:
 		| DIM LIST Integer [* %% = createNodeWithDebugInfo( NODE_OP, OP_GET_DIM_LIST, info, createNode( NODE_CONST, %3 ) ); *]
 		| DIM LIST Letter [* %% = createNodeWithDebugInfo( NODE_OP, OP_GET_DIM_LIST, info, createNode( NODE_VAR, %3 ) ); *]
 		| VariableCasio
+		| GraphVar
 		| ListElem
 		| MatElem
 		;
@@ -464,4 +479,17 @@ ListElem:
 VariableCasio:
 		Letter '[' Expression ']' [* %% = createNode( NODE_OP, OP_READVAR, %1, %3 ); *]
 		| Letter [* %% = createNode( NODE_VAR, %1 ); *]
+		;
+
+GraphVar:
+		XMIN [* %% = createNode( NODE_GRPHVAR, GRPHVAR_XMIN ); *]
+		| XMAX [* %% = createNode( NODE_GRPHVAR, GRPHVAR_XMAX ); *]
+		| XSCL [* %% = createNode( NODE_GRPHVAR, GRPHVAR_XSCL ); *]
+		| XDOT [* %% = createNode( NODE_GRPHVAR, GRPHVAR_XDOT ); *]
+		| YMIN [* %% = createNode( NODE_GRPHVAR, GRPHVAR_YMIN ); *]
+		| YMAX [* %% = createNode( NODE_GRPHVAR, GRPHVAR_YMAX ); *]
+		| YSCL [* %% = createNode( NODE_GRPHVAR, GRPHVAR_YSCL ); *]
+		| TTMIN [* %% = createNode( NODE_GRPHVAR, GRPHVAR_TTMIN ); *]
+		| TTMAX [* %% = createNode( NODE_GRPHVAR, GRPHVAR_TTMAX ); *]
+		| TTPTCH [* %% = createNode( NODE_GRPHVAR, GRPHVAR_TTPTCH ); *]
 		;

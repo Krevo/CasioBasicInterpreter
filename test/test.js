@@ -741,6 +741,57 @@ QUnit.test("jsccRun - test", function( assert ) {
        Mat Ans[1,3]=7 And Mat Ans[2,2]=5 And Mat Ans[3,1]=3
        `,
       answer: 1
+    },
+    {
+      name: 'Affectation of Xmin, Xmax, ...',
+      srcCode: `
+       -6.3 -> Xmin
+       6.3 -> Xmax
+       1 -> Xscl
+       -3.1 -> Ymin
+       3.1 -> Ymax
+       1 -> Yscl
+       1 -> Tθmin
+       10 -> Tθmax
+       1 -> Tθptch
+       Abs(Xmax-Xmin)+Abs(Ymax-Ymin)+Abs(Tθmax-Tθmin)`,
+      answer: 27.8
+    },
+    {
+      name: 'ViewWindow and read of Xmin, Xmax, ...',
+      srcCode: `
+        ViewWindow 1,127,0,1,63,0
+        Abs(Xmax-Xmin)+Abs(Ymax-Ymin)`,
+      answer: 188
+    },
+    {
+      name: 'ViewWindow with few args leave other args unchanged',
+      srcCode: `
+        -6.3 -> Xmin
+        6.3 -> Xmax
+        1 -> Xscl
+        -3.1 -> Ymin
+        3.1 -> Ymax
+        1 -> Yscl
+        1 -> Tθmin
+        10 -> Tθmax
+        1 -> Tθptch
+        Abs(Xmax-Xmin)+Abs(Ymax-Ymin)+Abs(Tθmax-Tθmin)->A
+        ViewWindow -6.3,6.3,1,-3.1
+        Abs(Xmax-Xmin)+Abs(Ymax-Ymin)+Abs(Tθmax-Tθmin)->B
+        A=B`,
+      answer: 1
+    },
+    {
+      name: 'Setting Xdot modify Xmax',
+      srcCode: `
+        #hires
+        6.3 -> Xmax
+        0 -> Xmin
+        0 -> Ymin
+        1 -> Xdot
+        Xmax`,
+      answer: 378
     }
   ];
   assert.expect(testsToRun.length * 2);

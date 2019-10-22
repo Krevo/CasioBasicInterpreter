@@ -9,6 +9,7 @@ function NODE() {
 var NODE_OP = 0;
 var NODE_VAR = 1;
 var NODE_CONST = 2;
+var NODE_GRPHVAR = 3;
 
 var OP_NONE = -1;
 
@@ -140,6 +141,7 @@ var OP_TRN_MAT = 125;
 var OP_AUGMENT_MAT = 126;
 var OP_LISTS_TO_MAT = 127;
 var OP_ABS = 128;
+var OP_ASSIGN_GRAPHVAR = 129;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -351,6 +353,9 @@ function execute(node) {
                     if (newValue == 0) {
                         nextLine++; // Isz and Dsz have a special meaning when value reach 0, next line/instruction is ignored
                     }
+                    break;
+                case OP_ASSIGN_GRAPHVAR:
+                    setGraphVar(execute(node.children[0]), node.children[1].value);
                     break;
                 case OP_ASSIGN:
                     if (node.children[1].type == NODE_VAR) {
@@ -666,7 +671,16 @@ function execute(node) {
                     ret = pixelTest(execute(node.children[1]), execute(node.children[0]));
                     break;
                 case OP_RANGE:
-                    range(execute(node.children[0]), execute(node.children[1]), execute(node.children[2]), execute(node.children[3]), execute(node.children[4]), execute(node.children[5]), execute(node.children[6]), execute(node.children[7]), execute(node.children[8]));
+                    range(node.children[0] ? execute(node.children[0]) : undefined,
+                        node.children[1] ? execute(node.children[1]) : undefined,
+                        node.children[2] ? execute(node.children[2]) : undefined,
+                        node.children[3] ? execute(node.children[3]) : undefined,
+                        node.children[4] ? execute(node.children[4]) : undefined,
+                        node.children[5] ? execute(node.children[5]) : undefined,
+                        node.children[6] ? execute(node.children[6]) : undefined,
+                        node.children[7] ? execute(node.children[7]) : undefined,
+                        node.children[8] ? execute(node.children[8]) : undefined,
+                    );
                     break;
                 case OP_INT:
                     num = execute(node.children[0]);
@@ -1297,6 +1311,9 @@ function execute(node) {
         case NODE_VAR:
             varTabIndex = letterToIndexSupp(node.value) + 1; // C est en fait C[1] donc, C[1] ~ A[2+1]
             ret = Number(getvar("A_" + varTabIndex));
+            break;
+        case NODE_GRPHVAR:
+            ret = Number(readGraphVar(node.value));
             break;
         case NODE_CONST:
             ret = Number(node.value);

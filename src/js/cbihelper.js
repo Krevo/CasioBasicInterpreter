@@ -163,7 +163,8 @@ function setRes(res) {
     gfxCharH = 14;
     currentGfxFontSize = gfxFontSizeHi;
     plotDefs = plotDefsHiRes;
-}
+  }
+  recalculateXdot();
 
   zoomW = Math.round(c.width  / casioScreenW);
   zoomH = Math.round(c.height / casioScreenH);
@@ -784,6 +785,17 @@ var _YMIN_ = -3.1;
 var _YMAX_ = 3.1;
 var _YSCL_ = 1;
 
+var GRPHVAR_XMIN = 0;
+var GRPHVAR_XMAX = 1;
+var GRPHVAR_XSCL = 2;
+var GRPHVAR_XDOT = 3;
+var GRPHVAR_YMIN = 4;
+var GRPHVAR_YMAX = 5;
+var GRPHVAR_YSCL = 6;
+var GRPHVAR_TTMIN = 7;
+var GRPHVAR_TTMAX = 8;
+var GRPHVAR_TTPTCH = 9;
+
 var xmin = _XMIN_;
 var xmax = _XMAX_;
 var xscl = _XSCL_;
@@ -1006,16 +1018,88 @@ function pixel(x, y, mode) {
     }
 }
 
+function readGraphVar(index) {
+    switch (index) {
+        case GRPHVAR_XMIN:
+            return this.xmin;
+        case GRPHVAR_XMAX:
+            return this.xmax;
+        case GRPHVAR_XSCL:
+            return this.xscl;
+        case GRPHVAR_XDOT:
+            return this.xdot;
+        case GRPHVAR_YMIN:
+            return this.ymin;
+        case GRPHVAR_YMAX:
+            return this.ymax;
+        case GRPHVAR_YSCL:
+            return this.yscl;
+        case GRPHVAR_TTMIN:
+            return this.tmin;
+        case GRPHVAR_TTMAX:
+            return this.tmax;
+        case GRPHVAR_TTPTCH:
+            return this.tptch;
+    }
+    return 0;
+}
+
+function setGraphVar(value, index) {
+    switch (index) {
+        case GRPHVAR_XMIN:
+            this.xmin = value;
+            recalculateXdot(); // Setting Xmin, modify Xdot !
+            break;
+        case GRPHVAR_XMAX:
+            this.xmax = value;
+            recalculateXdot(); // Setting Xmin, modify Xdot !
+            break;
+        case GRPHVAR_XSCL:
+            this.xscl = value;
+            break;
+        case GRPHVAR_XDOT:
+            this.xdot = value;
+            recalculateXmax(); // Setting Xdot, modify Xmax !
+            break;
+        case GRPHVAR_YMIN:
+            this.ymin = value;
+            break;
+        case GRPHVAR_YMAX:
+            this.ymax = value;
+            break;
+        case GRPHVAR_YSCL:
+            this.yscl = value;
+            break;
+        case GRPHVAR_TTMIN:
+            this.tmin = value;
+            break;
+        case GRPHVAR_TTMAX:
+            this.tmax = value;
+            break;
+        case GRPHVAR_TTPTCH:
+            this.tptch = value;
+            break;
+    }
+}
+
+function recalculateXdot() {
+    this.xdot = (this.xmax - this.xmin) / (this.casioScreenW - 1); 
+}
+
+function recalculateXmax() {
+    this.xmax = (this.casioScreenW - 1) * this.xdot + this.xmin; 
+}
+
 function range(xmin, xmax, xscl, ymin, ymax, yscl, tmin, tmax, tptch) {
-    this.xmin = xmin;
-    this.xmax = xmax;
-    this.xscl = xscl;
-    this.ymin = ymin;
-    this.ymax = ymax;
-    this.yscl = yscl;
-    this.tmin = tmin; // useless for now
-    this.tmax = tmax; // useless for now
-    this.tptch = tptch; // useless for now
+    if (xmin) { this.xmin = xmin; }
+    if (xmax) { this.xmax = xmax; }
+    if (xscl) { this.xscl = xscl; }
+    if (ymin) { this.ymin = ymin; }
+    if (ymax) { this.ymax = ymax; }
+    if (yscl) { this.yscl = yscl; }
+    if (tmin) { this.tmin = tmin; } // useless for now
+    if (tmax) { this.tmax = tmax; } // useless for now
+    if (tptch) { this.tptch = tptch; } // useless for now
     cls();
 }
 

@@ -683,18 +683,40 @@ function clrtext() {
 function drawAxes() {
     if (!showAxes) return;
     var prevDrawColor = currentDrawColorIdx;
-    var oldPlotSize = plotSize;
-    plotSize = 1;
+    var prevSketchMode = currentSketchMode;
     currentDrawColorIdx = getColorIndexFromColorName("Black");
+    currentSketchMode = "SketchThin";
     horizontal(0);
     vertical(0);
-    plotSize = oldPlotSize;
     currentDrawColorIdx = prevDrawColor;
+    currentSketchMode = prevSketchMode;
 }
 
 function drawGrid() {
     if (!showGrid) return;
     debug("drawGrid is not implemented");
+    var prevDrawColor = currentDrawColorIdx;
+    var oldPlotSize = plotSize;
+    plotSize = 1;
+    currentDrawColorIdx = getColorIndexFromColorName("Magenta");
+    for (var x=0; x < this.xmax; x += this.xscl) {
+        for (var y=0; y < this.ymax; y += this.yscl) {
+            plotOn(x, y);
+        }
+        for (var y=0; y > this.ymin; y -= this.yscl) {
+            plotOn(x, y);
+        }
+    }
+    for (var x=0; x > this.xmin; x -= this.xscl) {
+        for (var y=0; y < this.ymax; y += this.yscl) {
+            plotOn(x, y);
+        }
+        for (var y=0; y > this.ymin; y -= this.yscl) {
+            plotOn(x, y);
+        }
+    }
+    currentDrawColorIdx = prevDrawColor;
+    plotSize = oldPlotSize;
 }
 
 // Redraw all screen

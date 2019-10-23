@@ -142,6 +142,7 @@ var OP_AUGMENT_MAT = 126;
 var OP_LISTS_TO_MAT = 127;
 var OP_ABS = 128;
 var OP_ASSIGN_GRAPHVAR = 129;
+var OP_SHOWGRID = 130;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -795,6 +796,9 @@ function execute(node) {
                     break;
                 case OP_SHOWLABEL:
                     setShowLabel(node.children[0]);
+                    break;
+                case OP_SHOWGRID:
+                    setShowGrid(node.children[0]);
                     break;
                 case OP_CLEARTEXT:
                     cleartext();

@@ -671,6 +671,7 @@ function clearDisplay(isGraphicScreen) {
 function cls() {
     swapToGraphicScreen();
     clearDisplay(true);
+    drawGrid();
     drawAxes();
 }
 
@@ -689,6 +690,11 @@ function drawAxes() {
     vertical(0);
     plotSize = oldPlotSize;
     currentDrawColorIdx = prevDrawColor;
+}
+
+function drawGrid() {
+    if (!showGrid) return;
+    debug("drawGrid is not implemented");
 }
 
 // Redraw all screen
@@ -805,6 +811,7 @@ var yscl = _YSCL_;
 
 var showAxes = false; // false by default but should be a configurable option
 var showLabel = false; // false by default but should be a configurable option
+var showGrid = false; // false by default but should be a configurable option
 
 function setShowAxes(show) {
     showAxes = show;
@@ -814,6 +821,11 @@ function setShowAxes(show) {
 function setShowLabel(show) {
     showLabel = show;
     debug("showLabel = "+(showLabel?'true':'false'));
+}
+
+function setShowGrid(show) {
+    showGrid = show;
+    debug("showGrid = "+(showGrid?'true':'false'));
 }
 
 function getPixelColor(x, y) {

@@ -8,6 +8,8 @@
 
   "AXESON"
   "AXESOFF"
+  "GRIDON"
+  "GRIDOFF"
   "LABELON"
   "LABELOFF"
   "IF"
@@ -285,6 +287,8 @@ Stmt:
 		| AXESOFF [* %% = createNode( NODE_OP, OP_SHOWAXES, false ); *]
 		| LABELON [* %% = createNode( NODE_OP, OP_SHOWLABEL, true ); *]
 		| LABELOFF [* %% = createNode( NODE_OP, OP_SHOWLABEL, false ); *]
+		| GRIDON [* %% = createNode( NODE_OP, OP_SHOWGRID, true ); *]
+		| GRIDOFF [* %% = createNode( NODE_OP, OP_SHOWGRID, false ); *]
 		| S-L-NORMAL [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchNormal" ); *]
 		| S-L-DOT [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchDot" ); *]
 		| S-L-BROKEN [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchBroken" ); *]

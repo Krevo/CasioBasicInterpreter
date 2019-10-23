@@ -12,6 +12,8 @@
   "GRIDOFF"
   "LABELON"
   "LABELOFF"
+  "FUNCON"
+  "FUNCOFF"
   "IF"
   "THEN"
   "ELSE"
@@ -289,6 +291,8 @@ Stmt:
 		| LABELOFF [* %% = createNode( NODE_OP, OP_SHOWLABEL, false ); *]
 		| GRIDON [* %% = createNode( NODE_OP, OP_SHOWGRID, true ); *]
 		| GRIDOFF [* %% = createNode( NODE_OP, OP_SHOWGRID, false ); *]
+		| FUNCON [* %% = createNode( NODE_OP, OP_NONE ); *]
+		| FUNCOFF [* %% = createNode( NODE_OP, OP_NONE ); *]
 		| S-L-NORMAL [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchNormal" ); *]
 		| S-L-DOT [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchDot" ); *]
 		| S-L-BROKEN [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchBroken" ); *]

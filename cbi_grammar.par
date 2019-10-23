@@ -245,14 +245,14 @@ Stmt:
 		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10, %12 ); *]
 		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8, %10); *]
 		| VIEWWINDOW Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_RANGE, %2, %4, %6, %8); *]
-		| MENU String ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10 ); *]
-		| MENU String ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14 ); *]
-		| MENU String ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18 ); *]
-		| MENU String ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18, %20, %22 ); *]
-		| MENU String ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18, %20, %22, %24, %26 ); *]
-		| MENU String ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18, %20, %22, %24, %26, %28, %30 ); *]
-		| MENU String ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18, %20, %22, %24, %26, %28, %30, %32, %34 ); *]
-		| MENU String ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression ',' String ',' Expression [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18, %20, %22, %24, %26, %28, %30, %32, %34, %36, %38 ); *]
+		| MENU String ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10 ); *]
+		| MENU String ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14 ); *]
+		| MENU String ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18 ); *]
+		| MENU String ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18, %20, %22 ); *]
+		| MENU String ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18, %20, %22, %24, %26 ); *]
+		| MENU String ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18, %20, %22, %24, %26, %28, %30 ); *]
+		| MENU String ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18, %20, %22, %24, %26, %28, %30, %32, %34 ); *]
+		| MENU String ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter ',' String ',' IntegerOrLetter [* %% = createNode( NODE_OP, OP_MENU, %2, %4, %6, %8, %10, %12, %14, %16, %18, %20, %22, %24, %26, %28, %30, %32, %34, %36, %38 ); *]
 		| F-LINE Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_FLINE, %2, %4, %6, %8 ); *]
 		| Color F-LINE Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_FLINE, %3, %5, %7, %9, %1 ); *]
 		| SketchMode F-LINE Expression ',' Expression ',' Expression ',' Expression [* %% = createNode( NODE_OP, OP_FLINE, %3, %5, %7, %9, undefined, %1 ); *]
@@ -492,4 +492,9 @@ GraphVar:
 		| TTMIN [* %% = createNode( NODE_GRPHVAR, GRPHVAR_TTMIN ); *]
 		| TTMAX [* %% = createNode( NODE_GRPHVAR, GRPHVAR_TTMAX ); *]
 		| TTPTCH [* %% = createNode( NODE_GRPHVAR, GRPHVAR_TTPTCH ); *]
+		;
+
+IntegerOrLetter:
+		Integer
+		| Letter
 		;

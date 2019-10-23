@@ -1302,7 +1302,7 @@ function execute(node) {
                     var labels = [];
                     for (i=1; i < node.children.length; i=i+2) {
                         options.push(node.children[i]);
-                        labels.push(execute(node.children[i+1]));
+                        labels.push(node.children[i+1]);
                     }
                     MenuOn(titreMenu, options, labels, 1);
                     break;

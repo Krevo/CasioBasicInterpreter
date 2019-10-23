@@ -1243,11 +1243,13 @@ $("#srcCode").bind('paste drop', function(e) {
 
     setTimeout(function() {
         // gets the copied text after a specified time (100 milliseconds)
+        var savedCursorPos = myCodeMirror.getCursor();
         var text = myCodeMirror.getValue();
         text = text.replace(/(\uE015)/g, 'r'); // Replace "rho" (U+E015 used in BIDE) by "r"
         text = text.replace(/(\uE016)/g, 'i'); // Replace "i" (imaginary unit of complex number) (U+E016 used in BIDE) by "i"
         text = text.replace(/(\uE063)/g, '/'); // Replace "slash" (U+E063 used in BIDE) by "/"
         myCodeMirror.setValue(text);
+        myCodeMirror.setCursor(savedCursorPos); // Replace cursor where it was (because setting the value of the content place cursor at beginning)
     }, 100);
 });
 

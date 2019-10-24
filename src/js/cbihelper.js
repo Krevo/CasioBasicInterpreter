@@ -689,25 +689,25 @@ function drawAxes() {
     horizontal(0);
     vertical(0);
 
-    for (var x=0; x < this.xmax; x += this.xscl) {
+    for (var x=0; Math.abs(x) < Math.abs(this.xmax); x += Math.sign(this.xmax) * this.xscl) {
         for (var i=1; i <= plotSize; i++) {
            setPixelOn(xtoR(x), ytoR(0)-i, 1);
         }
     }
 
-    for (var x=0; x > this.xmin; x -= this.xscl) {
+    for (var x=0; Math.abs(x) < Math.abs(this.xmin); x += Math.sign(this.xmin) * this.xscl) {
         for (var i=1; i <= plotSize; i++) {
            setPixelOn(xtoR(x), ytoR(0)-i, 1);
         }
     }
 
-    for (var y=0; y < this.ymax; y += this.yscl) {
+    for (var y=0; Math.abs(y) < Math.abs(this.ymax); y += Math.sign(this.ymax) * this.yscl) {
         for (var i=1; i <= plotSize; i++) {
            setPixelOn(xtoR(0)+i, ytoR(y), 1);
         }
     }
 
-    for (var y=0; y > this.xmin; y -= this.yscl) {
+    for (var y=0; Math.abs(y) < Math.abs(this.ymin); y += Math.sign(this.ymin) * this.yscl) {
         for (var i=1; i <= plotSize; i++) {
            setPixelOn(xtoR(0)+i, ytoR(y), 1);
         }
@@ -718,27 +718,45 @@ function drawAxes() {
 }
 
 function drawGrid() {
-    if (!showGrid) return;
+    if (showGrid == GRID_OFF) return;
     debug("drawGrid is not implemented");
     var prevDrawColor = currentDrawColorIdx;
+    var prevSketchMode = currentSketchMode;
+    currentSketchMode = "SketchNormal";
     currentDrawColorIdx = getColorIndexFromColorName("Cyan");
-    for (var x=0; x < this.xmax; x += this.xscl) {
-        for (var y=0; y < this.ymax; y += this.yscl) {
-            plotOn(x, y);
+    if (showGrid == GRID_ON || (showGrid == GRID_LINE && currentRes == "low")) {
+        for (var x=0; Math.abs(x) < Math.abs(this.xmax); x += Math.sign(this.xmax) * this.xscl) {
+            for (var y=0; Math.abs(y) < Math.abs(this.ymax); y += Math.sign(this.ymax) * this.yscl) {
+                plotOn(x, y);
+            }
+            for (var y=0; Math.abs(y) < Math.abs(this.ymin); y += Math.sign(this.ymin) * this.yscl) {
+                plotOn(x, y);
+            }
         }
-        for (var y=0; y > this.ymin; y -= this.yscl) {
-            plotOn(x, y);
+        for (var x=0; Math.abs(x) < Math.abs(this.xmin); x += Math.sign(this.xmin) * this.xscl) {
+            for (var y=0; Math.abs(y) < Math.abs(this.ymax); y += Math.sign(this.ymax) * this.yscl) {
+                plotOn(x, y);
+            }
+            for (var y=0; Math.abs(y) < Math.abs(this.ymin); y += Math.sign(this.ymin) * this.yscl) {
+                plotOn(x, y);
+            }
         }
-    }
-    for (var x=0; x > this.xmin; x -= this.xscl) {
-        for (var y=0; y < this.ymax; y += this.yscl) {
-            plotOn(x, y);
+    } else if (showGrid == GRID_LINE) {
+        for (var x=0; Math.abs(x) < Math.abs(this.xmax); x += Math.sign(this.xmax) * this.xscl) {
+            vertical(x);
         }
-        for (var y=0; y > this.ymin; y -= this.yscl) {
-            plotOn(x, y);
+        for (var x=0; Math.abs(x) < Math.abs(this.xmin); x += Math.sign(this.xmin) * this.xscl) {
+            vertical(x);
+        }
+        for (var y=0; Math.abs(y) < Math.abs(this.ymax); y += Math.sign(this.ymax) * this.yscl) {
+            horizontal(y);
+        }
+        for (var y=0; Math.abs(y) < Math.abs(this.ymin); y += Math.sign(this.ymin) * this.yscl) {
+            horizontal(y);
         }
     }
     currentDrawColorIdx = prevDrawColor;
+    currentSketchMode = prevSketchMode;
 }
 
 // Redraw all screen
@@ -846,6 +864,10 @@ var GRPHVAR_TTMIN = 7;
 var GRPHVAR_TTMAX = 8;
 var GRPHVAR_TTPTCH = 9;
 
+var GRID_OFF = 0;
+var GRID_ON = 1;
+var GRID_LINE = 2;
+
 var xmin = _XMIN_;
 var xmax = _XMAX_;
 var xscl = _XSCL_;
@@ -855,7 +877,7 @@ var yscl = _YSCL_;
 
 var showAxes = false; // false by default but should be a configurable option
 var showLabel = false; // false by default but should be a configurable option
-var showGrid = false; // false by default but should be a configurable option
+var showGrid = GRID_OFF; // 'Off' by default but should be a configurable option
 
 function setShowAxes(show) {
     showAxes = show;
@@ -869,7 +891,7 @@ function setShowLabel(show) {
 
 function setShowGrid(show) {
     showGrid = show;
-    debug("showGrid = "+(showGrid?'true':'false'));
+    debug("showGrid = "+showGrid);
 }
 
 function getPixelColor(x, y) {

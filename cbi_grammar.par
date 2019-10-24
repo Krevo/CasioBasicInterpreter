@@ -10,6 +10,7 @@
   "AXESOFF"
   "GRIDON"
   "GRIDOFF"
+  "GRIDLINE"
   "LABELON"
   "LABELOFF"
   "FUNCON"
@@ -289,8 +290,9 @@ Stmt:
 		| AXESOFF [* %% = createNode( NODE_OP, OP_SHOWAXES, false ); *]
 		| LABELON [* %% = createNode( NODE_OP, OP_SHOWLABEL, true ); *]
 		| LABELOFF [* %% = createNode( NODE_OP, OP_SHOWLABEL, false ); *]
-		| GRIDON [* %% = createNode( NODE_OP, OP_SHOWGRID, true ); *]
-		| GRIDOFF [* %% = createNode( NODE_OP, OP_SHOWGRID, false ); *]
+		| GRIDON [* %% = createNode( NODE_OP, OP_SHOWGRID, GRID_ON ); *]
+		| GRIDOFF [* %% = createNode( NODE_OP, OP_SHOWGRID, GRID_OFF ); *]
+		| GRIDLINE [* %% = createNode( NODE_OP, OP_SHOWGRID, GRID_LINE ); *]
 		| FUNCON [* %% = createNode( NODE_OP, OP_NONE ); *]
 		| FUNCOFF [* %% = createNode( NODE_OP, OP_NONE ); *]
 		| S-L-NORMAL [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchNormal" ); *]

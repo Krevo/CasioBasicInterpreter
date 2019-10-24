@@ -696,9 +696,7 @@ function drawGrid() {
     if (!showGrid) return;
     debug("drawGrid is not implemented");
     var prevDrawColor = currentDrawColorIdx;
-    var oldPlotSize = plotSize;
-    plotSize = 1;
-    currentDrawColorIdx = getColorIndexFromColorName("Magenta");
+    currentDrawColorIdx = getColorIndexFromColorName("Cyan");
     for (var x=0; x < this.xmax; x += this.xscl) {
         for (var y=0; y < this.ymax; y += this.yscl) {
             plotOn(x, y);
@@ -716,7 +714,6 @@ function drawGrid() {
         }
     }
     currentDrawColorIdx = prevDrawColor;
-    plotSize = oldPlotSize;
 }
 
 // Redraw all screen

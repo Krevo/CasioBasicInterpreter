@@ -690,27 +690,27 @@ function drawAxes() {
     vertical(0);
 
     for (var x=0; x < this.xmax; x += this.xscl) {
-        setPixelOn(xtoR(x), ytoR(0)-1, 1);
-        setPixelOn(xtoR(x), ytoR(0)-2, 1);
-        setPixelOn(xtoR(x), ytoR(0)-3, 1);
+        for (var i=1; i <= plotSize; i++) {
+           setPixelOn(xtoR(x), ytoR(0)-i, 1);
+        }
     }
 
     for (var x=0; x > this.xmin; x -= this.xscl) {
-        setPixelOn(xtoR(x), ytoR(0)-1, 1);
-        setPixelOn(xtoR(x), ytoR(0)-2, 1);
-        setPixelOn(xtoR(x), ytoR(0)-3, 1);
+        for (var i=1; i <= plotSize; i++) {
+           setPixelOn(xtoR(x), ytoR(0)-i, 1);
+        }
     }
 
     for (var y=0; y < this.ymax; y += this.yscl) {
-        setPixelOn(xtoR(0)+1, ytoR(y), 1);
-        setPixelOn(xtoR(0)+2, ytoR(y), 1);
-        setPixelOn(xtoR(0)+3, ytoR(y), 1);
+        for (var i=1; i <= plotSize; i++) {
+           setPixelOn(xtoR(0)+i, ytoR(y), 1);
+        }
     }
 
     for (var y=0; y > this.xmin; y -= this.yscl) {
-        setPixelOn(xtoR(0)+1, ytoR(y), 1);
-        setPixelOn(xtoR(0)+2, ytoR(y), 1);
-        setPixelOn(xtoR(0)+3, ytoR(y), 1);
+        for (var i=1; i <= plotSize; i++) {
+           setPixelOn(xtoR(0)+i, ytoR(y), 1);
+        }
     }
 
     currentDrawColorIdx = prevDrawColor;

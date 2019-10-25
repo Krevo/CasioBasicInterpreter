@@ -1047,6 +1047,13 @@ For Xmin->X to Xmax+S Step S
   Green F-Line X-S, sin (X-S), X, sin X
 Next
         </textarea>
+        <textarea style="display: none" id="srcCode25">
+AxesOn
+GridOff
+ViewWindow -15.1, 15.1, 1, -2.1, 8.1, 1, -10, 20, .2
+Rad
+Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
+        </textarea>
         <br>
         <div style="display: none">
         Load raw content from URL : <input type="text" size="60" id="urlLoader">        
@@ -1056,6 +1063,7 @@ Next
  List of <a href="availablefunctions.html">currently implemented functions</a> (and list of <a href="knownproblems.html">known problems</a>)<br>
  Sample programs :<br>
         <button onclick="loadProg(0);">Hello World !</button>
+        <button onclick="loadProg(25);">Cycloïd</button>
         <button onclick="loadProg(24);">Draw sin/cos</button>
         <button onclick="loadProg(1);">5,4,3,...</button>
         <button onclick="loadProg(2);">Screen saver</button>

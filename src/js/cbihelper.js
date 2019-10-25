@@ -852,6 +852,9 @@ var _XSCL_ = 1;
 var _YMIN_ = -3.1;
 var _YMAX_ = 3.1;
 var _YSCL_ = 1;
+var _TMIN_ = 0;
+var _TMAX_ = 2 * Math.PI;
+var _TPITCH_ = (2 * Math.PI) / 100;
 
 var GRPHVAR_XMIN = 0;
 var GRPHVAR_XMAX = 1;
@@ -874,6 +877,9 @@ var xscl = _XSCL_;
 var ymin = _YMIN_;
 var ymax = _YMAX_;
 var yscl = _YSCL_;
+var tmin = _TMIN_;
+var tmax = _TMAX_;
+var tptch = _TPITCH_;
 
 var showAxes = false; // false by default but should be a configurable option
 var showLabel = false; // false by default but should be a configurable option

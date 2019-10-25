@@ -127,6 +127,7 @@
   "\?LIST"
   "MENU"
   "TRN"
+  "GRAPH\(X,Y\)=\("
   ','
   '~'
   '{'
@@ -335,7 +336,20 @@ Stmt:
 		| STOPICT Letter	[* %% = createNode( NODE_OP, OP_STOPICT, createNode( NODE_VAR, %2 ) ); *]
 		| RCLPICT Integer	[* %% = createNode( NODE_OP, OP_RCLPICT, createNode( NODE_CONST, %2 ) ); *]
 		| RCLPICT Letter	[* %% = createNode( NODE_OP, OP_RCLPICT, createNode( NODE_VAR, %2 ) ); *]
+		| "GRAPH\(X,Y\)=\(" ExprOrList ',' ExprOrList ')'	[* %% = createNode( NODE_OP, OP_GRAPHXY, %2, %4 ); *]
+		| "GRAPH\(X,Y\)=\(" ExprOrList ',' ExprOrList 	[* %% = createNode( NODE_OP, OP_GRAPHXY, %2, %4 ); *]
+		| Color "GRAPH\(X,Y\)=\(" ExprOrList ',' ExprOrList ')'	[* %% = createNode( NODE_OP, OP_GRAPHXY, %3, %5, %1 ); *]
+		| Color "GRAPH\(X,Y\)=\(" ExprOrList ',' ExprOrList 	[* %% = createNode( NODE_OP, OP_GRAPHXY, %3, %5, %1 ); *]
+		| SketchMode "GRAPH\(X,Y\)=\(" ExprOrList ',' ExprOrList ')'	[* %% = createNode( NODE_OP, OP_GRAPHXY, %3, %5, undefined, %1 ); *]
+		| SketchMode "GRAPH\(X,Y\)=\(" ExprOrList ',' ExprOrList 	[* %% = createNode( NODE_OP, OP_GRAPHXY, %3, %5, undefined, %1 ); *]
+		| Color SketchMode "GRAPH\(X,Y\)=\(" ExprOrList ',' ExprOrList ')'	[* %% = createNode( NODE_OP, OP_GRAPHXY, %4, %6, %1, %2 ); *]
+		| Color SketchMode "GRAPH\(X,Y\)=\(" ExprOrList ',' ExprOrList 	[* %% = createNode( NODE_OP, OP_GRAPHXY, %4, %6, %1, %2 ); *]
 		| ':'
+		;
+
+ExprOrList:
+		Expression
+		| AList
 		;
 
 AList:

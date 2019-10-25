@@ -143,6 +143,7 @@ var OP_LISTS_TO_MAT = 127;
 var OP_ABS = 128;
 var OP_ASSIGN_GRAPHVAR = 129;
 var OP_SHOWGRID = 130;
+var OP_GRAPHXY = 131;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -1310,6 +1311,53 @@ function execute(node) {
                     }
                     MenuOn(titreMenu, options, labels, 1);
                     break;
+                case OP_GRAPHXY:
+                    debug("OP_GRAPHXY");
+                    var prevDrawColor = currentDrawColorIdx;
+                    var prevSketchMode = currentSketchMode;
+                    if (node.children[2]) {
+                        currentDrawColorIdx = getColorIndexFromColorName(node.children[2]);
+                    }
+                    if (node.children[3]) {
+                        debug("sketchMode > '"+node.children[3]+"'");
+                        currentSketchMode = node.children[3];
+                    }
+                    var node0val = execute(node.children[0]);
+                    var node1val = execute(node.children[1]);
+                    var typeNode0 = giveType(node0val);
+                    var typeNode1 = giveType(node1val);
+                    var n = 1;
+                    debug((typeNode0 == TYPE_NUMERIC ? 'Num' : 'List') + ' / ' + (typeNode1 == TYPE_NUMERIC ? 'Num' : 'List'));
+                    if ((typeNode0 == TYPE_NUMERIC) && (typeNode1 == TYPE_NUMERIC)) {
+                        n = 1;
+                    } else if ((typeNode0 == TYPE_NUMERIC) && (typeNode1 == TYPE_LIST)) {
+                        n = node1val.length - 1;
+                    } else if ((typeNode0 == TYPE_LIST) && (typeNode1 == TYPE_NUMERIC)) {
+                        n = node0val.length - 1;
+                    } else if ((typeNode0 == TYPE_LIST) && (typeNode1 == TYPE_LIST)) {
+                        if (node0val.length != node1val.length) {
+                            throw {errorCode: EXIT_DIM_ERROR, offset: node.offsetDbg};
+                        }
+                        n = node0val.length - 1;
+                    }
+                    debug("n = "+n);
+                    for (var i=0; i<n; i++) {
+                        var points = [];
+                        for (var j = this.tmin; j <= this.tmax; j+= this.tptch) {
+                            // Mettre j dans T (20e lettre de l'alphabet) !
+                            letvar("A_20", j);
+                            var val0 = getNth(execute(node.children[0]), i);
+                            var val1 = getNth(execute(node.children[1]), i);
+                            points.push([val0, val1]);
+                            debug("x = "+val0+" / y = "+val1);
+                            if (points.length >= 2) {
+                                fline(points[points.length-2][0], points[points.length-2][1], points[points.length-1][0], points[points.length-1][1]);
+                            }
+                        }
+                    }
+                    currentDrawColorIdx = prevDrawColor;
+                    currentSketchMode = prevSketchMode;
+                    break;
             }
             break;
         case NODE_VAR:
@@ -1615,6 +1663,14 @@ function giveType(value) {
         return TYPE_LIST;
     }
     return TYPE_NUMERIC;
+}
+
+function getNth(value, idx) {
+    var t = giveType(value);
+    if (t == TYPE_LIST) {
+        return value[idx+1];
+    }
+    return value;
 }
 
 function formatListValue(value, start, stop) {

@@ -128,6 +128,7 @@ button {
           <button onclick="displayStatusMsg('Increasing speed. Timeout is now '+adjustTimeout(-1)+' ms')">Speed <i class="fa fa-plus" aria-hidden="true"></i></button>
           <button onclick="displayStatusMsg('Decreasing speed. Timeout is now '+adjustTimeout(1)+' ms')">Speed <i class="fa fa-minus" aria-hidden="true"></i></button>
           <button id="feedback"><i class="fa fa-envelope-o"></i> Send bug report</button>
+          <button id="share"><i class="fa fa-share-alt" aria-hidden="true"></i> Share</button>
         </span>
         <div id="statusbar" style="display: none"><span id="status" style="color: red"></span></div>
          <div style="text-align:center; margin: 0px;"><div id="srcCode" style="text-align: left; display: inline-block; width: 75%"><!-- CodeMirror editor --></div></div>
@@ -1277,6 +1278,19 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
           }
           logFirstAccess();
       }
+
+$("#share").on("click" , function(event){
+    event.preventDefault();
+    var srcCode = myCodeMirror.getValue();
+    var compressed = LZString.compressToEncodedURIComponent(srcCode);
+    var url = window.location.protocol+'//'+window.location.hostname+window.location.pathname;
+    displayStatusMsg('<input id="urlToCopy" value="'+url+'?src='+compressed+'" size="80" /> <button id="copy"><i class="fa fa-files-o" aria-hidden="true"></i> Copy Url</button>');
+    document.querySelector("#copy").addEventListener("click", function(event) {
+        var copyText = document.querySelector("#urlToCopy");
+        copyText.select();
+        document.execCommand("copy");
+    });
+});
 
 // Replace non-visible caracters by visible ones.
 $("#srcCode").bind('paste drop', function(e) {

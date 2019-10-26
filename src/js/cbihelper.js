@@ -1175,15 +1175,15 @@ function recalculateXmax() {
 }
 
 function range(xmin, xmax, xscl, ymin, ymax, yscl, tmin, tmax, tptch) {
-    if (xmin) { this.xmin = xmin; }
-    if (xmax) { this.xmax = xmax; }
-    if (xscl) { this.xscl = xscl; }
-    if (ymin) { this.ymin = ymin; }
-    if (ymax) { this.ymax = ymax; }
-    if (yscl) { this.yscl = yscl; }
-    if (tmin) { this.tmin = tmin; } // useless for now
-    if (tmax) { this.tmax = tmax; } // useless for now
-    if (tptch) { this.tptch = tptch; } // useless for now
+    if (xmin !== undefined) { this.xmin = xmin; }
+    if (xmax !== undefined) { this.xmax = xmax; }
+    if (xscl !== undefined) { this.xscl = xscl; }
+    if (ymin !== undefined) { this.ymin = ymin; }
+    if (ymax !== undefined) { this.ymax = ymax; }
+    if (yscl !== undefined) { this.yscl = yscl; }
+    if (tmin !== undefined) { this.tmin = tmin; } // useless for now
+    if (tmax !== undefined) { this.tmax = tmax; } // useless for now
+    if (tptch !== undefined) { this.tptch = tptch; } // useless for now
     cls();
 }
 

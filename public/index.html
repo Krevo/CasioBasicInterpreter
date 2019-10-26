@@ -2,8 +2,9 @@
   <meta charset="UTF-8">
   <head>
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/codemirror.js"></script>
-    <script src="mode/javascript/javascript.js"></script>
+    <script type="text/javascript" src="js/codemirror.js"></script>
+    <script type="text/javascript" src="js/lz-string.js"></script>
+    <script type="text/javascript" src="mode/javascript/javascript.js"></script>
     <script type="text/javascript" src="js/cbi.js"></script>
     <link rel="stylesheet" href="css/codemirror.css">
     <link href="css/feedback.css" type="text/css" rel="stylesheet" />
@@ -1204,6 +1205,12 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
         executeCode();
       }
 
+      function loadProgFromSrc(srcCode) {
+        stopCodeExecution();
+        myCodeMirror.setValue(srcCode);
+        executeCode();
+      }
+
       function displayStatusMsg(statusMsg) {
         document.getElementById("error").value = statusMsg;
         $("#statusbar").show();
@@ -1259,7 +1266,15 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
               lineWrapping: true,
               mode: "javascript",
           });
-          loadProg(0);
+          var url_string = window.location.href
+          var url = new URL(url_string);
+          var compressedSrcCode = url.searchParams.get("src");
+          if (compressedSrcCode) {
+            var decompressedSrcCode = LZString.decompressFromEncodedURIComponent(compressedSrcCode);
+            loadProgFromSrc(decompressedSrcCode);
+          } else {
+            loadProg(0);
+          }
           logFirstAccess();
       }
 

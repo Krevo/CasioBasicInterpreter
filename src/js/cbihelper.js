@@ -682,6 +682,7 @@ function clrtext() {
 
 function drawAxes() {
     if (!showAxes) return;
+    if (this.xscl == 0 || this.yscl == 0) return;
     var prevDrawColor = currentDrawColorIdx;
     var prevSketchMode = currentSketchMode;
     currentDrawColorIdx = getColorIndexFromColorName("Black");
@@ -719,7 +720,7 @@ function drawAxes() {
 
 function drawGrid() {
     if (showGrid == GRID_OFF) return;
-    debug("drawGrid is not implemented");
+    if (this.xscl == 0 || this.yscl == 0) return;
     var prevDrawColor = currentDrawColorIdx;
     var prevSketchMode = currentSketchMode;
     currentSketchMode = "SketchNormal";

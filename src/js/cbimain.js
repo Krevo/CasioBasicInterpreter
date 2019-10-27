@@ -1347,9 +1347,8 @@ function execute(node) {
                     debug("n = "+n);
                     for (var i=0; i<n; i++) {
                         var points = [];
-                        for (var j = this.tmin; j <= this.tmax; j+= this.tptch) {
-                            // Mettre j dans T (20e lettre de l'alphabet) !
-                            letvar("A_20", j);
+                        for (var j = this.tmin; j < this.tmax + this.tptch; j+= this.tptch) {
+                            letvar("A_20", j); // j -> T
                             var val0 = getNth(execute(node.children[0]), i);
                             var val1 = getNth(execute(node.children[1]), i);
                             points.push([val0, val1]);

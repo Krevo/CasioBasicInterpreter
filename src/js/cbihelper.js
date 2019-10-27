@@ -872,6 +872,9 @@ var GRID_OFF = 0;
 var GRID_ON = 1;
 var GRID_LINE = 2;
 
+var G_CONNECT = 0;
+var G_PLOT = 1;
+
 var xmin = _XMIN_;
 var xmax = _XMAX_;
 var xscl = _XSCL_;
@@ -885,6 +888,7 @@ var tptch = _TPITCH_;
 var showAxes = false; // false by default but should be a configurable option
 var showLabel = false; // false by default but should be a configurable option
 var showGrid = GRID_OFF; // 'Off' by default but should be a configurable option
+var graphMode = G_CONNECT; // 'G-Connect' by default but should be a configurable option
 
 function setShowAxes(show) {
     showAxes = show;
@@ -899,6 +903,11 @@ function setShowLabel(show) {
 function setShowGrid(show) {
     showGrid = show;
     debug("showGrid = "+showGrid);
+}
+
+function setGraphMode(gmode) {
+    graphMode = gmode;
+    debug("graphMode = "+gmode);
 }
 
 function getPixelColor(x, y) {

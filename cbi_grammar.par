@@ -8,6 +8,8 @@
 
   "AXESON"
   "AXESOFF"
+  "COORDOFF"
+  "COORDON"
   "GRIDON"
   "GRIDOFF"
   "GRIDLINE"
@@ -128,6 +130,8 @@
   "MENU"
   "TRN"
   "GRAPH\(X,Y\)=\("
+  "G-CONNECT"
+  "G-PLOT"
   ','
   '~'
   '{'
@@ -294,8 +298,12 @@ Stmt:
 		| GRIDON [* %% = createNode( NODE_OP, OP_SHOWGRID, GRID_ON ); *]
 		| GRIDOFF [* %% = createNode( NODE_OP, OP_SHOWGRID, GRID_OFF ); *]
 		| GRIDLINE [* %% = createNode( NODE_OP, OP_SHOWGRID, GRID_LINE ); *]
+		| G-CONNECT [* %% = createNode( NODE_OP, OP_SET_GRAPHMODE, G_CONNECT ); *]
+		| G-PLOT [* %% = createNode( NODE_OP, OP_SET_GRAPHMODE, G_PLOT ); *]
 		| FUNCON [* %% = createNode( NODE_OP, OP_NONE ); *]
 		| FUNCOFF [* %% = createNode( NODE_OP, OP_NONE ); *]
+		| COORDON [* %% = createNode( NODE_OP, OP_NONE ); *]
+		| COORDOFF [* %% = createNode( NODE_OP, OP_NONE ); *]
 		| S-L-NORMAL [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchNormal" ); *]
 		| S-L-DOT [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchDot" ); *]
 		| S-L-BROKEN [* %% = createNode( NODE_OP, OP_SKETCHMODE, "SketchBroken" ); *]

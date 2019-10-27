@@ -144,6 +144,7 @@ var OP_ABS = 128;
 var OP_ASSIGN_GRAPHVAR = 129;
 var OP_SHOWGRID = 130;
 var OP_GRAPHXY = 131;
+var OP_SET_GRAPHMODE = 132;
 
 var programs = new Array();
 var currentPrgName = "main";
@@ -798,6 +799,9 @@ function execute(node) {
                 case OP_SHOWLABEL:
                     setShowLabel(node.children[0]);
                     break;
+                case OP_SET_GRAPHMODE:
+                    setGraphMode(node.children[0]);
+                    break;
                 case OP_SHOWGRID:
                     setShowGrid(node.children[0]);
                     break;
@@ -1350,7 +1354,10 @@ function execute(node) {
                             var val1 = getNth(execute(node.children[1]), i);
                             points.push([val0, val1]);
                             debug("x = "+val0+" / y = "+val1);
-                            if (points.length >= 2) {
+                            if (graphMode == G_PLOT) {
+                                plotOn(points[points.length-1][0], points[points.length-1][1]);
+                            }
+                            if (graphMode == G_CONNECT && points.length >= 2) {
                                 fline(points[points.length-2][0], points[points.length-2][1], points[points.length-1][0], points[points.length-1][1]);
                             }
                         }

@@ -273,7 +273,7 @@ function getvar(vname) {
 // Sur Casio C[1] ~ A[3] donc cette fonction pour la lettre C renvoi 2,
 // à additionner à l'index demandé car : C[X] == A[X+2]
 function letterToIndexSupp(letter) {
-    diff = letter.charCodeAt(0) - "A".charCodeAt(0);
+    var diff = letter.charCodeAt(0) - "A".charCodeAt(0);
     return diff;
 }
 
@@ -324,6 +324,7 @@ function execute(node) {
                     }
                     break;
                 case OP_INCR:
+                    var varTabIndex;
                     if (node.children[0].type == NODE_VAR) {
                         varTabIndex = letterToIndexSupp(node.children[0].value) + 1;
                     } else {
@@ -345,6 +346,7 @@ function execute(node) {
                     ret = Math.floor(Math.random() * Math.floor(max - min + 1)) + min;
                     break;
                 case OP_DECR:
+                    var varTabIndex;
                     if (node.children[0].type == NODE_VAR) {
                         varTabIndex = letterToIndexSupp(node.children[0].value) + 1;
                     } else {
@@ -361,6 +363,8 @@ function execute(node) {
                     setGraphVar(execute(node.children[0]), node.children[1].value);
                     break;
                 case OP_ASSIGN:
+                    var varTabIndexBegin;
+                    var varTabIndexEnd;
                     if (node.children[1].type == NODE_VAR) {
                         varTabIndexBegin = letterToIndexSupp(node.children[1].value) + 1;
                     } else {
@@ -389,6 +393,7 @@ function execute(node) {
                     }
                     break;
                 case OP_READVAR: // Read a Casio array var like A[Expr]
+                    var varTabIndex;
                     varTabIndex = letterToIndexSupp(node.children[0]) + execute(node.children[1]);
                     ret = Number(getvar("A_" + varTabIndex));
                     break;
@@ -587,6 +592,7 @@ function execute(node) {
                     currentDrawColorIdx = prevDrawColor;
                     break;
                 case OP_INPUT:
+                    var varTabIndex;
                     paused = true; // pause program execution
                     print(node.children[0] + "?");
                     if (node.children[1].type == NODE_VAR) {
@@ -1252,6 +1258,7 @@ function execute(node) {
                     var start = execute(node.children[2]);
                     var stop = execute(node.children[3]);
                     var step = execute(node.children[4]);
+                    var varTabIndex;
                     if (node.children[1].type == NODE_VAR) {
                         varTabIndex = letterToIndexSupp(node.children[1].value) + 1;
                     } else {
@@ -1367,7 +1374,7 @@ function execute(node) {
             }
             break;
         case NODE_VAR:
-            varTabIndex = letterToIndexSupp(node.value) + 1; // C est en fait C[1] donc, C[1] ~ A[2+1]
+            var varTabIndex = letterToIndexSupp(node.value) + 1; // C est en fait C[1] donc, C[1] ~ A[2+1]
             ret = Number(getvar("A_" + varTabIndex));
             break;
         case NODE_GRPHVAR:

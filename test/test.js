@@ -308,6 +308,19 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 1875
     },
     {
+      name: 'List: test Seq 2',
+      srcCode: `
+         # Supprimer un nombre d'une liste tout en decalant ce qui suit
+         # Supprimons le 6e nombre de la liste
+         {1,2,3,4,5,6,7,8,9}→List 1
+         6→R
+         Seq(List 1[I+(I≥R)],I,1,Dim List 1-1,1)→List 2
+         # Verif. que List 2 = {1,2,3,4,5,7,8,9}
+         List 2[1]=1 And List 2[2]=2 And List 2[3]=3 And List 2[4]=4 And List 2[5]=5 And List 2[6]=7 And List 2[7]=8 And List 2[8]=9
+       `,
+      answer: 1
+    },
+    {
       name: 'List: init lists',
       srcCode: `
        {1,2,3,4}->List 1

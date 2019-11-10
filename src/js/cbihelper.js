@@ -1,6 +1,8 @@
 var TEXT_SCREEN_WIDTH = 21;
 var TEXT_SCREEN_HEIGHT = 7;
 
+var currentTextLineIdx = 0;
+
 var MONO_BLUE = [0x39, 0x43, 0xCE];
 var MONO_GREEN = [0xBD, 0xDE, 0xCE];
 
@@ -57,6 +59,8 @@ var plotDefs;
 
 var currentPalette = POLY_COLOR;
 var currentDrawColorIdx;
+var currentTextColorIdx;
+
 var currentSketchMode;
 var angleMode;
 
@@ -196,14 +200,17 @@ function chooseColorScheme(colorSchemeName) {
   if (colorSchemeName == "black&white") {
     currentPalette = MONO_NB_COLOR;
     currentDrawColorIdx = 1;
+    currentTextColorIdx = 1;
     fonts = MONO_NB_COLOR_fonts;
   } else if (colorSchemeName == "blue&green") {
     currentPalette = MONO_BLUEGREEN_COLOR;
     currentDrawColorIdx = 1;
+    currentTextColorIdx = 1;
     fonts = MONO_BLUEGREEN_COLOR_fonts;
   } else if (colorSchemeName == "multicolor") {
     currentPalette = POLY_COLOR;
     currentDrawColorIdx = getColorIndexFromColorName("Blue");
+    currentTextColorIdx = getColorIndexFromColorName("Black");
     fonts = POLY_COLOR_fonts;
   }
 
@@ -406,11 +413,10 @@ function handleOnKeyDown(e) {
 
     if (editMode) {
         if (e.key == '-' || e.key == '.' || (e.key >= '0' && e.key <= '9')) {
-            var currentLineIndex = textScreenLines.length - 1;
-            if (currentLineBuffer !== null && currentLineBuffer.length < 20) {
+            if (currentLineBuffer !== null && currentLineBuffer.length < (TEXT_SCREEN_WIDTH - 1)) {
                 currentLineBuffer += e.key;
-                textScreenLines[currentLineIndex] = currentLineBuffer;
-                drawTextLine(currentLineIndex + 1, currentLineBuffer);
+                textScreenLines[currentTextLineIdx] = currentLineBuffer;
+                drawTextLine(currentTextLineIdx + 1, currentLineBuffer);
                 cursorCol += 1;
             }
         }
@@ -420,7 +426,7 @@ function handleOnKeyDown(e) {
         currentLineBuffer = currentLineBuffer.substring(0, currentLineBuffer.length - 1);
         cursorMode = " ";
         clignoteCurseur(); // Clear old position
-        drawTextLine(textScreenLines.length, currentLineBuffer + " ");
+        drawTextLine(currentTextLineIdx + 1, currentLineBuffer + " ");
         cursorCol--;
         cursorMode = "_";
         clignoteCurseur(); // Cursor at new pos
@@ -540,6 +546,7 @@ function preset() {
     ListAns = [];
     MatAns = [];
     currentDrawColorIdx = getColorIndexFromColorName("Blue");
+    currentTextColorIdx = getColorIndexFromColorName("Black");
     currentSketchMode = "SketchNormal";
     angleMode = DEG;
     cls();
@@ -592,26 +599,21 @@ function editModeOn() {
     debug("editModeOn");
     editMode = true;
     currentLineBuffer = "";
-    print("");
-    currentLineIndex = textScreenLines.length - 1;
-    cursorLine = textScreenLines.length;
+    drawTextLine(currentTextLineIdx + 1, "".padStart(TEXT_SCREEN_WIDTH, " "));
+    cursorLine = currentTextLineIdx + 1;
     cursorCol = 1;
     idTimerCursor = setInterval('clignoteCurseur()', 500);
 }
 
 function editModeOff() {
-    editMode = false;
-    if (currentLineBuffer == "") { // If line is empty when exit edit mode, remove line from textscreenline
-        textScreenLines.pop();
-    } else {
-
-    }
     debug("editModeOff");
+    editMode = false;
     letvar(stockVarName, parseFloat(currentLineBuffer));
-    currentLineBuffer = null;
     clearInterval(idTimerCursor);
     cursorMode = " ";
     clignoteCurseur(); // Clear old position
+    print(currentLineBuffer);
+    currentLineBuffer = null;
 }
 
 function clignoteCurseurGraphOn() {
@@ -769,37 +771,64 @@ function redrawAllTextScreen() {
     }
 }
 
+function txtScrollVertical() {
+    textScreenLines.shift();
+    textScreenLines.push("".padStart(TEXT_SCREEN_WIDTH, " "));
+    txtColorScreenLines.shift();
+    txtColorScreenLines.push("".padStart(TEXT_SCREEN_WIDTH, "1"));
+}
+
+// Si c'est après le locate, ça rempli la ligne avec des blancs après le texte à imprimer.
+// A partir de 20 caracteres, ça créé une ligne supplémentaire.
 function print(str) {
+    var newLine = "";
     swapToTextScreen();
     str += " ";
-    while (str.length > TEXT_SCREEN_WIDTH) {
-        textScreenLines.push(str.substring(0, TEXT_SCREEN_WIDTH));
+
+    do {
+        textScreenLines[currentTextLineIdx] = str.padEnd(TEXT_SCREEN_WIDTH, " ");
+        txtColorScreenLines[currentTextLineIdx] = "".padStart(TEXT_SCREEN_WIDTH, "1");
         str = str.substring(TEXT_SCREEN_WIDTH);
-    }
-    textScreenLines.push(str);
-    while (textScreenLines.length > TEXT_SCREEN_HEIGHT) {
-        textScreenLines.shift();
-    }
+        currentTextLineIdx++;
+        if (currentTextLineIdx == TEXT_SCREEN_HEIGHT) {
+             txtScrollVertical();
+        }
+    } while (str.length > TEXT_SCREEN_WIDTH)
+
+    // Scroll ...
     redrawAllTextScreen();
 }
 
-function locate(col, ligne, str) {
-    if (col < 1 || col > 21) return; // Should generate a runtimeError, do nothing for now !
-    if (ligne < 1 || ligne > 7) return; // Should generate a runtimeError, do nothing for now !
-    while (textScreenLines.length < ligne) {
-        textScreenLines.push("                       ");
+// 1. Locate doesn't change the 'currentLine'.
+// 2. Locate set the text at the exact wanted position
+// 3. If lines are scrolled vertically, text that was printed with locate will scroll too !
+
+function locate(col, ligne, str, colorIdx) {
+    var newLine = "";
+    if (col < 1 || col > TEXT_SCREEN_WIDTH
+      || ligne < 1 || ligne > TEXT_SCREEN_HEIGHT) {
+      throw {errorCode: EXIT_DOMAIN_ERROR, offset: node.offsetDbg};
     }
-    currentLine = textScreenLines[ligne - 1];
-    if (currentLine.length < col - 1) {
-        currentLine = currentLine + "                       ".substring(0, (col - 1) - currentLine.length);
-    }
-    newLine = currentLine.substring(0, col - 1) + str + currentLine.substring(col - 1 + str.length);
-    textScreenLines[ligne - 1] = newLine;
+
+    newLine = textScreenLines[ligne - 1].substring(0, col - 1) + str + textScreenLines[ligne - 1].substring(col - 1 + str.length);
+    textScreenLines[ligne - 1] = newLine.substring(0, TEXT_SCREEN_WIDTH);
+
+    newLine = txtColorScreenLines[ligne - 1].substring(0, col - 1) + "".padStart(str.length, colorIdx) + txtColorScreenLines[ligne - 1].substring(col - 1 + str.length);
+    txtColorScreenLines[ligne - 1] = newLine.substring(0, TEXT_SCREEN_WIDTH);
+
     redrawAllTextScreen();
 }
 
 function cleartext() {
-    textScreenLines = new Array();
+    currentTextLineIdx = 0;
+    textScreenLines = [];
+    for (var i=0; i< TEXT_SCREEN_HEIGHT; i++) {
+        textScreenLines.push("".padStart(TEXT_SCREEN_WIDTH, " "));
+    }
+    txtColorScreenLines = [];
+    for (var i=0; i< TEXT_SCREEN_HEIGHT; i++) {
+        txtColorScreenLines.push("".padStart(TEXT_SCREEN_WIDTH, "1"));
+    }
     redrawAllTextScreen();
 }
 
@@ -809,10 +838,12 @@ function drawTextLine(lineNb, str, deltaCol) {
     var charH = txtCharH; //8;
     var y = (lineNb - 1) * charH + 1;
     var x = 0;
-    str = str.substring(0, 21); // 21 first char
+    var colorIdx = 1;
+    str = str.substring(0, TEXT_SCREEN_WIDTH);
     for (var i = 0; i < str.length; i++) {
         x = (i + deltaCol) * charW + 1;
-        ctx.drawImage(fonts[currentFontDeltaIndx][0], 1 + str.charCodeAt(i) * charW, 0, charW, charH, x, y, charW, charH);
+        colorIdx = txtColorScreenLines[lineNb -1][i];
+        ctx.drawImage(fonts[currentFontDeltaIndx][colorIdx-1], 1 + str.charCodeAt(i) * charW, 0, charW, charH, x, y, charW, charH);
     }
 }
 

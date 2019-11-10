@@ -173,6 +173,7 @@ var EXIT_SYNTAX_ERROR = 15;
 var EXIT_ARG_ERROR = 16;
 var EXIT_NO_DATA = 17;
 var EXIT_DIM_ERROR = 18;
+var EXIT_DOMAIN_ERROR = 19;
 
 function debug(msg) {
     if (DEBUG) {
@@ -571,12 +572,18 @@ function execute(node) {
                     print(node.children[0]);
                     break;
                 case OP_LOCATE: // Efface l'écran texte puis affiche le texte demandé à la position demandée
+                    //var prevTextColor = currentTextColorIdx;
+                    var colorIndex = 1;
+                    if (node.children[3]) {
+                        colorIndex = getColorIndexFromColorName(node.children[3]);
+                    }
                     if (typeof node.children[2].type != 'undefined') {
                         str = "" + execute(node.children[2]); // 3rd arg is an expression to evaluate
                     } else {
                         str = node.children[2]; // 3rd arg is a string
                     }
-                    locate(execute(node.children[0]), execute(node.children[1]), str);
+                    locate(execute(node.children[0]), execute(node.children[1]), str, colorIndex);
+                    //currentTextColorIdx = prevTextColor;
                     break;
                 case OP_TEXT: // Efface l'écran texte puis affiche le texte demandé à la position demandée
                     var prevDrawColor = currentDrawColorIdx;
@@ -1439,9 +1446,6 @@ function jsccRun(str, finishCallBack) {
         cbiInit();
     }
 
-    cls();
-    cleartext();
-
     programs = new Array();
     programsSrc = new Array();
 
@@ -1472,6 +1476,9 @@ function jsccRun(str, finishCallBack) {
     reset();
     preset();
 
+    cls();
+    cleartext();
+
     var nbErrors = 0;
     var where = "";
     var lineNum = undefined;
@@ -1498,8 +1505,6 @@ function jsccRun(str, finishCallBack) {
 
     // ... puis lancer le programme "main"
     currentPrgName = "main";
-
-    textScreenLines = new Array();
 
     nextLine = 0;
 

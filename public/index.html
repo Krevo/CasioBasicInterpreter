@@ -1176,7 +1176,6 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
     <script type="text/javascript">
 
       var myCodeMirror;
-      var previousLineNumber;
 
       function loadFromUrl() {
         var urlToLoad = document.getElementById("urlLoader").value;
@@ -1221,8 +1220,15 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
         document.getElementById("status").innerHTML = statusMsg;
       }
 
+      function removeErrorLines() {
+          var lineCount = myCodeMirror.getDoc().lineCount();
+          for (var i = 0; i< lineCount; i++) {
+              myCodeMirror.getDoc().removeLineClass(i, "background", "error");
+          }
+      }
+
       function executeCode() {
-        if (previousLineNumber) { myCodeMirror.getDoc().removeLineClass(previousLineNumber - 1, "background", "error"); } // Remove previous error (if any)
+        removeErrorLines();
         var srcCode = myCodeMirror.getValue();
         $("#code").val(srcCode);
         $("#codesize").text(srcCode.length);
@@ -1238,7 +1244,6 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
               if (errorCode > 0) {
                   displayStatusMsg(msg + (detail ? detail : ""));
                   if (lineNumber) {
-                    previousLineNumber = lineNumber;
                     myCodeMirror.getDoc().addLineClass(lineNumber - 1, "background", "error");
                     jumpToLine(lineNumber);
                   }

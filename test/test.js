@@ -807,7 +807,7 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 378
     },
     {
-      name: 'If/Then with break (A MODIFIER, parce qu on break pas un If',
+      name: 'If/Then with break (on break pas un If, donc ça va jusqu\'au bout)',
       srcCode: `
         1->A
         If 1: Then
@@ -817,7 +817,7 @@ QUnit.test("jsccRun - test", function( assert ) {
         IfEnd
         A
       `,
-      answer: 5
+      answer: 10
     },
     {
       name: 'If/Then with subprog',
@@ -827,12 +827,12 @@ QUnit.test("jsccRun - test", function( assert ) {
         1->I
         Prog "SUB"
         If 1 :Then
-        	2 -> A
-        	Prog "SUB"
-        	3 -> A
-        	Prog "SUB"
-        	4 -> A
-        	Prog "SUB"
+          2 -> A
+          Prog "SUB"
+          3 -> A
+          Prog "SUB"
+          4 -> A
+          Prog "SUB"
         IfEnd
         List 1[1]=1 And List 1[2]=2 And List 1[3]=3 And List 1[4]=4
 
@@ -841,6 +841,31 @@ QUnit.test("jsccRun - test", function( assert ) {
         A->List 1[I]
         I+1->I
       `,
+      answer: 1
+    },
+    {
+      name: 'If/Then/Else with subprog',
+      srcCode: `
+        4->Dim List 1
+        1->A
+        1->I
+        Prog "SUB"
+        If 1 :Then If 0: Then 2 -> A
+          Prog "SUB"
+          3 -> A
+          Prog "SUB"
+          4 -> A
+          Prog "SUB"
+        Else
+          5->A
+          Prog "SUB"
+        IfEnd
+        List 1[1]=1 And List 1[2]=5 And List 1[3]=0 And List 1[4]=0
+
+        @@ Prog "SUB" ( )
+
+        A->List 1[I]
+        I+1->I      `,
       answer: 1
     }
   ];

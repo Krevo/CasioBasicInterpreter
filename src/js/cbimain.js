@@ -466,33 +466,27 @@ function execute(node) {
                     break;
                 case OP_IF:
                     var objIf = programs[currentPrgName]['labels'].get("IF_" + node.children[0]); // recup d'un objet dans lequel on stockera les num des noued a exec pour aller au then, au else ou apres le if
-					loopStack.push(objIf);
+                    loopStack.push(objIf);
                     if (execute(node.children[1])) {
-						objIf.thenBranche = true;
-						if (node.children[2]) { // Then followed by a statement (to execute)
-							ret = execute(node.children[2]);
-						}
+                        objIf.thenBranche = true;
                         // and then, do nothing more because the next line to execute is the next line !
                     } else {
-						objIf.thenBranche = false;
-						// Jump to the 'else' part if there is one
-						debug(objIf);
-						if (objIf.elseNode) {
+                        objIf.thenBranche = false;
+                        // Jump to the 'else' part if there is one
+                        debug(objIf);
+                        if (objIf.elseNode) {
                             nextLine = objIf.elseNode;
-						} else {
-							loopStack.pop();
-							nextLine = objIf.firstOuterNode;
-						}
-					}
+                        } else {
+                            loopStack.pop();
+                            nextLine = objIf.firstOuterNode;
+                        }
+                    }
                     break;
                 case OP_ELSE: // If a 'else' is read, that means we have executed the 'Then' part of the If/Then/Else/IfEnd
                     var objIf = loopStack.pop();
-					if (!objIf.thenBranche && node.children[0]) {
-						ret = execute(node.children[0]);
-					}
-					if (objIf.thenBranche) {
-						nextLine = objIf.firstOuterNode;
-					}
+                    if (objIf.thenBranche) {
+                        nextLine = objIf.firstOuterNode;
+                    }
                     break;
                 case OP_IFEND:
                     loopStack.pop();
@@ -537,9 +531,9 @@ function execute(node) {
                     break;
                 case OP_BREAK:
                     var currentLoopObj;
-					do {
-						currentLoopObj = loopStack.pop();
-					} while (currentLoopObj && currentLoopObj.type == "IF") // Unstack all "IF"
+                    do {
+                        currentLoopObj = loopStack.pop();
+                    } while (currentLoopObj && currentLoopObj.type == "IF") // Unstack all "IF"
                     if (currentLoopObj && currentLoopObj.hasOwnProperty('firstOuterNode')) {
                         nextLine = currentLoopObj.firstOuterNode;
                     } else {
@@ -590,12 +584,6 @@ function execute(node) {
                         }
                     }
                     break;
-/*
-                case OP_WRITE:
-                    ret = execute(node.children[0]);
-                    print("" + ret);
-                    break;
-*/
                 case OP_READ:
                     letvar(node.children[0].toString(), prompt("Please enter a value:", "0"));
                     break;
@@ -1609,6 +1597,47 @@ function addPropertyNodeToLoop(prgLabels, nodeNum, labelType, property) {
     }
 }
 
+function addLabelsForIfElse(nodes, labels) {
+        for (i = 0; i < nodes.length; i++) {
+            currentNode = nodes[i];
+            if (currentNode.type == NODE_OP) {
+                if (currentNode.value == OP_IF) {
+                    labels.set("IF_"+i, {type: "IF"});
+                    currentNode.children[0] = i; // used to retrieve the IF object by label "IF_i" when executing node OP_IF
+                } else if (currentNode.value == OP_ELSE) {
+                    addElseNodeToLoop(labels, i + 1, 'IF_');
+                } else if (currentNode.value == OP_IFEND) {
+                    addAfterNodeToLoop(labels, i + 1, 'IF_');
+                }
+            }
+        }
+}
+
+function expandIfNode(nodes) {
+    var nbOfExpandMade;
+    do {
+        nbOfExpandMade = 0;
+        var expandedNodes = [];
+        for (i = 0; i < nodes.length; i++) {
+            currentNode = nodes[i];
+            if (currentNode !== undefined) {
+                if (currentNode.type == NODE_OP
+                    && ((currentNode.value == OP_IF && currentNode.children.length==3)
+                        || (currentNode.value == OP_ELSE && currentNode.children.length==1))) {
+                    var nodeToAdd = currentNode.children.pop();
+                    nbOfExpandMade++;
+                    expandedNodes.push(currentNode);
+                    expandedNodes.push(nodeToAdd);
+                } else {
+                    expandedNodes.push(currentNode);
+                }
+            }
+        }
+        nodes = expandedNodes;
+    } while (nbOfExpandMade);
+    return expandedNodes;
+}
+
 function parse(programsSrc, progName) {
 
     var linesOfSourceCode = programsSrc[progName].map(cbiReplace);
@@ -1633,8 +1662,8 @@ function parse(programsSrc, progName) {
             break;
         }
     }
-    debug(nodes);
-    debug(labels);
+    nodes = expandIfNode(nodes);
+    addLabelsForIfElse(nodes, labels);
     debug("after parse");
 
     return {

@@ -132,7 +132,7 @@ button {
         </span>
         <div id="statusbar" style="display: none"><span id="status" style="color: red"></span></div>
          <div style="text-align:center; margin: 0px;"><div id="srcCode" style="text-align: left; display: inline-block; width: 75%"><!-- CodeMirror editor --></div></div>
-        
+
         <textarea style="display: none" id="srcCode0">
 ""
 ""
@@ -173,7 +173,7 @@ F-Line A,1,1,B
 Isz B:Dsz A:Goto 4
 Goto 0
 
-@@ Prog "RNDCOLOR" ( ) 
+@@ Prog "RNDCOLOR" ( )
 
 1+Int (7Ran# ) -> F
 If F = 1
@@ -205,9 +205,9 @@ Lbl 1
 Prog "RNDCOLOR"
 Plot Ran#*127, Ran#*63
 Isz A
-Goto 1        
-        
-@@ Prog "RNDCOLOR" ( ) 
+Goto 1
+
+@@ Prog "RNDCOLOR" ( )
 
 1+Int (7Ran# ) -> F
 If F = 1
@@ -263,7 +263,7 @@ Int(P/(T*T)*100)/100
 '
 ' v1.0 by Krevo_
 '
-ViewWindow 1,127,0,1,63,0 
+ViewWindow 1,127,0,1,63,0
 F-Line 76,8,76,55
 7->E
 Lbl 4
@@ -317,18 +317,18 @@ N<=J=>Goto 5
 #End of part
        </textarea>
         <textarea style="display: none" id="srcCode8">
-# 
-# CITY 
+#
+# CITY
 # 1 ou 2 Joueurs
-# 
+#
 # VOUS ETES LE PERSONNAGE DE GAUCHE SUR L' ECRAN GRAPHIQUE. VOTRE BUT : TUER
-# AVEC UN TIR DE MORTIER BIEN PLACE VOTRE ENNEMI DE TOUJOURS 
+# AVEC UN TIR DE MORTIER BIEN PLACE VOTRE ENNEMI DE TOUJOURS
 # POUR CELA, VOUS DEVEZ INDIQUER L'ANGLE (EN DEGRE), PUIS LA FORCE DE TIR (ENTRE 50 ET 100 ENVIRON).
 # --------------------
 
 Prog "CITY"
 
-@@ Prog "CITY" ( ) 
+@@ Prog "CITY" ( )
 
 ViewWindow 4,645,0,400,4,0
 Deg
@@ -385,7 +385,7 @@ E=1=>240-40*Z◢
 E=2=>P◢
 ""
 
-@@ Prog "CITY2" ( ) 
+@@ Prog "CITY2" ( )
 
 16->D
 Plot T-D,List 1[S]
@@ -411,7 +411,7 @@ Line
 Plot T,List 1[S]-45
 Line
 
-@@ Prog "CITY3" ( ) 
+@@ Prog "CITY3" ( )
 
 Cls
 0->D
@@ -584,11 +584,11 @@ ViewWindow 1,127,0,1,63,0
 Lbl 1
 Prog "RNDCOLOR"
 Prog "RNDTHICK"
-F-Line 127Ran# ,63Ran# ,127Ran# ,63Ran# 
+F-Line 127Ran# ,63Ran# ,127Ran# ,63Ran#
 Isz A
 Goto 1
 
-@@ Prog "RNDCOLOR" ( ) 
+@@ Prog "RNDCOLOR" ( )
 
 1+Int (7Ran# ) -> F
 If F = 1
@@ -613,7 +613,7 @@ IfEnd
 IfEnd
 IfEnd
 
-@@ Prog "RNDTHICK" ( ) 
+@@ Prog "RNDTHICK" ( )
 
 1+Int (5Ran# ) -> F
 If F = 1
@@ -910,7 +910,7 @@ Next
 
 Prog "TENTANIM"
 
-@@ Prog "TENTAC1" ( ) 
+@@ Prog "TENTAC1" ( )
 
 #Program name: TENTAC1
 #Password: <no password>
@@ -948,7 +948,7 @@ For 0 -> r To 10
 	List 4[θ] + G -> List 4[θ
 Next
 
-@@ Prog "TENTANIM" ( ) 
+@@ Prog "TENTANIM" ( )
 
 #Program name: TENTANIM
 #Password: <no password>
@@ -964,7 +964,7 @@ Do
 LpWhile 1
         </textarea>
         <textarea style="display: none" id="srcCode22">
-' Teste MOD, Dim List Ans et Augment( 
+' Teste MOD, Dim List Ans et Augment(
 Augment({1,2,3,4,5},{6,7,8,9,10,11,12
 For 2->C To 7
   ClrText
@@ -1061,7 +1061,7 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
         </textarea>
         <br>
         <div style="display: none">
-        Load raw content from URL : <input type="text" size="60" id="urlLoader">        
+        Load raw content from URL : <input type="text" size="60" id="urlLoader">
         <button onclick="loadFromUrl()">Load</button>
         <br>
         </div>
@@ -1117,8 +1117,8 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
       <input type="text" name="name"><br><br>
       <label for="email">Email (if you want an answer)</label><br>
       <input type="text" name="email"><br><br>
-      <label for="email">Message (english or french accepted)</label><br>
-      <textarea name="feedback"></textarea>
+      <label for="feedback">Message (english or french accepted)</label><br>
+      <textarea id="feedbackArea" name="feedback"></textarea>
       <button id='submit'>Send bug report</button>
       </form>
     </section>
@@ -1129,16 +1129,16 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
 (function($){
   var words = ["Boom!" , "Whammy!", "Booya!" , "Holler!", "Broskee!" , "All Good!" , "Right on!"];
   var feedback = $(".feedback-box");
-  
+
   //Feedback Toggle
 	$("#feedback").on("click" , function(){
 		feedback.addClass("show");
 	});
-  
+
   //Close Trigger
 	$(".close").on("click" , function(){
     feedback.removeClass("show");
-    setTimeout(function(){ 
+    setTimeout(function(){
       feedback.removeClass("show-confirm").find("textarea").val('');
       console.log("reset")
     }, 1000);
@@ -1160,11 +1160,11 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
       feedback.addClass("show-confirm");
       var randomWord = words[Math.floor(Math.random() * words.length)];
       $(".feedback-box h1 strong").text(randomWord);
-      
+
       setTimeout(function(){
          feedback.removeClass("show").find("textarea").val('').delay(1000);
       },2000);
-      
+
        setTimeout(function(){
          feedback.removeClass("show-confirm");
       },2200);
@@ -1179,7 +1179,7 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
 
       function loadFromUrl() {
         var urlToLoad = document.getElementById("urlLoader").value;
-        
+
         var request = new XMLHttpRequest();
         request.open('GET', urlToLoad, true);
 
@@ -1260,7 +1260,7 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
       }
 
       function logFirstAccess() {
-        $.get("log.php");  
+        $.get("log.php");
       };
 
       function jumpToLine(i) {

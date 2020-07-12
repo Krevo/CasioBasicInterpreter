@@ -1243,10 +1243,6 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
         if (idTimerMain == 0) {
           jsccRun(srcCode, function(errorCode, msg, programs, detail, lineNumber) {
               if (errorCode > 0) {
-                  if (detail) {
-                    var idx = detail.indexOf("\n");
-                    debugger;
-                  }
                   if (detail && detail.indexOf("\n") != -1) {
                     displayStatusMsg(msg, detail);
                   } else {

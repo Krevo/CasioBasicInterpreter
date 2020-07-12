@@ -1214,10 +1214,11 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
         executeCode();
       }
 
-      function displayStatusMsg(statusMsg) {
+      function displayStatusMsg(statusMsg, detailLong) {
         document.getElementById("error").value = statusMsg;
+        document.getElementById("feedbackArea").value = 'Full error was : \n' + detailLong;
         $("#statusbar").show();
-        document.getElementById("status").innerHTML = statusMsg;
+        document.getElementById("status").innerHTML = statusMsg + (detailLong ? (' <span title="' + detailLong + '"><i class="fa fa-question-circle" aria-hidden="true"></i></span>') : '');
       }
 
       function removeErrorLines() {
@@ -1242,7 +1243,15 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
         if (idTimerMain == 0) {
           jsccRun(srcCode, function(errorCode, msg, programs, detail, lineNumber) {
               if (errorCode > 0) {
-                  displayStatusMsg(msg + (detail ? detail : ""));
+                  if (detail) {
+                    var idx = detail.indexOf("\n");
+                    debugger;
+                  }
+                  if (detail && detail.indexOf("\n") != -1) {
+                    displayStatusMsg(msg, detail);
+                  } else {
+                    displayStatusMsg(msg + (detail ? detail : ""));
+                  }
                   if (lineNumber) {
                     myCodeMirror.getDoc().addLineClass(lineNumber - 1, "background", "error");
                     jumpToLine(lineNumber);

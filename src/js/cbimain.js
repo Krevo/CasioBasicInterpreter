@@ -1825,7 +1825,7 @@ function executeNextStmt() {
             if (lineNum != -1) { where = " line " + lineNum + " ( " + giveLineFromSourceCode(lineNum, programsSrc[currentPrgName]) + " )"; }
             finish(e.errorCode, errorMsg[e.errorCode], programs, where, lineNum);
         } else {
-            finish(EXIT_JS_ERROR, e.message, programs);
+            finish(EXIT_JS_ERROR, e.message, programs, ' ' + e.stack);
         }
     }
 }

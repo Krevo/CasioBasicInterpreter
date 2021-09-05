@@ -505,8 +505,10 @@ function getMaxNbOfMenuLine() {
 }
 
 function redrawMenu() {
-    var titleFirstLine = 1.6;
-    var optionsFirstLine = 2.8;
+    var titleFirstLine = 1;
+    var decFirstLine = .6;
+    var optionsFirstLine = 2;
+    var decOptionsFirstLine = .8;
     var maxNbOfLine = getMaxNbOfMenuLine();
     var widthInNbOfChar = (currentRes == "hi") ? 20 : 18;
     var nbLine = Math.min(maxNbOfLine, currentMenu.options.length);
@@ -520,19 +522,19 @@ function redrawMenu() {
     // Title
     var titre = currentMenu.titre.substring(0,widthInNbOfChar);
     var padLeft = Math.floor((widthInNbOfChar-titre.length)/2);
-    drawTextLine(titleFirstLine, titre.substring(0,widthInNbOfChar), 2 + padLeft);
+    drawTextLine(titleFirstLine, titre.substring(0,widthInNbOfChar), 2 + padLeft, decFirstLine);
 
     // Options
     for (i = 0; i < nbLine; i++) {
-       drawTextLine(optionsFirstLine + i, ("  "+currentMenu.options[i + currentMenu.currentFirstLine - 1]),2);
+       drawTextLine(optionsFirstLine + i, ("  "+currentMenu.options[i + currentMenu.currentFirstLine - 1]), 2, decOptionsFirstLine);
     }
 
     // Draw a ">" on current selected option
-    drawTextLine(optionsFirstLine + (currentMenu.currentSelection - currentMenu.currentFirstLine), ">", 2);
+    drawTextLine(optionsFirstLine + (currentMenu.currentSelection - currentMenu.currentFirstLine), ">", 2, decOptionsFirstLine);
 
     // Draw an arrow down or up
-    if (currentMenu.currentFirstLine > 1) { drawTextLine(optionsFirstLine + 0, "^", 2 + widthInNbOfChar-1); }
-    if (currentMenu.currentFirstLine + (getMaxNbOfMenuLine()-1) < currentMenu.options.length) { drawTextLine(optionsFirstLine + nbLine - 1, "v", 2 + widthInNbOfChar-1); }
+    if (currentMenu.currentFirstLine > 1) { drawTextLine(optionsFirstLine, "^", 2 + widthInNbOfChar-1, decOptionsFirstLine); }
+    if (currentMenu.currentFirstLine + (getMaxNbOfMenuLine()-1) < currentMenu.options.length) { drawTextLine(optionsFirstLine + nbLine - 1, "v", 2 + widthInNbOfChar-1, decOptionsFirstLine); }
 
 }
 
@@ -832,11 +834,12 @@ function cleartext() {
     redrawAllTextScreen();
 }
 
-function drawTextLine(lineNb, str, deltaCol) {
+function drawTextLine(lineNb, str, deltaCol, decLineNb) {
     if (deltaCol == undefined) { deltaCol = 0 }
+    if (decLineNb == undefined) { decLineNb = 0 }
     var charW = txtCharW; //6;
     var charH = txtCharH; //8;
-    var y = (lineNb - 1) * charH + 1;
+    var y = (lineNb + decLineNb - 1) * charH + 1;
     var x = 0;
     var colorIdx = 1;
     str = str.substring(0, TEXT_SCREEN_WIDTH);

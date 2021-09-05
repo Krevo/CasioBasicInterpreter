@@ -1059,12 +1059,20 @@ ViewWindow -15.1, 15.1, 1, -2.1, 8.1, 1, -10, 20, .2
 Rad
 Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
         </textarea>
-        <br>
         <div style="display: none">
         Load raw content from URL : <input type="text" size="60" id="urlLoader">
         <button onclick="loadFromUrl()">Load</button>
-        <br>
         </div>
+        <button onclick="insertSpecialChar('→');">→</button>
+        <button onclick="insertSpecialChar('⇒');">⇒</button>
+        <button onclick="insertSpecialChar('≠');">≠</button>
+        <button onclick="insertSpecialChar('≥');">≥</button>
+        <button onclick="insertSpecialChar('≤');">≤</button>
+        <button onclick="insertSpecialChar('◢');">◢</button>
+        <button onclick="insertSpecialChar('r');">r</button>
+        <button onclick="insertSpecialChar('θ');">θ</button>
+        <button onclick="insertSpecialChar('π');">π</button>
+        <br>
  List of <a href="availablefunctions.html">currently implemented functions</a> (and list of <a href="knownproblems.html">known problems</a>)<br>
  Sample programs :<br>
         <button onclick="loadProg(0);">Hello World !</button>
@@ -1198,6 +1206,11 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
 
         request.send();
         request = null;
+      }
+
+      function insertSpecialChar(specialChar) {
+        myCodeMirror.replaceSelection(specialChar);
+        myCodeMirror.focus();
       }
 
       function loadProg(progNumber) {

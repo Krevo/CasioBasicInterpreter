@@ -117,7 +117,7 @@ var textScreenLines = new Array();
 var idTimerMain = 0;
 var currentLineBuffer = null;
 
-var casioScreenW, casioScreenH, plotSize; 
+var casioScreenW, casioScreenH, plotSize;
 var c1, c2, c3, ctx1, ctx2, ctx3, c, ctx;
 var zoomW, zoomH, dx, dy;
 var currentRes, currentColorSchemeName;
@@ -133,7 +133,7 @@ function setRes(res) {
   c2 = document.getElementById("canvas2");
   c3 = document.getElementById("canvas3");
 
-  
+
   ctx1 = c1.getContext("2d");
   ctx2 = c2.getContext("2d");
   ctx3 = c3.getContext("2d");
@@ -382,7 +382,7 @@ function handleOnKeyDown(e) {
     var doPrevent = false;
 
     // Disable back button acting like history previous / back
-    // ... and arrow down acting like moving page down 
+    // ... and arrow down acting like moving page down
     // ...
     if (e.key == "Backspace"
          || e.key == "Enter"
@@ -988,7 +988,7 @@ function bline(x0, y0, x1, y1) {
     var moduloTest = plotDefs[currentSketchMode][1][0].length + plotDefs[currentSketchMode][1][1].length;
     while (true) {
         pxlIndex++;
-        if (plotDefs[currentSketchMode][1][0].indexOf(pxlIndex % moduloTest) >= 0) { // generique 
+        if (plotDefs[currentSketchMode][1][0].indexOf(pxlIndex % moduloTest) >= 0) { // generique
             setPixelOn(x0, y0, plotDefs[currentSketchMode][0]);
         }
         if (x0 === x1 && y0 === y1) break;
@@ -1048,7 +1048,7 @@ function circleBres(xc, yc, r) {
             d = d + 4 * x + 6;
         }
         debug(pxlIndex % moduloTest);
-        if (plotDefs[currentSketchMode][1][0].indexOf(pxlIndex % moduloTest) >= 0) { // generique 
+        if (plotDefs[currentSketchMode][1][0].indexOf(pxlIndex % moduloTest) >= 0) { // generique
             debug("draw point");
             drawPointOfCircle(xc, yc, x, y);
         }
@@ -1208,11 +1208,11 @@ function setGraphVar(value, index) {
 }
 
 function recalculateXdot() {
-    this.xdot = (this.xmax - this.xmin) / (this.casioScreenW - 1); 
+    this.xdot = (this.xmax - this.xmin) / (this.casioScreenW - 1);
 }
 
 function recalculateXmax() {
-    this.xmax = (this.casioScreenW - 1) * this.xdot + this.xmin; 
+    this.xmax = (this.casioScreenW - 1) * this.xdot + this.xmin;
 }
 
 function range(xmin, xmax, xscl, ymin, ymax, yscl, tmin, tmax, tptch) {
@@ -1281,4 +1281,3 @@ function radiansToAngle(radians) {
     }
     return radians;
 }
-

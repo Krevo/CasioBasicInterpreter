@@ -252,7 +252,7 @@ LpWhile A<=7
 "   CALCUL IMC"
 "Poids (kg) "?->P
 "Taille (m) "?->T
-Int(P/(T*T)*100)/100
+Int(P÷(T*T)*100)÷100
        </textarea>
         <textarea style="display: none" id="srcCode7">
 #Program name: CALUNIV
@@ -287,30 +287,30 @@ Lbl 1
 N!=Int (N)=>Goto 1
 Y!=Int (Y)=>Goto 1
 D!=Int (D)=>Goto 1
-Int ((14-N)/12)->C
+Int ((14-N)÷12)->C
 Y-C->A
 N+12*C-2->M
-D+A+Int (A/4)-Int (A/100)+Int (A/400)+Int ((31*M)/12)->J
-J-Int (J/7)*7->P
+D+A+Int (A÷4)-Int (A÷100)+Int (A÷400)+Int ((31*M)÷12)->J
+J-Int (J÷7)*7->P
 P=0=>7->P
 30->J
-(N/2)!=Int (N/2)=>N<=7=>31->J
-(N/2)=Int (N/2)=>N>=8=>31->J
+(N÷2)!=Int (N÷2)=>N<=7=>31->J
+(N÷2)=Int (N÷2)=>N>=8=>31->J
 N=2=>28->J
-N=2=>Frac (Y/4)=0=>Frac (Y/100)>0=>29->J
-N=2=>Frac (Y/400)=0=>29->J
+N=2=>Frac (Y÷4)=0=>Frac (Y÷100)>0=>29->J
+N=2=>Frac (Y÷400)=0=>29->J
 1->N
 Lbl 5
 N+P-1->O
-Int ((O-1)/7)+2->E
+Int ((O-1)÷7)+2->E
 O-(E-2)*7->D
 8-E->E
 (D-1)*10+8->A
 E*8+5->B
-Int (N/10)->C
+Int (N÷10)->C
 C!=0=>Text 64-B,A,C
 A+4->A
-Frac (N/10)*10->C
+Frac (N÷10)*10->C
 Text 64-B,A,C
 Isz N
 N<=J=>Goto 5
@@ -366,7 +366,7 @@ P=1=>101+A->A
 P=2=>548+A->A
 List 1[7*P-5]+(.5*9.81*C*C)-50-T*C->B
 Plot A,B
-Int ((A-5)/64)+1->D
+Int ((A-5)÷64)+1->D
 P=1=>A>533=>A<563=>B<List 1[D]=>B>List 1[D]-58=>Goto 4
 P=2=>A>90=>A<111=>B<List 1[D]=>B>List 1[D]-58=>Goto 4
 D>0=>D<11=>B<List 1[D]=>Goto 2
@@ -400,11 +400,11 @@ Plot T,List 1[S]-45
 Plot T,List 1[S]-25
 Line
 Plot T,List 1[S]-45
-Plot T-(D/3),Y
+Plot T-(D÷3),Y
 Line
 Plot X,List 1[S]-58
 Line
-Plot T+(D/3),Y
+Plot T+(D÷3),Y
 Line
 Plot X,List 1[S]-45
 Line
@@ -451,7 +451,7 @@ Range 1,127,0,1,63,0
 " -- POLYGON -- "
 "NB COTE "?->N
 "RAYON (px) "?->r
-360/N->A
+360÷N->A
 Plot 64+r,32
 0->θ
 Lbl 1
@@ -672,7 +672,7 @@ Do
 	94 + 40*cos (Z) -> B
 	PlotOn A, B
         Line
-	Z - π/10 -> Z
+	Z - π÷10 -> Z
 LpWhile Z > -.1
 π -> Z
 PlotOn 329,54
@@ -681,7 +681,7 @@ Do
 	94 + 40*cos (Z) -> B
 	PlotOn A, B
         Line
-	Z + π/10 -> Z
+	Z + π÷10 -> Z
 LpWhile Z < 2π + .1
        </textarea>
         <textarea style="display: none" id="srcCode19">
@@ -902,7 +902,7 @@ S-L-Thin
 BG-None
 Rad
 For 1 -> H To 15
-	cos (H / 5) / 2 + 0.2 -> G
+	cos (H ÷ 5) ÷ 2 + 0.2 -> G
 	Cls
 	{-4 -> List 1
 	{-4 -> List 2
@@ -922,8 +922,8 @@ For 0 -> r To 10
 	1 -> θ
 	List 1[θ] + List 3[θ] * cos List 4[θ] -> A
 	List 2[θ] + List 3[θ] * sin List 4[θ] -> B
-	List 1[θ] + List 3[θ] * cos (List 4[θ] + π / 2) -> C
-	List 2[θ] + List 3[θ] * sin (List 4[θ] + π / 2) -> D
+	List 1[θ] + List 3[θ] * cos (List 4[θ] + π ÷ 2) -> C
+	List 2[θ] + List 3[θ] * sin (List 4[θ] + π ÷ 2) -> D
 	C + List 3[θ] * cos List 4[θ] -> E
 	D + List 3[θ] * sin List 4[θ] -> F
 	F-Line List 1[θ], List 2[θ], A, B
@@ -973,7 +973,7 @@ Augment({1,2,3,4,5},{6,7,8,9,10,11,12
 For 2->C To 7
   ClrText
   For 1 -> A To Dim List Ans
-    Locate 3*(MOD((A-1),C)+1) -2 , Int((A-1)/C)+1, List Ans[A]
+    Locate 3*(MOD((A-1),C)+1) -2 , Int((A-1)÷C)+1, List Ans[A]
   Next
 Next
         </textarea>
@@ -1037,7 +1037,7 @@ WhileEnd
 "le peuple !"
         </textarea>
         <textarea style="display: none" id="srcCode24">
-ViewWindow -2π, 2π, π/4, -1.6, 1.6, 0.5
+ViewWindow -2π, 2π, π÷4, -1.6, 1.6, 0.5
 GridOn
 AxesOn
 Rad

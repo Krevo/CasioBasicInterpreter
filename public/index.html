@@ -1076,6 +1076,7 @@ Red SketchThin Graph(X,Y)=(2T - 3*sin T, 2 - 3*cos T
         <button onclick="insertSpecialChar('r');">r</button>
         <button onclick="insertSpecialChar('θ');">θ</button>
         <button onclick="insertSpecialChar('π');">π</button>
+        <button onclick="insertSpecialChar('÷');">÷</button>
         <br>
  List of <a href="availablefunctions.html">currently implemented functions</a> (and list of <a href="knownproblems.html">known problems</a>)<br>
  Sample programs :<br>
@@ -1332,7 +1333,7 @@ $("#srcCode").bind('paste drop', function(e) {
         var text = myCodeMirror.getValue();
         text = text.replace(/(\uE015)/g, 'r'); // Replace "rho" (U+E015 used in BIDE) by "r"
         text = text.replace(/(\uE016)/g, 'i'); // Replace "i" (imaginary unit of complex number) (U+E016 used in BIDE) by "i"
-        text = text.replace(/(\uE063)/g, '/'); // Replace "slash" (U+E063 used in BIDE) by "/"
+        text = text.replace(/(\uE063)/g, '÷'); // Replace "slash" (U+E063 used in BIDE) by "÷"
         myCodeMirror.setValue(text);
         myCodeMirror.setCursor(savedCursorPos); // Replace cursor where it was (because setting the value of the content place cursor at beginning)
     }, 100);

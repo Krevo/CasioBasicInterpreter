@@ -461,7 +461,7 @@ function execute(node) {
                     break;
                 case OP_IF_SIMPLE:
                     if (execute(node.children[0])) {
-                        execute(node.children[1]);
+                        ret = execute(node.children[1]);
                     }
                     break;
                 case OP_IF:

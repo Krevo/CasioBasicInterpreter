@@ -778,6 +778,7 @@ function txtScrollVertical() {
     textScreenLines.push("".padStart(TEXT_SCREEN_WIDTH, " "));
     txtColorScreenLines.shift();
     txtColorScreenLines.push("".padStart(TEXT_SCREEN_WIDTH, "1"));
+    currentTextLineIdx--;
 }
 
 // Si c'est après le locate, ça rempli la ligne avec des blancs après le texte à imprimer.

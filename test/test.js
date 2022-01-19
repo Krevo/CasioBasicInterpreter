@@ -107,6 +107,34 @@ QUnit.test("jsccRun - test", function( assert ) {
       answer: 16
     },
     {
+      name: 'Floating point operation .1+.1 = .2 ?',
+      srcCode: `
+        .1+.1
+      `,
+      answer: .2
+    },
+    {
+      name: 'Floating point operation .1+.2 = .3 ?',
+      srcCode: `
+        .1+.2
+      `,
+      answer: .3
+    },
+    {
+      name: 'Floating point operation .3-.1 = .2 ?',
+      srcCode: `
+        .3-.1
+      `,
+      answer: .2
+    },
+    {
+      name: 'Floating point operation 1111.11 + 1111.11 + 1111.11 + 1111.11 + 1111.11 = 5555.55 ?',
+      srcCode: `
+        1111.11 + 1111.11 + 1111.11 + 1111.11 + 1111.11
+      `,
+      answer: 5555.55
+    },
+    {
     name: 'A-1 test',
       srcCode: `
         5->A

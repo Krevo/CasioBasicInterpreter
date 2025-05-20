@@ -955,7 +955,7 @@ function setPixelOn(x, y, plotSize) {
 }
 
 function setPixelOff(x, y, plotSize) {
-    setPixel(x, y, BACKGROUND_COLOR, plotSize);
+    setPixel(x, y, currentPalette[0], plotSize);
 }
 
 function setPixel(x, y, color, plotSize) {
